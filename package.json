@@ -1,0 +1,31 @@
+{
+  "name": "sauma",
+  "version": "0.0.1",
+  "description": "TBA",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose",
+    "watch": "cross-env NODE_ENV=development nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrnn/sauma.git"
+  },
+  "author": "Juho Juurinen",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "cross-env": "^5.1.4",
+    "eslint": "^4.19.1",
+    "jest": "^22.4.3",
+    "nodemon": "^1.17.2",
+    "supertest": "^3.0.0"
+  }
+}
