@@ -8,10 +8,7 @@ const schema = new mongoose.Schema({
     minlength : [ 4, "Käyttäjänimen oltava vähintään 4 merkkiä" ],
     trim : true
   },
-  pwHash : {
-    type : String,
-    default : undefined  // TBA
-  },
+  pwHash : { type : String },
   firstName : {
     type : String,
     required : [ true, "Etunimi puuttuu" ],
@@ -69,6 +66,18 @@ const schema = new mongoose.Schema({
    *   - associated Sites (-- '' --)
    */
 })
+
+/* GOOD TO KNOW THAT THIS IS ALSO POSSIBLE ...
+schema.options.toJSON = {
+  transform : (employee) => {
+    employee = employee._doc
+    employee.id = employee._id
+    delete employee.pwHash
+    delete employee.__v
+    delete employee._id
+    return employee
+  }
+}*/
 
 const Employee = mongoose.model("Employee", schema)
 

@@ -1,3 +1,12 @@
+const parseErrors = (validationResult) => {
+  let errors = []
+
+  Object.keys(validationResult).forEach(key =>
+    errors.push(validationResult[key].message))
+
+  return errors
+}
+
 const validateEmail = (email) => {
   let re = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-z0-9-]+(\.[a-z0-9]+)*(\.[a-z]{2,})$/
   return re.test(String(email).trim().toLowerCase())
@@ -8,4 +17,4 @@ const validatePhone = (phone) => {
   return re.test(String(phone).trim())
 }
 
-module.exports = { validateEmail, validatePhone }
+module.exports = { parseErrors, validateEmail, validatePhone }
