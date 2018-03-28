@@ -4,7 +4,14 @@ const server = require("http").createServer(app)
 const config = require("./util/config")
 
 // database
-// ... TBA
+const mongoose = require("mongoose")
+mongoose
+  .connect(config.dbUri)
+  .then(() =>
+    console.log("Now connected to database"))
+  .catch (ex =>
+    console.log(ex))
+mongoose.Promise = global.Promise
 
 // middleware
 const cors = require("cors")
@@ -19,13 +26,14 @@ const employeeRouter = require("./router/employee_router")
 app.use("/api/employees", employeeRouter)
 
 // static resources
-app.use(express.static("build"))
+// app.use(express.static("build")) <-- NOT SURE IF NEEDED?
 
 server.listen(config.port, () =>
   console.log(`Server now listening on port ${config.port}`))
 
-server.on("close", () =>
-  // close also db connection
-  console.log("Now closing server"))
+server.on("close", () => {
+  console.log("Now closing server and connection to database")
+  mongoose.connection.close()
+})
 
 module.exports = { app, server }
