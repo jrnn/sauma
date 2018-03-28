@@ -4,6 +4,11 @@ module.exports = {
     "node": true
   },
   "extends": "eslint:recommended",
+  "globals" : {
+    "describe" : true,
+    "expect" : true,
+    "test" : true
+  },
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2017

@@ -36,4 +36,4 @@ server.on("close", () => {
   mongoose.connection.close()
 })
 
-module.exports = { app, server }
+module.exports = { app, server } // <-- SERVER MAYBE NOT NEEDED IF USING MOCK DB FOR TESTS?
