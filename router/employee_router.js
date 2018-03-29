@@ -1,11 +1,11 @@
 const employeeRouter = require("express").Router()
 const Employee = require("../model/employee")
-const { parseErrors } = require("../util/validator")
+const { parseErrors, validatePassword } = require("../util/validator")
 const bcrypt = require("bcrypt")
 const bcryptCost = 10
 const url = "/api/employees"
 
-const excludedFields = { pwHash : 0, __v : 0 }
+const excludedFields = { pwHash : 0, __v : 0 } // MAYBE SCHEMA.OPTIONS.TOJSON IS PRETTIER?
 
 const usernameExists = async (username) => {
   let employees = await Employee.find({ username })
@@ -37,14 +37,14 @@ employeeRouter.post("/", async (req, res) => {
     let { username, password } = req.body
     if (await usernameExists(username.trim()))
       errors.push("Käyttäjänimi on jo käytössä")
-    if ( !password || password.trim().length < 8 )
-      errors.push("Salasanan oltava vähintään 8 merkkiä ")
+    if (!validatePassword(password))
+      errors.push("Salasana ei täytä vaatimuksia")
 
     if (errors.length > 0)
       throw ({ message : errors })
 
     employee.pwHash = await bcrypt
-      .hash(password.trim(), bcryptCost)
+      .hash(password, bcryptCost)
 
     employee = await employee.save()
     res

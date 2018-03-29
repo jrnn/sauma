@@ -8,13 +8,25 @@ const parseErrors = (validationResult) => {
 }
 
 const validateEmail = (email) => {
-  let re = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-z0-9-]+(\.[a-z0-9]+)*(\.[a-z]{2,})$/
-  return re.test(String(email).trim().toLowerCase())
+  let regExp = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-z0-9-]+(\.[a-z0-9]+)*(\.[a-z]{2,})$/
+
+  return regExp.test(String(email).trim().toLowerCase())
+}
+
+const validatePassword = (password) => {
+  let allowedChrs = /^[A-Za-z0-9!#$%&'*+.:,;/=?@^_~-]+$/
+  let minimumReqs = /((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,})/
+
+  return allowedChrs.test(String(password))
+      && minimumReqs.test(String(password))
 }
 
 const validatePhone = (phone) => {
-  let re = /^\d{2,3}[ -]?(\d{3}[ -]?\d{4}|\d{4}[ -]?\d{3})$/
-  return re.test(String(phone).trim())
+  let regExp = /^\d{2,3}[ -]?(\d{3}[ -]?\d{4}|\d{4}[ -]?\d{3})$/
+
+  return regExp.test(String(phone).trim())
 }
 
-module.exports = { parseErrors, validateEmail, validatePhone }
+module.exports = {
+  parseErrors, validateEmail, validatePassword, validatePhone
+}
