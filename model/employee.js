@@ -67,7 +67,7 @@ const schema = new mongoose.Schema({
    */
 })
 
-schema.options.toJSON = {
+schema.options.toJSON = { // GENERALIZE AT SOME POINT?
   transform : (employee) => {
     employee = employee._doc
     employee.id = employee._id

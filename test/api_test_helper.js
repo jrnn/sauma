@@ -6,7 +6,7 @@ const initEmployees = [
     lastName : "McBoatface",
     email : "boaty@boats.io",
     phone : "313-666-1337",
-    enabled : true,
+    enabled : false,
     administrator : false
   },
   {
@@ -31,37 +31,28 @@ const initEmployees = [
   }
 ]
 
-const newEmployees = [
+const invalidCredentials = [
+  { bestDogEver : "Gooby" },
+  { password : "trustno1" },
+  { password : "Qwerty_123" },
+  { username : "jonne" },
   {
-    username : "batman",
-    password : "Qwerty_123",
-    firstName : "Batman",
-    lastName : "McRobinface",
-    email : "batman@robin.io",
-    phone : "040-123-4567"
+    username : "jonne",
+    password : "trustno1"
   },
   {
-    username : "beardy",
-    password : "Qwerty_123",
-    firstName : "Beardy",
-    lastName : "McBeardface",
-    email : "beardy@goat.ee",
-    phone : "040-123-4567"
+    username : "jonne",
+    password : "Qwerty_123"
   },
+  { username : "spongebob" },
   {
-    username : "heman",
-    password : "Qwerty_123",
-    firstName : "Heman",
-    lastName : "McSkeletorface",
-    email : "heman@gmail.com",
-    phone : "040-123-4567"
+    username : "spongebob",
+    password : "trustno1"
   }
 ]
 
 const invalidEmployees = [
-  {
-    bestDuckEver : "Dolan"
-  },
+  { bestDuckEver : "Dolan" },
   {
     password : "Qwerty_123",
     firstName : "Jonne",
@@ -146,9 +137,37 @@ const invalidEmployees = [
   }
 ]
 
-const newEmployee = () => {
-  let i = Math.floor(Math.random() * newEmployees.length)
-  return newEmployees[i]
-}
+const newEmployees = [
+  {
+    username : "batman",
+    password : "Qwerty_123",
+    firstName : "Batman",
+    lastName : "McRobinface",
+    email : "batman@robin.io",
+    phone : "040-123-4567"
+  },
+  {
+    username : "beardy",
+    password : "Qwerty_123",
+    firstName : "Beardy",
+    lastName : "McBeardface",
+    email : "beardy@goat.ee",
+    phone : "040-123-4567"
+  },
+  {
+    username : "heman",
+    password : "Qwerty_123",
+    firstName : "Heman",
+    lastName : "McSkeletorface",
+    email : "heman@gmail.com",
+    phone : "040-123-4567"
+  }
+]
 
-module.exports = { initEmployees, invalidEmployees, newEmployee }
+const newEmployee = () => newEmployees[randomIdx(newEmployees.length)]
+
+const randomIdx = (n) => Math.floor(Math.random() * n)
+
+module.exports = {
+  initEmployees, invalidCredentials, invalidEmployees, newEmployee
+}

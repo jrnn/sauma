@@ -2,7 +2,6 @@ const employeeRouter = require("express").Router()
 const Employee = require("../model/employee")
 const { parseErrors, validatePassword } = require("../util/validator")
 const bcrypt = require("bcrypt")
-const bcryptCost = 10
 const url = "/api/employees"
 
 // const excludedFields = { pwHash : 0, __v : 0 } // alternative to schema.options.toJSON
@@ -44,7 +43,7 @@ employeeRouter.post("/", async (req, res) => {
       throw ({ message : errors })
 
     employee.pwHash = await bcrypt
-      .hash(password, bcryptCost)
+      .hash(password, Number(process.env.BCRYPT_COST))
 
     employee = await employee.save()
     res

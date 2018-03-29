@@ -7,7 +7,7 @@ const url = "/api/login"
 loginRouter.post("/", async (req, res) => {
   try {
     let employee = await Employee
-      .findOne({ username : req.body.username.trim() })
+      .findOne({ username : req.body.username })
 
     let pwCheck = ( !employee )
       ? false

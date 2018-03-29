@@ -7,7 +7,7 @@ const url = "/api/employees"
 
 if (process.env.NODE_ENV !== "test") {
   server.close()
-  throw new Error("Not in test mode, abort to avoid DB from being wiped clean")
+  throw new Error("Tests must be run in test mode")
 }
 
 describe("Employee API", async () => {
@@ -26,7 +26,7 @@ describe("Employee API", async () => {
       let res = await api
         .get(url)
         .expect(200)
-        .expect("content-type", "application/json; charset=utf-8")
+        .expect("content-type", /application\/json/)
 
       let usernames = res.body.map(e => e.username)
       let lastNames = res.body.map(e => e.lastName)
@@ -59,11 +59,11 @@ describe("Employee API", async () => {
         .post(url)
         .send(employee)
         .expect(201)
-        .expect("content-type", "application/json; charset=utf-8")
+        .expect("content-type", /application\/json/)
 
       let employeesAfter = await Employee.find()
-
       expect(employeesAfter.length).toBe(employeesBefore.length + 1)
+
       expect(res.body.username).toEqual(employee.username)
       expect(res.body.lastName).toEqual(employee.lastName)
       expect(res.body.email).toEqual(employee.email)
@@ -77,12 +77,13 @@ describe("Employee API", async () => {
     test("fails with invalid input", async () => {
       let employeesBefore = await Employee.find()
 
-      helper.invalidEmployees.forEach(async (e) => {
-        await api
-          .post(url)
-          .send(e)
-          .expect(400)
-      })
+      await Promise
+        .all(helper.invalidEmployees.map(e => {
+          return api
+            .post(url)
+            .send(e)
+            .expect(400)
+        }))
 
       let employeesAfter = await Employee.find()
       expect(employeesAfter.length).toBe(employeesBefore.length)
