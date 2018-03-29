@@ -1,14 +1,6 @@
+const jwt = require("jsonwebtoken")
+
 const initEmployees = [
-  {
-    username : "boaty1",
-    pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
-    firstName : "Boaty",
-    lastName : "McBoatface",
-    email : "boaty@boats.io",
-    phone : "313-666-1337",
-    enabled : false,
-    administrator : false
-  },
   {
     username : "cnorris",
     pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
@@ -27,6 +19,16 @@ const initEmployees = [
     email : "sponge@bob.io",
     phone : "42-313-1337",
     enabled : true,
+    administrator : false
+  },
+  {
+    username : "boaty1",
+    pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
+    firstName : "Boaty",
+    lastName : "McBoatface",
+    email : "boaty@boats.io",
+    phone : "313-666-1337",
+    enabled : false,
     administrator : false
   }
 ]
@@ -164,10 +166,14 @@ const newEmployees = [
   }
 ]
 
+const createToken = (employee) =>
+  jwt.sign({ id : employee._id, username : employee.username, admin : employee.administrator },
+    process.env.SECRET)
+
 const newEmployee = () => newEmployees[randomIdx(newEmployees.length)]
 
 const randomIdx = (n) => Math.floor(Math.random() * n)
 
 module.exports = {
-  initEmployees, invalidCredentials, invalidEmployees, newEmployee
+  createToken, initEmployees, invalidCredentials, invalidEmployees, newEmployee
 }

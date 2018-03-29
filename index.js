@@ -19,6 +19,7 @@ const bodyParser = require("body-parser")
 const middleWare = require("./util/middleware")
 app.use(cors())
 app.use(bodyParser.json())
+app.use(middleWare.tokenParser)
 app.use(middleWare.logger)
 
 // routers

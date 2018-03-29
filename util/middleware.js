@@ -11,4 +11,13 @@ const logger = (req, res, next) => {
   next()
 }
 
-module.exports = { logger }
+const tokenParser = (req, res, next) => {
+  let auth = req.get("authorization")
+
+  if (auth && auth.toLowerCase().startsWith("bearer "))
+    req.token = auth.substring(7)
+
+  next()
+}
+
+module.exports = { logger, tokenParser }

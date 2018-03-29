@@ -24,7 +24,7 @@ loginRouter.post("/", async (req, res) => {
 
     res
       .status(200)
-      .json({ token, username })
+      .json({ token, username })  // USERNAME NOT NEEDED...?
 
   } catch (ex) {
     console.log(`Error @ POST ${url}`, ex.message)
