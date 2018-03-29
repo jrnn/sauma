@@ -23,7 +23,9 @@ app.use(middleWare.logger)
 
 // routers
 const employeeRouter = require("./router/employee_router")
+const loginRouter = require("./router/login_router")
 app.use("/api/employees", employeeRouter)
+app.use("/api/login", loginRouter)
 
 // static resources
 // app.use(express.static("build")) <-- NOT SURE IF NEEDED?

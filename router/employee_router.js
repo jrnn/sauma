@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt")
 const bcryptCost = 10
 const url = "/api/employees"
 
-const excludedFields = { pwHash : 0, __v : 0 } // MAYBE SCHEMA.OPTIONS.TOJSON IS PRETTIER?
+// const excludedFields = { pwHash : 0, __v : 0 } // alternative to schema.options.toJSON
 
 const usernameExists = async (username) => {
   let employees = await Employee.find({ username })
@@ -14,7 +14,7 @@ const usernameExists = async (username) => {
 
 employeeRouter.get("/", async (req, res) => {
   try {
-    let employees = await Employee.find({}, excludedFields)
+    let employees = await Employee.find() // ...find({}, excludedFields)
     res.json(employees)
 
   } catch (ex) {
@@ -36,9 +36,9 @@ employeeRouter.post("/", async (req, res) => {
     // THIS IS UGLY AS SHIT. SEPARATE CUSTOM VALIDATION METHOD NEEDED...?
     let { username, password } = req.body
     if (await usernameExists(username.trim()))
-      errors.push("Käyttäjänimi on jo käytössä")
+      errors.push("That username is already in use")
     if (!validatePassword(password))
-      errors.push("Salasana ei täytä vaatimuksia")
+      errors.push("Password does not meet requirements")
 
     if (errors.length > 0)
       throw ({ message : errors })

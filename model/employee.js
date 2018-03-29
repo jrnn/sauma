@@ -4,37 +4,37 @@ const { validateEmail, validatePhone } = require("../util/validator")
 const schema = new mongoose.Schema({
   username : {
     type : String,
-    required : [ true, "Käyttäjänimi puuttuu" ],
-    minlength : [ 4, "Käyttäjänimen oltava vähintään 4 merkkiä" ],
+    required : [ true, "Username missing" ],
+    minlength : [ 4, "Username must be at least 4 characters long" ],
     trim : true
   },
   pwHash : { type : String },
   firstName : {
     type : String,
-    required : [ true, "Etunimi puuttuu" ],
+    required : [ true, "First name missing" ],
     trim : true
   },
   lastName : {
     type : String,
-    required : [ true, "Sukunimi puuttuu" ],
+    required : [ true, "Last name missing" ],
     trim : true
   },
   email : {
     type : String,
-    required : [ true, "Email puuttuu" ],
+    required : [ true, "Email missing" ],
     lowercase : true,
     trim : true,
     validate : {
       validator : validateEmail,
-      message : "Virheellinen email"
+      message : "Invalid email"
     }
   },
   phone : {
     type : String,
-    required : [ true, "Puhelinnumero puuttuu" ],
+    required : [ true, "Phone number missing" ],
     validate : {
       validator : validatePhone,
-      message : "Virheellinen puhelinnumero"
+      message : "Invalid phone number"
     },
     trim : true
   },
@@ -67,17 +67,18 @@ const schema = new mongoose.Schema({
    */
 })
 
-/* GOOD TO KNOW THAT THIS IS ALSO POSSIBLE ...
 schema.options.toJSON = {
   transform : (employee) => {
     employee = employee._doc
     employee.id = employee._id
+
     delete employee.pwHash
     delete employee.__v
     delete employee._id
+
     return employee
   }
-}*/
+}
 
 const Employee = mongoose.model("Employee", schema)
 
