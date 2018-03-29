@@ -5,6 +5,8 @@ module.exports = {
   },
   "extends": "eslint:recommended",
   "globals" : {
+    "afterAll" : true,
+    "beforeEach" : true,
     "describe" : true,
     "expect" : true,
     "test" : true
