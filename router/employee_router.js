@@ -29,6 +29,27 @@ employeeRouter.get("/", async (req, res) => {
   }
 })
 
+employeeRouter.get("/:id", async (req, res) => {
+  try {
+    let token = checkToken(req.token)
+    if ( !token ) return res
+      .status(401)
+      .json({ error : "Invalid or missing token" })
+
+    let employee = await Employee.findById(req.params.id)
+    if ( employee ) res
+      .json(employee)
+    else res
+      .status(404).end()
+
+  } catch (ex) {
+    console.log(`Error @ GET ${url}/${req.params.id}`, ex.message)
+    res
+      .status(400)
+      .json({ error : ex.message })
+  }
+})
+
 employeeRouter.post("/", async (req, res) => {
   try {
     let token = checkToken(req.token)

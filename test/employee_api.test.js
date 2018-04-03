@@ -69,6 +69,59 @@ describe("Employee API", async () => {
     })
   })
 
+  describe(`GET ${url}/:id`, async () => {
+
+    test("with valid id returns that employee as JSON", async () => {
+      let user = await Employee.findOne({ username : "spongebob" })
+      let token = helper.createToken(user, process.env.SECRET)
+
+      let employees = await Employee.find()
+      let employee = employees[0]
+
+      let res = await api
+        .get(`${url}/${employee.id}`)
+        .set("authorization", `bearer ${token}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.username).toEqual(employee.username)
+      expect(res.body.lastName).toEqual(employee.lastName)
+      expect(res.body.email).toEqual(employee.email)
+    })
+
+    test("fails if not authenticated or if invalid token", async () => {
+      let employees = await Employee.find()
+      let employee = employees[0]
+
+      await api
+        .get(`${url}/${employee.id}`)
+        .expect(401)
+
+      let user = await Employee.findOne({ username : "spongebob" })
+      let token = helper.createToken(user, "incorrect_key")
+
+      await api
+        .get(`${url}/${employee.id}`)
+        .set("authorization", `bearer ${token}`)
+        .expect(401)
+    })
+
+    test("fails with invalid or nonexisting id", async () => {
+      let user = await Employee.findOne({ username : "spongebob" })
+      let token = helper.createToken(user, process.env.SECRET)
+
+      await api
+        .get(`${url}/${new Employee()._id}`)
+        .set("authorization", `bearer ${token}`)
+        .expect(404)
+
+      await api
+        .get(`${url}/all_your_base_are_belong_to_us`)
+        .set("authorization", `bearer ${token}`)
+        .expect(400)
+    })
+  })
+
   describe(`POST ${url}`, async () => {
 
     test("succeeds with valid input, and returns new employee as JSON", async () => {
