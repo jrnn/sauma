@@ -1,21 +1,10 @@
-const employeeRouter = require("express").Router()
-const Employee = require("../model/employee")
-const { parseErrors, validatePassword } = require("../util/validator")
 const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const { checkEmployee, checkToken } = require("./router_helper")
+const Employee = require("../model/employee")
+const { validatePassword } = require("../util/validator")
+
+const employeeRouter = require("express").Router()
 const url = "/api/employees"
-
-// const excludedFields = { pwHash : 0, __v : 0 } // alternative to schema.options.toJSON
-
-const checkToken = (reqToken) => {
-  try {
-    let token = jwt.verify(reqToken, process.env.SECRET)
-    return ( !token.id )
-      ? undefined
-      : token
-
-  } catch (ex) { return undefined }
-}
 
 const usernameExists = async (username) => {
   let employees = await Employee.find({ username })
@@ -25,12 +14,11 @@ const usernameExists = async (username) => {
 employeeRouter.get("/", async (req, res) => {
   try {
     let token = checkToken(req.token)
-
     if ( !token ) return res
       .status(401)
       .json({ error : "Invalid or missing token" })
 
-    let employees = await Employee.find() // ...find({}, excludedFields)
+    let employees = await Employee.find()
     res.json(employees)
 
   } catch (ex) {
@@ -44,20 +32,14 @@ employeeRouter.get("/", async (req, res) => {
 employeeRouter.post("/", async (req, res) => {
   try {
     let token = checkToken(req.token)
-
     if ( !token || !token.admin ) return res
       .status(401)
       .json({ error : "Invalid or missing token" })
 
-    let employee = new Employee(req.body) // CLEAN-UP METHOD FOR INCOMING REQUEST BODY...?
-    let validationResult = employee.validateSync()
-    let errors = ( !validationResult )
-      ? []
-      : parseErrors(validationResult.errors)
+    let { employee, errors } = checkEmployee(req.body)
+    let { password } = req.body
 
-    // THIS IS UGLY AS SHIT. SEPARATE CUSTOM VALIDATION METHOD NEEDED...?
-    let { username, password } = req.body
-    if (await usernameExists(username.trim()))
+    if (await usernameExists(employee.username.trim()))
       errors.push("Username is already in use")
     if (!validatePassword(password))
       errors.push("Password does not meet requirements")

@@ -36,7 +36,7 @@ describe("Login API", async () => {
       let token = jwt.verify(res.body.token, process.env.SECRET)
 
       expect(employee._id.toString()).toEqual(token.id.toString())
-      expect(employee.username).toEqual(token.username, res.body.username)
+      expect(employee.firstName).toEqual(token.firstName)
       expect(employee.administrator).toEqual(token.admin)
     })
 
@@ -54,12 +54,12 @@ describe("Login API", async () => {
 
     test("fails with invalid credentials", async () => {
       await Promise
-        .all(helper.invalidCredentials.map(c => {
-          return api
+        .all(helper.invalidCredentials
+          .map(c => api
             .post(url)
             .send(c)
             .expect(401)
-        }))
+          ))
     })
   })
 })

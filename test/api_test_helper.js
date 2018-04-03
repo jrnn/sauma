@@ -60,7 +60,7 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jon",
@@ -68,7 +68,7 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "spongebob",
@@ -76,14 +76,14 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
@@ -91,28 +91,28 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
     password : "Qwerty_123",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
     password : "Qwerty_123",
     firstName : "Jonne",
     email : "jonne@mopo.es",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
     password : "Qwerty_123",
     firstName : "Jonne",
     lastName : "McMopoface",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
@@ -120,7 +120,7 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo",
-    phone : "040 123 4567"
+    phone : "0401234567"
   },
   {
     username : "jonne",
@@ -146,7 +146,7 @@ const newEmployees = [
     firstName : "Batman",
     lastName : "McRobinface",
     email : "batman@robin.io",
-    phone : "040-123-4567"
+    phone : "040-123 4567"
   },
   {
     username : "beardy",
@@ -154,7 +154,7 @@ const newEmployees = [
     firstName : "Beardy",
     lastName : "McBeardface",
     email : "beardy@goat.ee",
-    phone : "040-123-4567"
+    phone : "04 01 23 45 67"
   },
   {
     username : "heman",
@@ -162,13 +162,16 @@ const newEmployees = [
     firstName : "Heman",
     lastName : "McSkeletorface",
     email : "heman@gmail.com",
-    phone : "040-123-4567"
+    phone : "0401234567"
   }
 ]
 
-const createToken = (employee) =>
-  jwt.sign({ id : employee._id, username : employee.username, admin : employee.administrator },
-    process.env.SECRET)
+const createToken = (employee, key) =>
+  jwt.sign({
+    id : employee._id,
+    username : employee.username,
+    admin : employee.administrator
+  }, key)
 
 const newEmployee = () => newEmployees[randomIdx(newEmployees.length)]
 

@@ -23,7 +23,7 @@ describe("Employee API", async () => {
     test("returns employees in DB as JSON", async () => {
       let employeesInDb = await Employee.find()
       let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user)
+      let token = helper.createToken(user, process.env.SECRET)
 
       let res = await api
         .get(url)
@@ -45,7 +45,7 @@ describe("Employee API", async () => {
 
     test("does not return password hashes", async () => {
       let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user)
+      let token = helper.createToken(user, process.env.SECRET)
 
       let res = await api
         .get(url)
@@ -53,13 +53,27 @@ describe("Employee API", async () => {
 
       res.body.map(e => expect(e.pwHash).toEqual(undefined))
     })
+
+    test("fails if not authenticated or if invalid token", async () => {
+      await api
+        .get(url)
+        .expect(401)
+
+      let user = await Employee.findOne({ username : "spongebob" })
+      let token = helper.createToken(user, "incorrect_key")
+
+      await api
+        .get(url)
+        .set("authorization", `bearer ${token}`)
+        .expect(401)
+    })
   })
 
   describe(`POST ${url}`, async () => {
 
     test("succeeds with valid input, and returns new employee as JSON", async () => {
       let user = await Employee.findOne({ username : "cnorris" })
-      let token = helper.createToken(user)
+      let token = helper.createToken(user, process.env.SECRET)
 
       let employeesBefore = await Employee.find()
       let employee = helper.newEmployee()
@@ -81,7 +95,7 @@ describe("Employee API", async () => {
 
     test("fails if not authenticated as administrator", async () => {
       let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user)
+      let token = helper.createToken(user, process.env.SECRET)
 
       let employeesBefore = await Employee.find()
       let employee = helper.newEmployee()
@@ -98,7 +112,7 @@ describe("Employee API", async () => {
 
     test("fails with invalid input", async () => {
       let user = await Employee.findOne({ username : "cnorris" })
-      let token = helper.createToken(user)
+      let token = helper.createToken(user, process.env.SECRET)
       let employeesBefore = await Employee.find()
 
       await Promise
