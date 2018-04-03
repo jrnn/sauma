@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
-const { validateEmail, validatePhone } = require("../util/validator")
+const parser = require("../util/parser")
+const validator = require("../util/validator")
 
 const schema = new mongoose.Schema({
   username : {
@@ -25,18 +26,18 @@ const schema = new mongoose.Schema({
     lowercase : true,
     trim : true,
     validate : {
-      validator : validateEmail,
+      validator : validator.validateEmail,
       message : "Invalid email"
     }
   },
   phone : {
     type : String,
     required : [ true, "Phone number missing" ],
+    set : parser.formatPhone,
     validate : {
-      validator : validatePhone,
+      validator : validator.validatePhone,
       message : "Invalid phone number"
-    },
-    trim : true
+    }
   },
   /*
   address : {

@@ -1,20 +1,17 @@
 module.exports = {
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "extends": "eslint:recommended",
-  "globals" : {
-    "afterAll" : true,
-    "beforeEach" : true,
-    "describe" : true,
-    "expect" : true,
-    "test" : true
-  },
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2017
   },
+  "plugins": [
+    "jest"
+  ],
   "rules": {
     "arrow-spacing": [
       "error",
@@ -26,7 +23,10 @@ module.exports = {
     "eqeqeq": "error",
     "indent": [
       "error",
-      2
+      2,
+      {
+        "SwitchCase" : 1
+      }
     ],
     "linebreak-style": [
       "error",

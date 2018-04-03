@@ -21,8 +21,8 @@ const validatePassword = (password) => {
 }
 
 const validatePhone = (phone) => {
-  let regExp = /^\d{2,3}[ -]?(\d{3}[ -]?\d{4}|\d{4}[ -]?\d{3})$/
-  return regExp.test(String(phone).trim())
+  let regExp = /(^\d{2}-\d{3}-\d{3,4}$)|(^\d{3}-\d{3}-\d{4}$)/
+  return regExp.test(String(phone))
 }
 
 module.exports = {
