@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt")
 const Employee = require("../model/employee")
 const jwt = require("jsonwebtoken")
-
 const loginRouter = require("express").Router()
 const url = "/api/login"
 
@@ -17,9 +16,12 @@ loginRouter.post("/", async (req, res) => {
       throw new Error("Login attempt with wrong credentials")
 
     let { _id, firstName, administrator } = employee
-    let token = jwt
-      .sign({ id : _id, firstName, admin : administrator },
-        process.env.SECRET)
+    let token = jwt.sign({
+      handshake : process.env.HANDSHAKE,
+      id : _id,
+      firstName,
+      admin : administrator
+    }, process.env.SECRET)
 
     res
       .status(200)
@@ -29,7 +31,7 @@ loginRouter.post("/", async (req, res) => {
     console.log(`Error @ POST ${url}`, ex.message)
     res
       .status(401)
-      .send({ error : "Invalid username or password" })
+      .json({ error : "Invalid username or password" })
   }
 })
 

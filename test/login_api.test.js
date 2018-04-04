@@ -1,9 +1,9 @@
 const supertest = require("supertest")
 const { app, server } = require("../index")
-const jwt = require("jsonwebtoken")
 const api = supertest(app)
 const Employee = require("../model/employee")
 const helper = require("../test/api_test_helper")
+const jwt = require("jsonwebtoken")
 const url = "/api/login"
 
 if (process.env.NODE_ENV !== "test") {
@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== "test") {
 
 describe("Login API", async () => {
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await Employee.remove()
     let employees = helper.initEmployees.map(e => new Employee(e))
     await Promise.all(employees.map(e => e.save()))
@@ -23,8 +23,8 @@ describe("Login API", async () => {
 
     test("succeeds with valid credentials, and returns token as JSON with correct data", async () => {
       let username = (Math.random() < 0.5)
-        ? "spongebob"
-        : "cnorris"
+        ? "basic_user"
+        : "admin_user"
 
       let employee = await Employee.findOne({ username })
       let res = await api
@@ -41,7 +41,7 @@ describe("Login API", async () => {
     })
 
     test("fails with valid credentials, if account is disabled", async () => {
-      let username = "boaty1"
+      let username = "blocked_user"
       let employee = await Employee.findOne({ username })
 
       await api

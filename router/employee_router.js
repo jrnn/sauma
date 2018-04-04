@@ -1,22 +1,13 @@
-const bcrypt = require("bcrypt")
-const { checkEmployee, checkToken } = require("./router_helper")
 const Employee = require("../model/employee")
-const { validatePassword } = require("../util/validator")
-
 const employeeRouter = require("express").Router()
+const helper = require("./router_helper")
 const url = "/api/employees"
-
-const usernameExists = async (username) => {
-  let employees = await Employee.find({ username })
-  return (employees.length > 0)
-}
 
 employeeRouter.get("/", async (req, res) => {
   try {
-    let token = checkToken(req.token)
-    if ( !token ) return res
+    if ( !req.auth ) return res
       .status(401)
-      .json({ error : "Invalid or missing token" })
+      .json({ error : "Invalid or missing credentials" })
 
     let employees = await Employee.find()
     res.json(employees)
@@ -31,10 +22,9 @@ employeeRouter.get("/", async (req, res) => {
 
 employeeRouter.get("/:id", async (req, res) => {
   try {
-    let token = checkToken(req.token)
-    if ( !token ) return res
+    if ( !req.auth ) return res
       .status(401)
-      .json({ error : "Invalid or missing token" })
+      .json({ error : "Invalid or missing credentials" })
 
     let employee = await Employee.findById(req.params.id)
     if ( employee ) res
@@ -52,24 +42,14 @@ employeeRouter.get("/:id", async (req, res) => {
 
 employeeRouter.post("/", async (req, res) => {
   try {
-    let token = checkToken(req.token)
-    if ( !token || !token.admin ) return res
+    if ( !req.auth || !req.auth.admin ) return res
       .status(401)
-      .json({ error : "Invalid or missing token" })
+      .json({ error : "Invalid or missing credentials" })
 
-    let { employee, errors } = checkEmployee(req.body)
-    let { password } = req.body
-
-    if (await usernameExists(employee.username.trim()))
-      errors.push("Username is already in use")
-    if (!validatePassword(password))
-      errors.push("Password does not meet requirements")
-
+    let { employee, errors } = await helper
+      .validateEmployee(req.body, true)
     if (errors.length > 0)
       throw ({ message : errors })
-
-    employee.pwHash = await bcrypt
-      .hash(password, Number(process.env.BCRYPT_COST))
 
     employee = await employee.save()
     res

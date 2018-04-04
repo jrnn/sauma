@@ -1,7 +1,7 @@
 const parseErrors = (validationResult) => {
   let errors = []
 
-  Object.keys(validationResult).forEach(key =>
+  Object.keys(validationResult).map(key =>
     errors.push(validationResult[key].message))
 
   return errors

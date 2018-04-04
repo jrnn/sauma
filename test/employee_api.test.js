@@ -12,22 +12,33 @@ if (process.env.NODE_ENV !== "test") {
 
 describe("Employee API", async () => {
 
-  beforeEach(async () => {
+  let adminToken
+  let basicToken
+  let invalidToken
+
+  beforeAll(async () => {
     await Employee.remove()
-    let employees = helper.initEmployees.map(e => new Employee(e))
-    await Promise.all(employees.map(e => e.save()))
+    let initEmployees = helper.initEmployees.map(e => new Employee(e))
+    await Promise.all(initEmployees.map(e => e.save()))
+
+    let employees = await Employee.find()
+    let user = employees.find(e => e.username === "basic_user")
+
+    invalidToken = helper.createToken(user, "open_sesame")
+    basicToken = helper.createToken(user, process.env.SECRET)
+    adminToken = helper.createToken(
+      employees.find(e => e.username === "admin_user"),
+      process.env.SECRET)
   })
 
   describe(`GET ${url}`, async () => {
 
     test("returns employees in DB as JSON", async () => {
       let employeesInDb = await Employee.find()
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, process.env.SECRET)
 
       let res = await api
         .get(url)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${basicToken}`)
         .expect(200)
         .expect("content-type", /application\/json/)
 
@@ -44,12 +55,9 @@ describe("Employee API", async () => {
     })
 
     test("does not return password hashes", async () => {
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, process.env.SECRET)
-
       let res = await api
         .get(url)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${basicToken}`)
 
       res.body.map(e => expect(e.pwHash).toEqual(undefined))
     })
@@ -59,28 +67,22 @@ describe("Employee API", async () => {
         .get(url)
         .expect(401)
 
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, "incorrect_key")
-
       await api
         .get(url)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${invalidToken}`)
         .expect(401)
     })
   })
 
   describe(`GET ${url}/:id`, async () => {
 
+    let employee
+    beforeAll(async () => employee = await helper.randomEmployee())
+
     test("with valid id returns that employee as JSON", async () => {
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, process.env.SECRET)
-
-      let employees = await Employee.find()
-      let employee = employees[0]
-
       let res = await api
-        .get(`${url}/${employee.id}`)
-        .set("authorization", `bearer ${token}`)
+        .get(`${url}/${employee._id}`)
+        .set("authorization", `bearer ${basicToken}`)
         .expect(200)
         .expect("content-type", /application\/json/)
 
@@ -90,34 +92,25 @@ describe("Employee API", async () => {
     })
 
     test("fails if not authenticated or if invalid token", async () => {
-      let employees = await Employee.find()
-      let employee = employees[0]
-
       await api
         .get(`${url}/${employee.id}`)
         .expect(401)
 
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, "incorrect_key")
-
       await api
         .get(`${url}/${employee.id}`)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${invalidToken}`)
         .expect(401)
     })
 
     test("fails with invalid or nonexisting id", async () => {
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, process.env.SECRET)
-
       await api
         .get(`${url}/${new Employee()._id}`)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${basicToken}`)
         .expect(404)
 
       await api
         .get(`${url}/all_your_base_are_belong_to_us`)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${basicToken}`)
         .expect(400)
     })
   })
@@ -125,15 +118,12 @@ describe("Employee API", async () => {
   describe(`POST ${url}`, async () => {
 
     test("succeeds with valid input, and returns new employee as JSON", async () => {
-      let user = await Employee.findOne({ username : "cnorris" })
-      let token = helper.createToken(user, process.env.SECRET)
-
       let employeesBefore = await Employee.find()
       let employee = helper.newEmployee()
 
       let res = await api
         .post(url)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${adminToken}`)
         .send(employee)
         .expect(201)
         .expect("content-type", /application\/json/)
@@ -147,15 +137,12 @@ describe("Employee API", async () => {
     })
 
     test("fails if not authenticated as administrator", async () => {
-      let user = await Employee.findOne({ username : "spongebob" })
-      let token = helper.createToken(user, process.env.SECRET)
-
       let employeesBefore = await Employee.find()
       let employee = helper.newEmployee()
 
       await api
         .post(url)
-        .set("authorization", `bearer ${token}`)
+        .set("authorization", `bearer ${basicToken}`)
         .send(employee)
         .expect(401)
 
@@ -164,18 +151,16 @@ describe("Employee API", async () => {
     })
 
     test("fails with invalid input", async () => {
-      let user = await Employee.findOne({ username : "cnorris" })
-      let token = helper.createToken(user, process.env.SECRET)
       let employeesBefore = await Employee.find()
 
       await Promise
-        .all(helper.invalidEmployees.map(e => {
-          return api
+        .all(helper.invalidEmployees
+          .map(e => api
             .post(url)
-            .set("authorization", `bearer ${token}`)
+            .set("authorization", `bearer ${adminToken}`)
             .send(e)
             .expect(400)
-        }))
+          ))
 
       let employeesAfter = await Employee.find()
       expect(employeesAfter.length).toBe(employeesBefore.length)

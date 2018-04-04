@@ -1,25 +1,27 @@
+const bcrypt = require("bcrypt")
 const Employee = require("../model/employee")
-const jwt = require("jsonwebtoken")
-const { parseErrors } = require("../util/validator")
+const validator = require("../util/validator")
 
-const checkToken = (reqToken) => {
-  try {
-    let token = jwt.verify(reqToken, process.env.SECRET)
-    return ( token.id )
-      ? token
-      : undefined
-
-  } catch (ex) { return undefined }
-}
-
-const checkEmployee = (reqBody) => {
+const validateEmployee = async (reqBody, isNew = false) => {
   let employee = new Employee(reqBody)
   let validationResult = employee.validateSync()
   let errors = ( !validationResult )
     ? []
-    : parseErrors(validationResult.errors)
+    : validator.parseErrors(validationResult.errors)
+
+  if ( !isNew )
+    return { employee, errors }
+
+  let employees = await Employee.find({ username : employee.username })
+  if (employees.length > 0)
+    errors.push("Username is already in use")
+
+  if (!validator.validatePassword(reqBody.password))
+    errors.push("Password does not meet requirements")
+  employee.pwHash = await bcrypt
+    .hash(reqBody.password, Number(process.env.BCRYPT_COST))
 
   return { employee, errors }
 }
 
-module.exports = { checkEmployee, checkToken }
+module.exports = { validateEmployee }

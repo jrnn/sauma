@@ -1,7 +1,5 @@
-const { formatPhone } = require("../util/parser")
-const {
-  validateEmail, validatePassword, validatePhone
-} = require("../util/validator")
+const parser = require("../util/parser")
+const validator = require("../util/validator")
 
 describe("Custom validators", () => {
 
@@ -27,10 +25,10 @@ describe("Custom validators", () => {
     ]
 
     validEmails.forEach(email =>
-      expect(validateEmail(email)).toBe(true))
+      expect(validator.validateEmail(email)).toBe(true))
 
     invalidEmails.forEach(email =>
-      expect(validateEmail(email)).toBe(false))
+      expect(validator.validateEmail(email)).toBe(false))
   })
 
   test("for password requirements works as expected", () => {
@@ -47,10 +45,10 @@ describe("Custom validators", () => {
     ]
 
     validPasswords.forEach(password =>
-      expect(validatePassword(password)).toBe(true))
+      expect(validator.validatePassword(password)).toBe(true))
 
     invalidPasswords.forEach(password =>
-      expect(validatePassword(password)).toBe(false))
+      expect(validator.validatePassword(password)).toBe(false))
   })
 
   test("for phone numbers works as expected", () => {
@@ -67,10 +65,10 @@ describe("Custom validators", () => {
     ]
 
     validPhones.forEach(phone =>
-      expect(validatePhone(phone)).toBe(true))
+      expect(validator.validatePhone(phone)).toBe(true))
 
     invalidPhones.forEach(phone =>
-      expect(validatePhone(phone)).toBe(false))
+      expect(validator.validatePhone(phone)).toBe(false))
   })
 })
 
@@ -96,9 +94,9 @@ describe("Custom parsers/formatters", () => {
     let regExp = /(^\d{2}-\d{3}-\d{3,4}$)|(^\d{3}-\d{3}-\d{4}$)/
 
     validPhones.forEach(phone =>
-      expect(regExp.test(formatPhone(phone))).toBe(true))
+      expect(regExp.test(parser.formatPhone(phone))).toBe(true))
 
     invalidPhones.forEach(phone =>
-      expect(formatPhone(phone)).toEqual(phone))
+      expect(parser.formatPhone(phone)).toEqual(phone))
   })
 })

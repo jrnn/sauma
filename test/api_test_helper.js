@@ -1,33 +1,34 @@
+const Employee = require("../model/employee")
 const jwt = require("jsonwebtoken")
 
 const initEmployees = [
   {
-    username : "cnorris",
+    username : "admin_user",
     pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
-    firstName : "Chuck",
-    lastName : "McNorrisface",
-    email : "chuck@norris.io",
-    phone : "69-1337-666",
+    firstName : "Admin",
+    lastName : "McAdminface",
+    email : "admin@sauma.io",
+    phone : "42 1337 666",
     enabled : true,
     administrator : true
   },
   {
-    username : "spongebob",
+    username : "basic_user",
     pwHash : "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK",
-    firstName : "Sponge",
-    lastName : "McBobface",
-    email : "sponge@bob.io",
-    phone : "42-313-1337",
+    firstName : "Basic",
+    lastName : "McBasicface",
+    email : "basic@sauma.io",
+    phone : "42-31-31-337",
     enabled : true,
     administrator : false
   },
   {
-    username : "boaty1",
+    username : "blocked_user",
     pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
-    firstName : "Boaty",
-    lastName : "McBoatface",
-    email : "boaty@boats.io",
-    phone : "313-666-1337",
+    firstName : "Blocked",
+    lastName : "McBlockface",
+    email : "blocked@sauma.io",
+    phone : "313 6661337",
     enabled : false,
     administrator : false
   }
@@ -46,9 +47,9 @@ const invalidCredentials = [
     username : "jonne",
     password : "Qwerty_123"
   },
-  { username : "spongebob" },
+  { username : "basic_user" },
   {
-    username : "spongebob",
+    username : "basic_user",
     password : "trustno1"
   }
 ]
@@ -71,7 +72,7 @@ const invalidEmployees = [
     phone : "0401234567"
   },
   {
-    username : "spongebob",
+    username : "  basic_user",
     password : "Qwerty_123",
     firstName : "Jonne",
     lastName : "McMopoface",
@@ -141,33 +142,42 @@ const invalidEmployees = [
 
 const newEmployees = [
   {
-    username : "batman",
+    username : "boaty",
     password : "Qwerty_123",
-    firstName : "Batman",
-    lastName : "McRobinface",
-    email : "batman@robin.io",
-    phone : "040-123 4567"
+    firstName : "Boaty",
+    lastName : "McBoatface",
+    email : "boaty@sauma.io",
+    phone : "040-123 45 67"
   },
   {
     username : "beardy",
     password : "Qwerty_123",
     firstName : "Beardy",
     lastName : "McBeardface",
-    email : "beardy@goat.ee",
+    email : "beardy@sauma.io",
     phone : "04 01 23 45 67"
   },
   {
-    username : "heman",
+    username : "chucky",
     password : "Qwerty_123",
-    firstName : "Heman",
-    lastName : "McSkeletorface",
-    email : "heman@gmail.com",
+    firstName : "Chuck",
+    lastName : "McNorrisface",
+    email : "cnorris@sauma.io",
     phone : "0401234567"
+  },
+  {
+    username : "the_dolan",
+    password : "Qwerty_123",
+    firstName : "Dolan",
+    lastName : "McDuckface",
+    email : "dolan@sauma.io",
+    phone : "0403131337"
   }
 ]
 
 const createToken = (employee, key) =>
   jwt.sign({
+    handshake : process.env.HANDSHAKE,
     id : employee._id,
     username : employee.username,
     admin : employee.administrator
@@ -175,8 +185,14 @@ const createToken = (employee, key) =>
 
 const newEmployee = () => newEmployees[randomIdx(newEmployees.length)]
 
+const randomEmployee = async () => {
+  let employees = await Employee.find()
+  return employees[randomIdx(employees.length)]
+}
+
 const randomIdx = (n) => Math.floor(Math.random() * n)
 
 module.exports = {
-  createToken, initEmployees, invalidCredentials, invalidEmployees, newEmployee
+  createToken, invalidCredentials,
+  initEmployees, invalidEmployees, newEmployee, randomEmployee
 }
