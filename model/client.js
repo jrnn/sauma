@@ -3,21 +3,20 @@ const parser = require("../util/parser")
 const validator = require("../util/validator")
 
 const schema = new mongoose.Schema({
-  username : {
+  legalEntity : {
     type : String,
-    required : [ true, "Username missing" ],
-    minlength : [ 4, "Username must be at least 4 characters long" ],
+    required : [ true, "Legal entity name missing" ],
     trim : true
   },
-  pwHash : { type : String },
-  firstName : {
+  businessId : {
     type : String,
-    required : [ true, "First name missing" ],
+    required : [ true, "Business ID missing" ],
     trim : true
+    // validation possible for Finnish Y-tunnus at least ...
   },
-  lastName : {
+  contactPerson : {
     type : String,
-    required : [ true, "Last name missing" ],
+    required : [ true, "Contact person missing" ],
     trim : true
   },
   email : {
@@ -48,34 +47,21 @@ const schema = new mongoose.Schema({
     country : String
   },
   */
-  enabled : {
-    type : Boolean,
-    default : true
-  },
-  administrator : {
-    type : Boolean,
-    default : false
-  },
   createdOn : {
     type : Date,
     default : Date.now
   }
   /*  possible additions
-   *   - more detailed authorities/privileges (array of Strings?)
-   *   - labour cost/hour
-   *   - "perehdytykset" (array of Site ObjectIds?)
-   *   - associated Sites (-- '' --)
+   *   - documentation (e.g. contracts)
+   *   - saumapojat client manager (--> Employee)
+   *   - associated Sites (array of Site ObjectIds)
    */
 })
 
 schema.options.toJSON = {
-  transform : (employee) => {
-    employee = parser.toJSONCommon(employee._doc)
-    delete employee.pwHash
-    return employee
-  }
+  transform : (client) => parser.toJSONCommon(client._doc)
 }
 
-const Employee = mongoose.model("Employee", schema)
+const Client = mongoose.model("Client", schema)
 
-module.exports = Employee
+module.exports = Client

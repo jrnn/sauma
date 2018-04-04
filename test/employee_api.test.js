@@ -12,23 +12,11 @@ if (process.env.NODE_ENV !== "test") {
 
 describe("Employee API", async () => {
 
-  let adminToken
-  let basicToken
-  let invalidToken
+  let tokens
 
   beforeAll(async () => {
-    await Employee.remove()
-    let initEmployees = helper.initEmployees.map(e => new Employee(e))
-    await Promise.all(initEmployees.map(e => e.save()))
-
-    let employees = await Employee.find()
-    let user = employees.find(e => e.username === "basic_user")
-
-    invalidToken = helper.createToken(user, "open_sesame")
-    basicToken = helper.createToken(user, process.env.SECRET)
-    adminToken = helper.createToken(
-      employees.find(e => e.username === "admin_user"),
-      process.env.SECRET)
+    await helper.initEmployees()
+    tokens = await helper.initTokens()
   })
 
   describe(`GET ${url}`, async () => {
@@ -38,7 +26,7 @@ describe("Employee API", async () => {
 
       let res = await api
         .get(url)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
         .expect(200)
         .expect("content-type", /application\/json/)
 
@@ -57,7 +45,7 @@ describe("Employee API", async () => {
     test("does not return password hashes", async () => {
       let res = await api
         .get(url)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
 
       res.body.map(e => expect(e.pwHash).toEqual(undefined))
     })
@@ -69,7 +57,7 @@ describe("Employee API", async () => {
 
       await api
         .get(url)
-        .set("authorization", `bearer ${invalidToken}`)
+        .set("authorization", `bearer ${tokens.invalid}`)
         .expect(401)
     })
   })
@@ -82,7 +70,7 @@ describe("Employee API", async () => {
     test("with valid id returns that employee as JSON", async () => {
       let res = await api
         .get(`${url}/${employee._id}`)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
         .expect(200)
         .expect("content-type", /application\/json/)
 
@@ -98,19 +86,19 @@ describe("Employee API", async () => {
 
       await api
         .get(`${url}/${employee.id}`)
-        .set("authorization", `bearer ${invalidToken}`)
+        .set("authorization", `bearer ${tokens.invalid}`)
         .expect(401)
     })
 
     test("fails with invalid or nonexisting id", async () => {
       await api
         .get(`${url}/${new Employee()._id}`)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
         .expect(404)
 
       await api
         .get(`${url}/all_your_base_are_belong_to_us`)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
         .expect(400)
     })
   })
@@ -123,7 +111,7 @@ describe("Employee API", async () => {
 
       let res = await api
         .post(url)
-        .set("authorization", `bearer ${adminToken}`)
+        .set("authorization", `bearer ${tokens.admin}`)
         .send(employee)
         .expect(201)
         .expect("content-type", /application\/json/)
@@ -136,13 +124,13 @@ describe("Employee API", async () => {
       expect(res.body.email).toEqual(employee.email)
     })
 
-    test("fails if not authenticated as administrator", async () => {
+    test("fails if not authenticated as admin", async () => {
       let employeesBefore = await Employee.find()
       let employee = helper.newEmployee()
 
       await api
         .post(url)
-        .set("authorization", `bearer ${basicToken}`)
+        .set("authorization", `bearer ${tokens.basic}`)
         .send(employee)
         .expect(401)
 
@@ -157,7 +145,7 @@ describe("Employee API", async () => {
         .all(helper.invalidEmployees
           .map(e => api
             .post(url)
-            .set("authorization", `bearer ${adminToken}`)
+            .set("authorization", `bearer ${tokens.admin}`)
             .send(e)
             .expect(400)
           ))

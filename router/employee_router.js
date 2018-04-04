@@ -7,7 +7,7 @@ employeeRouter.get("/", async (req, res) => {
   try {
     if ( !req.auth ) return res
       .status(401)
-      .json({ error : "Invalid or missing credentials" })
+      .json({ error : "Invalid or inadequate credentials" })
 
     let employees = await Employee.find()
     res.json(employees)
@@ -24,7 +24,7 @@ employeeRouter.get("/:id", async (req, res) => {
   try {
     if ( !req.auth ) return res
       .status(401)
-      .json({ error : "Invalid or missing credentials" })
+      .json({ error : "Invalid or inadequate credentials" })
 
     let employee = await Employee.findById(req.params.id)
     if ( employee ) res
@@ -44,7 +44,7 @@ employeeRouter.post("/", async (req, res) => {
   try {
     if ( !req.auth || !req.auth.admin ) return res
       .status(401)
-      .json({ error : "Invalid or missing credentials" })
+      .json({ error : "Invalid or inadequate credentials" })
 
     let { employee, errors } = await helper
       .validateEmployee(req.body, true)

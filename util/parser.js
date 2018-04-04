@@ -19,4 +19,13 @@ const formatPhone = (phone) => {
   }
 }
 
-module.exports = { formatPhone }
+const toJSONCommon = (doc) => {
+  doc.id = doc._id
+
+  delete doc._id
+  delete doc.__v
+
+  return doc
+}
+
+module.exports = { formatPhone, toJSONCommon }

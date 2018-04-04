@@ -23,8 +23,10 @@ app.use(middleWare.tokenParser)
 app.use(middleWare.logger)
 
 // routers
+const clientRouter = require("./router/client_router")
 const employeeRouter = require("./router/employee_router")
 const loginRouter = require("./router/login_router")
+app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
 app.use("/api/login", loginRouter)
 

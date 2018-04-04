@@ -13,11 +13,7 @@ if (process.env.NODE_ENV !== "test") {
 
 describe("Login API", async () => {
 
-  beforeAll(async () => {
-    await Employee.remove()
-    let employees = helper.initEmployees.map(e => new Employee(e))
-    await Promise.all(employees.map(e => e.save()))
-  })
+  beforeAll(async () => await helper.initEmployees())
 
   describe(`POST ${url}`, async () => {
 
