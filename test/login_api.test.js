@@ -48,15 +48,14 @@ describe("Login API", async () => {
       expect(employee.enabled).toBe(false)
     })
 
-    test("fails with invalid credentials", async () => {
+    test("fails with invalid credentials", async () =>
       await Promise
         .all(helper.invalidCredentials
           .map(c => api
             .post(url)
             .send(c)
             .expect(401)
-          ))
-    })
+          )))
   })
 })
 

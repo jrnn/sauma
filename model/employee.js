@@ -80,6 +80,10 @@ schema.options.toJSON = {
   }
 }
 
+schema.statics.testAttrs = [
+  "username", "firstName", "lastName", "email", "phone"
+]
+
 const Employee = mongoose.model("Employee", schema)
 
 module.exports = Employee

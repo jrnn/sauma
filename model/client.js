@@ -67,6 +67,10 @@ schema.options.toObject = {
   transform : (doc, ret) => parser.trimDbObject(ret)
 }
 
+schema.statics.testAttrs = [
+  "legalEntity", "businessId", "contactPerson", "email", "phone"
+]
+
 const Client = mongoose.model("Client", schema)
 
 module.exports = Client

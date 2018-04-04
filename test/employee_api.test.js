@@ -2,7 +2,8 @@ const supertest = require("supertest")
 const { app, server } = require("../index")
 const api = supertest(app)
 const Employee = require("../model/employee")
-const helper = require("../test/api_test_helper")
+const helper = require("./api_test_helper")
+const standardTests = require("./standard_tests")
 const url = "/api/employees"
 
 if (process.env.NODE_ENV !== "test") {
@@ -21,138 +22,70 @@ describe("Employee API", async () => {
 
   describe(`GET ${url}`, async () => {
 
-    test("returns employees in DB as JSON", async () => {
-      let employeesInDb = await Employee.find()
+    test("returns all employees in DB as JSON", async () =>
+      await standardTests
+        .getReturnsAllAsJSON(api, Employee, url, tokens.basic))
 
-      let res = await api
-        .get(url)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(200)
-        .expect("content-type", /application\/json/)
-
-      let usernames = res.body.map(e => e.username)
-      let lastNames = res.body.map(e => e.lastName)
-      let emails = res.body.map(e => e.email)
-
-      employeesInDb.forEach(e => {
-        expect(usernames).toContain(e.username)
-        expect(lastNames).toContain(e.lastName)
-        expect(emails).toContain(e.email)
-      })
-      expect(res.body.length).toBe(employeesInDb.length)
-    })
+    test("fails if not authed or if invalid token", async () =>
+      await Promise
+        .all([ undefined, tokens.invalid ]
+          .map(token => standardTests
+            .getReturnsStatusCode(api, url, 401, token))))
 
     test("does not return password hashes", async () => {
       let res = await api
         .get(url)
         .set("authorization", `bearer ${tokens.basic}`)
 
-      res.body.map(e => expect(e.pwHash).toEqual(undefined))
-    })
-
-    test("fails if not authenticated or if invalid token", async () => {
-      await api
-        .get(url)
-        .expect(401)
-
-      await api
-        .get(url)
-        .set("authorization", `bearer ${tokens.invalid}`)
-        .expect(401)
+      res.body.map(e =>
+        expect(e.pwHash).toEqual(undefined))
     })
   })
 
   describe(`GET ${url}/:id`, async () => {
 
     let employee
-    beforeAll(async () => employee = await helper.randomEmployee())
+    beforeAll(async () =>
+      employee = await helper.randomEmployee())
 
-    test("with valid id returns that employee as JSON", async () => {
-      let res = await api
-        .get(`${url}/${employee.id}`)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(200)
-        .expect("content-type", /application\/json/)
+    test("with valid id returns that employee as JSON", async () =>
+      await standardTests
+        .getReturnsOneAsJSON(api, Employee, employee, url, tokens.basic))
 
-      expect(res.body.username).toEqual(employee.username)
-      expect(res.body.lastName).toEqual(employee.lastName)
-      expect(res.body.email).toEqual(employee.email)
-    })
-
-    test("fails if not authenticated or if invalid token", async () => {
-      await api
-        .get(`${url}/${employee.id}`)
-        .expect(401)
-
-      await api
-        .get(`${url}/${employee.id}`)
-        .set("authorization", `bearer ${tokens.invalid}`)
-        .expect(401)
-    })
+    test("fails if not authed", async () =>
+      await Promise
+        .all([ undefined, tokens.invalid ]
+          .map(token => standardTests
+            .getReturnsStatusCode(api, `${url}/${employee.id}`, 401, token))))
 
     test("fails with invalid or nonexisting id", async () => {
-      await api
-        .get(`${url}/${new Employee().id}`)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(404)
+      let invalidPath = `${url}/${new Employee().id}`
+      await standardTests
+        .getReturnsStatusCode(api, invalidPath, 404, tokens.basic)
 
-      await api
-        .get(`${url}/all_your_base_are_belong_to_us`)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(400)
+      invalidPath = `${url}/all_your_base_are_belong_to_us`
+      await standardTests
+        .getReturnsStatusCode(api, invalidPath, 400, tokens.basic)
     })
   })
 
   describe(`POST ${url}`, async () => {
 
-    test("succeeds with valid input, and returns new employee as JSON", async () => {
-      let employeesBefore = await Employee.find()
-      let employee = helper.newEmployee()
+    test("succeeds with valid input, and returns new employee as JSON", async () =>
+      await standardTests.postReturnsNewAsJson(
+        api, Employee, helper.newEmployee(), url, tokens.admin))
 
-      let res = await api
-        .post(url)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .send(employee)
-        .expect(201)
-        .expect("content-type", /application\/json/)
-
-      let employeesAfter = await Employee.find()
-      expect(employeesAfter.length).toBe(employeesBefore.length + 1)
-
-      expect(res.body.username).toEqual(employee.username)
-      expect(res.body.lastName).toEqual(employee.lastName)
-      expect(res.body.email).toEqual(employee.email)
-    })
-
-    test("fails if not authenticated as admin", async () => {
-      let employeesBefore = await Employee.find()
-      let employee = helper.newEmployee()
-
-      await api
-        .post(url)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .send(employee)
-        .expect(401)
-
-      let employeesAfter = await Employee.find()
-      expect(employeesAfter.length).toBe(employeesBefore.length)
-    })
-
-    test("fails with invalid input", async () => {
-      let employeesBefore = await Employee.find()
-
+    test("fails if not authed as admin", async () => {
+      let employees = [ helper.newEmployee() ]
       await Promise
-        .all(helper.invalidEmployees
-          .map(e => api
-            .post(url)
-            .set("authorization", `bearer ${tokens.admin}`)
-            .send(e)
-            .expect(400)
-          ))
-
-      let employeesAfter = await Employee.find()
-      expect(employeesAfter.length).toBe(employeesBefore.length)
+        .all([ undefined, tokens.invalid, tokens.basic ]
+          .map(token => standardTests
+            .postFailsWithStatusCode(api, Employee, employees, url, 401, token)))
     })
+
+    test("fails with invalid input", async () =>
+      await standardTests.postFailsWithStatusCode(
+        api, Employee, helper.invalidEmployees, url, 400, tokens.admin))
   })
 })
 

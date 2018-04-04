@@ -2,7 +2,8 @@ const supertest = require("supertest")
 const { app, server } = require("../index")
 const api = supertest(app)
 const Client = require("../model/client")
-const helper = require("../test/api_test_helper")
+const helper = require("./api_test_helper")
+const standardTests = require("./standard_tests")
 const url = "/api/clients"
 
 if (process.env.NODE_ENV !== "test") {
@@ -16,146 +17,67 @@ describe("Client API", async () => {
 
   beforeAll(async () => {
     await helper.initEmployees()
-    tokens = await helper.initTokens()
     await helper.initClients()
+    tokens = await helper.initTokens()
   })
 
   describe(`GET ${url}`, async () => {
 
-    test("returns clients in DB as JSON", async () => {
-      let clientsInDb = await Client.find()
+    test("returns all clients in DB as JSON", async () =>
+      await standardTests
+        .getReturnsAllAsJSON(api, Client, url, tokens.admin))
 
-      let res = await api
-        .get(url)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .expect(200)
-        .expect("content-type", /application\/json/)
-
-      let legalEntities = res.body.map(c => c.legalEntity)
-      let contactPersons = res.body.map(c => c.contactPerson)
-      let businessIds = res.body.map(c => c.businessId)
-
-      clientsInDb.forEach(c => {
-        expect(legalEntities).toContain(c.legalEntity)
-        expect(contactPersons).toContain(c.contactPerson)
-        expect(businessIds).toContain(c.businessId)
-      })
-      expect(res.body.length).toBe(clientsInDb.length)
-    })
-
-    test("fails if not authenticated as admin, or if invalid token", async () => {
-      await api
-        .get(url)
-        .expect(401)
-
-      await api
-        .get(url)
-        .set("authorization", `bearer ${tokens.invalid}`)
-        .expect(401)
-
-      await api
-        .get(url)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(401)
-    })
+    test("fails if not authed as admin, or if invalid token", async () =>
+      await Promise
+        .all([ undefined, tokens.invalid, tokens.basic ]
+          .map(token => standardTests
+            .getReturnsStatusCode(api, url, 401, token))))
   })
 
   describe(`GET ${url}/:id`, async () => {
 
     let client
-    beforeAll(async () => client = await helper.randomClient())
+    beforeAll(async () =>
+      client = await helper.randomClient())
 
-    test("with valid id returns that client as JSON", async () => {
-      let res = await api
-        .get(`${url}/${client.id}`)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .expect(200)
-        .expect("content-type", /application\/json/)
+    test("with valid id returns that client as JSON", async () =>
+      await standardTests
+        .getReturnsOneAsJSON(api, Client, client, url, tokens.admin))
 
-      expect(res.body.legalEntity).toEqual(client.legalEntity)
-      expect(res.body.contactPerson).toEqual(client.contactPerson)
-      expect(res.body.businessId).toEqual(client.businessId)
-    })
-
-    test("fails if not authenticated as admin, or if invalid token", async () => {
-      await api
-        .get(`${url}/${client.id}`)
-        .expect(401)
-
-      await api
-        .get(`${url}/${client.id}`)
-        .set("authorization", `bearer ${tokens.invalid}`)
-        .expect(401)
-
-      await api
-        .get(`${url}/${client.id}`)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .expect(401)
-    })
+    test("fails if not authed as admin", async () =>
+      await Promise
+        .all([ undefined, tokens.invalid, tokens.basic ]
+          .map(token => standardTests
+            .getReturnsStatusCode(api, `${url}/${client.id}`, 401, token))))
 
     test("fails with invalid or nonexisting id", async () => {
-      await api
-        .get(`${url}/${new Client().id}`)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .expect(404)
+      let invalidPath = `${url}/${new Client().id}`
+      await standardTests
+        .getReturnsStatusCode(api, invalidPath, 404, tokens.admin)
 
-      await api
-        .get(`${url}/all_your_base_are_belong_to_us`)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .expect(400)
+      invalidPath = `${url}/all_your_base_are_belong_to_us`
+      await standardTests
+        .getReturnsStatusCode(api, invalidPath, 400, tokens.admin)
     })
   })
 
   describe(`POST ${url}`, async () => {
 
-    test("succeeds with valid input, and returns new client as JSON", async () => {
-      let clientsBefore = await Client.find()
-      let client = helper.newClient()
+    test("succeeds with valid input, and returns new client as JSON", async () =>
+      await standardTests.postReturnsNewAsJson(
+        api, Client, helper.newClient(), url, tokens.admin))
 
-      let res = await api
-        .post(url)
-        .set("authorization", `bearer ${tokens.admin}`)
-        .send(client)
-        .expect(201)
-        .expect("content-type", /application\/json/)
-
-      let clientsAfter = await Client.find()
-      expect(clientsAfter.length).toBe(clientsBefore.length + 1)
-
-      expect(res.body.legalEntity).toEqual(client.legalEntity)
-      expect(res.body.contactPerson).toEqual(client.contactPerson)
-      expect(res.body.businessId).toEqual(client.businessId)
-    })
-
-    test("fails if not authenticated as admin", async () => {
-      let clientsBefore = await Client.find()
-      let client = helper.newClient()
-
-      await api
-        .post(url)
-        .set("authorization", `bearer ${tokens.basic}`)
-        .send(client)
-        .expect(401)
-
-      let clientsAfter = await Client.find()
-      expect(clientsAfter.length).toBe(clientsBefore.length)
-    })
-
-    test("fails with invalid input", async () => {
-      let clientsBefore = await Client.find()
-
+    test("fails if not authed as admin", async () => {
+      let clients = [ helper.newClient() ]
       await Promise
-        .all(helper.invalidClients
-          .map(c => api
-            .post(url)
-            .set("authorization", `bearer ${tokens.admin}`)
-            .send(c)
-            .expect(400)
-          ))
-
-      let clientsAfter = await Client.find()
-      expect(clientsAfter.length).toBe(clientsBefore.length)
+        .all([ undefined, tokens.invalid, tokens.basic ]
+          .map(token => standardTests
+            .postFailsWithStatusCode(api, Client, clients, url, 401, token)))
     })
+
+    test("fails with invalid input", async () =>
+      await standardTests.postFailsWithStatusCode(
+        api, Client, helper.invalidClients, url, 400, tokens.admin))
   })
 })
 
