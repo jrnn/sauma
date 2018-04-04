@@ -16,8 +16,8 @@ describe("Client API", async () => {
 
   beforeAll(async () => {
     await helper.initEmployees()
-    await helper.initClients()
     tokens = await helper.initTokens()
+    await helper.initClients()
   })
 
   describe(`GET ${url}`, async () => {
@@ -57,6 +57,52 @@ describe("Client API", async () => {
         .get(url)
         .set("authorization", `bearer ${tokens.basic}`)
         .expect(401)
+    })
+  })
+
+  describe(`GET ${url}/:id`, async () => {
+
+    let client
+    beforeAll(async () => client = await helper.randomClient())
+
+    test("with valid id returns that client as JSON", async () => {
+      let res = await api
+        .get(`${url}/${client.id}`)
+        .set("authorization", `bearer ${tokens.admin}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.legalEntity).toEqual(client.legalEntity)
+      expect(res.body.contactPerson).toEqual(client.contactPerson)
+      expect(res.body.businessId).toEqual(client.businessId)
+    })
+
+    test("fails if not authenticated as admin, or if invalid token", async () => {
+      await api
+        .get(`${url}/${client.id}`)
+        .expect(401)
+
+      await api
+        .get(`${url}/${client.id}`)
+        .set("authorization", `bearer ${tokens.invalid}`)
+        .expect(401)
+
+      await api
+        .get(`${url}/${client.id}`)
+        .set("authorization", `bearer ${tokens.basic}`)
+        .expect(401)
+    })
+
+    test("fails with invalid or nonexisting id", async () => {
+      await api
+        .get(`${url}/${new Client().id}`)
+        .set("authorization", `bearer ${tokens.admin}`)
+        .expect(404)
+
+      await api
+        .get(`${url}/all_your_base_are_belong_to_us`)
+        .set("authorization", `bearer ${tokens.admin}`)
+        .expect(400)
     })
   })
 

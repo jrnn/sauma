@@ -50,6 +50,11 @@ const schema = new mongoose.Schema({
   createdOn : {
     type : Date,
     default : Date.now
+  },
+  lastEditedBy : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Employee",
+    required : true
   }
   /*  possible additions
    *   - documentation (e.g. contracts)
@@ -58,8 +63,8 @@ const schema = new mongoose.Schema({
    */
 })
 
-schema.options.toJSON = {
-  transform : (client) => parser.toJSONCommon(client._doc)
+schema.options.toObject = {
+  transform : (doc, ret) => parser.trimDbObject(ret)
 }
 
 const Client = mongoose.model("Client", schema)

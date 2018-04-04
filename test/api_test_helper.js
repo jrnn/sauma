@@ -3,27 +3,31 @@ const Employee = require("../model/employee")
 const jwt = require("jsonwebtoken")
 
 const initClients = async () => {
+  let user = await Employee.findOne({ username : "admin_user" })
   let init = [
     {
       legalEntity : "ACME Explosives Inc.",
       businessId : "1234567-8",
       contactPerson : "Acme McExplosiveface",
       email : "acme@explosives.inc",
-      phone : "42 313 666"
+      phone : "42 313 666",
+      lastEditedBy : user.id
     },
     {
       legalEntity : "Foobar Solutions LLC",
       businessId : "1123581-3",
       contactPerson : "Foo McBarface",
       email : "foo@bar.io",
-      phone : "42-3131337"
+      phone : "42-3131337",
+      lastEditedBy : user.id
     },
     {
       legalEntity : "EVVK Yhtiöt Oyj",
       businessId : "2481632-6",
       contactPerson : "Evvk McEvoface",
       email : "info@evvk.fi",
-      phone : "0406661337"
+      phone : "0406661337",
+      lastEditedBy : user.id
     }
   ]
   await Client.remove()
@@ -303,7 +307,7 @@ const newEmployees = [
 const createToken = (employee, key) =>
   jwt.sign({
     handshake : process.env.HANDSHAKE,
-    id : employee._id,
+    id : employee.id,
     username : employee.username,
     admin : employee.administrator
   }, key)
@@ -311,6 +315,11 @@ const createToken = (employee, key) =>
 const newClient = () => newClients[randomIdx(newClients.length)]
 
 const newEmployee = () => newEmployees[randomIdx(newEmployees.length)]
+
+const randomClient = async () => {
+  let clients = await Client.find()
+  return clients[randomIdx(clients.length)]
+}
 
 const randomEmployee = async () => {
   let employees = await Employee.find()
@@ -323,6 +332,6 @@ module.exports = {
   initClients, initEmployees, initTokens,
   invalidClients, invalidCredentials, invalidEmployees,
   newClient, newEmployee,
-  randomEmployee,
+  randomClient, randomEmployee,
   createToken
 }

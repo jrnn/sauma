@@ -19,13 +19,13 @@ const formatPhone = (phone) => {
   }
 }
 
-const toJSONCommon = (doc) => {
-  doc.id = doc._id
+const trimDbObject = (obj) => {
+  obj.id = obj._id
 
-  delete doc._id
-  delete doc.__v
+  delete obj._id
+  delete obj.__v
 
-  return doc
+  return obj
 }
 
-module.exports = { formatPhone, toJSONCommon }
+module.exports = { formatPhone, trimDbObject }

@@ -69,7 +69,7 @@ describe("Employee API", async () => {
 
     test("with valid id returns that employee as JSON", async () => {
       let res = await api
-        .get(`${url}/${employee._id}`)
+        .get(`${url}/${employee.id}`)
         .set("authorization", `bearer ${tokens.basic}`)
         .expect(200)
         .expect("content-type", /application\/json/)
@@ -92,7 +92,7 @@ describe("Employee API", async () => {
 
     test("fails with invalid or nonexisting id", async () => {
       await api
-        .get(`${url}/${new Employee()._id}`)
+        .get(`${url}/${new Employee().id}`)
         .set("authorization", `bearer ${tokens.basic}`)
         .expect(404)
 

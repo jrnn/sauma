@@ -15,10 +15,10 @@ loginRouter.post("/", async (req, res) => {
     if ( !(employee && pwCheck) || !employee.enabled )
       throw new Error("Login attempt with wrong credentials")
 
-    let { _id, firstName, administrator } = employee
+    let { id, firstName, administrator } = employee
     let token = jwt.sign({
       handshake : process.env.HANDSHAKE,
-      id : _id,
+      id,
       firstName,
       admin : administrator
     }, process.env.SECRET)

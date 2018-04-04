@@ -31,7 +31,7 @@ describe("Login API", async () => {
 
       let token = jwt.verify(res.body.token, process.env.SECRET)
 
-      expect(employee._id.toString()).toEqual(token.id.toString())
+      expect(employee.id.toString()).toEqual(token.id.toString())
       expect(employee.firstName).toEqual(token.firstName)
       expect(employee.administrator).toEqual(token.admin)
     })

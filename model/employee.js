@@ -68,11 +68,15 @@ const schema = new mongoose.Schema({
    */
 })
 
+schema.options.toObject = {
+  transform : (doc, ret) => parser.trimDbObject(ret)
+}
+
 schema.options.toJSON = {
-  transform : (employee) => {
-    employee = parser.toJSONCommon(employee._doc)
-    delete employee.pwHash
-    return employee
+  transform : (doc, ret) => {
+    ret = parser.trimDbObject(ret)
+    delete ret.pwHash
+    return ret
   }
 }
 
