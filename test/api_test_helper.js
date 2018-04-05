@@ -17,6 +17,7 @@ const initClients = async () => {
   await Client.remove()
   await Promise
     .all(data.initClients(user.id)
+      .map(c => c = { ...c, address : randomAddress() })
       .map(c => new Client(c)).map(c => c.save()))
 }
 
@@ -24,6 +25,7 @@ const initEmployees = async () => {
   await Employee.remove()
   await Promise
     .all(data.initEmployees()
+      .map(e => e = { ...e, address : randomAddress() })
       .map(e => new Employee(e)).map(e => e.save()))
 }
 
@@ -45,13 +47,20 @@ const invalidEmployees = data.invalidEmployees
 
 const newClient = () => {
   let i = randomIdx(data.newClients.length)
-  return data.newClients.splice(i, 1)[0]
+  let client = data.newClients.splice(i, 1)[0]
+  client.address = randomAddress()
+  return client
 }
 
 const newEmployee = () => {
   let i = randomIdx(data.newEmployees.length)
-  return data.newEmployees.splice(i, 1)[0]
+  let employee = data.newEmployees.splice(i, 1)[0]
+  employee.address = randomAddress()
+  return employee
 }
+
+const randomAddress = () =>
+  data.validAddresses[randomIdx(data.validAddresses.length)]
 
 const randomClient = async () => {
   let clients = await Client.find()
@@ -70,5 +79,5 @@ module.exports = {
   initClients, initEmployees, initTokens,
   invalidClients, invalidCredentials, invalidEmployees,
   newClient, newEmployee,
-  randomClient, randomEmployee,
+  randomAddress, randomClient, randomEmployee,
 }

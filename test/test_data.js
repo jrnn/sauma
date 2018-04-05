@@ -107,6 +107,12 @@ const invalidClients = [
     businessId : "0000000-0",
     contactPerson : "Jonne McMopoface",
     email : "jonne@mopo.es",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    }
   },
   {
     legalEntity : "Jonnen Mopopaja Oy",
@@ -114,6 +120,18 @@ const invalidClients = [
     contactPerson : "Jonne McMopoface",
     email : "jonne@mopo.es",
     phone : "C4LL-M3_N0W"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "0000000-0",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567",
+    address : {
+      streetExt : "Mopo avenue 13 ES",
+      city : "Kerava",
+      country : "Finland"
+    }
   }
 ]
 
@@ -212,6 +230,12 @@ const invalidEmployees = [
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    }
   },
   {
     username : "jonne",
@@ -220,6 +244,19 @@ const invalidEmployees = [
     lastName : "McMopoface",
     email : "jonne@mopo.es",
     phone : "C4LL-M3-N0W"
+  },
+  {
+    username : "jonne",
+    password : "Qwerty_123",
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567",
+    address : {
+      streetExt : "Mopo avenue 13 ES",
+      city : "Kerava",
+      country : "Finland"
+    }
   }
 ]
 
@@ -282,7 +319,68 @@ const newEmployees = [
   }
 ]
 
+const validAddresses = [
+  {
+    name : "Dolan Duck",
+    street : "1313 Webfoot Walk",
+    zipCode : "112358",
+    city : "Duckburg",
+    country : "Disneyland"
+  },
+  {
+    name : "Fred Flintstone",
+    street : "301 Cobblestone Way",
+    zipCode : "70777",
+    city : "Bedrock",
+    country : "Stone Age"
+  },
+  {
+    name : "Homer Simpson",
+    street : "740 Evergreen Terrace",
+    zipCode : "112358",
+    city : "Springfield",
+    country : "United States of America"
+  },
+  {
+    name : "Mr. Bean",
+    street : "2-12 Arbour Road",
+    streetExt : "Highbury",
+    zipCode : "112358",
+    city : "London",
+    country : "United Kingdom"
+  },
+  {
+    name : "Peter Griffin",
+    street : "31 Spooner Street",
+    zipCode : "112358",
+    city : "Quahog",
+    country : "United States of America"
+  },
+  {
+    name : "Sherlock Holmes",
+    street : "221B Baker Street",
+    zipCode : "112358",
+    city : "London",
+    country : "United Kingdom"
+  },
+  {
+    name : "Spongebob Squarepants",
+    street : "124 Conch Street",
+    zipCode : "112358",
+    city : "Bikini Bottom",
+    country : "Pacific Ocean"
+  },
+  {
+    name : "Tyler Durden",
+    street : "420 Paper Street",
+    zipCode : "19886",
+    city : "Wilmington",
+    country : "United States of America"
+  }
+]
+
 module.exports = {
+  validAddresses,
   initClients, initEmployees,
   invalidClients, invalidCredentials, invalidEmployees,
   newClients, newEmployees

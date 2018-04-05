@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const parser = require("../util/parser")
+const schemas = require("./shared_schemas")
 const validator = require("../util/validator")
 
 const schema = new mongoose.Schema({
@@ -39,15 +40,7 @@ const schema = new mongoose.Schema({
       message : "Invalid phone number"
     }
   },
-  /*
-  address : {
-    street : String,
-    streetExt : String,
-    zipCode : String,
-    city : String,
-    country : String
-  },
-  */
+  address : { type : schemas.address },
   enabled : {
     type : Boolean,
     default : true

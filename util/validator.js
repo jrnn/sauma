@@ -1,8 +1,9 @@
-const parseErrors = (validationResult) => {
+const parseErrors = (validationErrors) => {
   let errors = []
 
-  Object.keys(validationResult).map(key =>
-    errors.push(validationResult[key].message))
+  Object.keys(validationErrors)
+    .filter(key => validationErrors[key].path)
+    .map(key => errors.push(validationErrors[key].message))
 
   return errors
 }
