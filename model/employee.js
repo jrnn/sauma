@@ -73,8 +73,17 @@ schema.options.toJSON = {
   }
 }
 
+schema.statics.overwrite = (data, employee) => {
+  let newValues = parser.filterByKeys([
+    "administrator", "address", "email", "enabled",
+    "firstName", "lastName", "phone", "username"
+  ], data)
+  Object.keys(newValues)
+    .map(key => employee[key] = newValues[key])
+}
+
 schema.statics.testAttrs = [
-  "username", "firstName", "lastName", "email", "phone"
+  "email", "firstName", "lastName", "phone", "username"
 ]
 
 const Employee = mongoose.model("Employee", schema)

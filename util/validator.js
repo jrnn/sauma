@@ -1,13 +1,3 @@
-const parseErrors = (validationErrors) => {
-  let errors = []
-
-  Object.keys(validationErrors)
-    .filter(key => validationErrors[key].path)
-    .map(key => errors.push(validationErrors[key].message))
-
-  return errors
-}
-
 const validateEmail = (email) => {
   let regExp = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-z0-9-]+(\.[a-z0-9]+)*(\.[a-z]{2,})$/
   return regExp.test(String(email).trim().toLowerCase())
@@ -27,5 +17,5 @@ const validatePhone = (phone) => {
 }
 
 module.exports = {
-  parseErrors, validateEmail, validatePassword, validatePhone
+  validateEmail, validatePassword, validatePhone
 }

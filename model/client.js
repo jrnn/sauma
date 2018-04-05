@@ -13,7 +13,6 @@ const schema = new mongoose.Schema({
     type : String,
     required : [ true, "Business ID missing" ],
     trim : true
-    // validation possible for Finnish Y-tunnus at least ...
   },
   contactPerson : {
     type : String,
@@ -60,8 +59,17 @@ schema.options.toObject = {
   transform : (doc, ret) => parser.trimDbObject(ret)
 }
 
+schema.statics.overwrite = (data, client) => {
+  let newValues = parser.filterByKeys([
+    "address", "businessId", "contactPerson",
+    "email", "legalEntity", "phone"
+  ], data)
+  Object.keys(newValues)
+    .map(key => client[key] = newValues[key])
+}
+
 schema.statics.testAttrs = [
-  "legalEntity", "businessId", "contactPerson", "email", "phone"
+  "businessId", "contactPerson", "email", "legalEntity", "phone"
 ]
 
 const Client = mongoose.model("Client", schema)

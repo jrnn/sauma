@@ -1,3 +1,10 @@
+const filterByKeys = (allowedKeys, obj, res = {}) => {
+  allowedKeys
+    .filter(key => obj[key])
+    .map(key => res = { ...res, [key] : obj[key] })
+  return res
+}
+
 const formatPhone = (phone) => {
   let s = ""
   let allowedChars = /\d|[ -]/
@@ -19,6 +26,15 @@ const formatPhone = (phone) => {
   }
 }
 
+const parseValidationErrors = (obj) => {
+  let res = obj.validateSync()
+  return ( !res )
+    ? []
+    : Object.keys(res.errors)
+      .filter(key => res.errors[key].path)
+      .map(key => res.errors[key].message)
+}
+
 const trimDbObject = (obj) => {
   obj.id = obj._id
 
@@ -28,4 +44,6 @@ const trimDbObject = (obj) => {
   return obj
 }
 
-module.exports = { formatPhone, trimDbObject }
+module.exports = {
+  filterByKeys, formatPhone, parseValidationErrors, trimDbObject
+}
