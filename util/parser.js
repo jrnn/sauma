@@ -1,8 +1,8 @@
-const filterByKeys = (allowedKeys, obj, res = {}) => {
-  allowedKeys
-    .filter(key => obj[key])
-    .map(key => res = { ...res, [key] : obj[key] })
-  return res
+const filterByKeys = (allowedKeys, obj) => {
+  Object.keys(obj)
+    .filter(key => !allowedKeys.includes(key))
+    .map(key => delete obj[key])
+  return obj
 }
 
 const formatPhone = (phone) => {

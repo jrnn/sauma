@@ -83,7 +83,12 @@ schema.statics.overwrite = (data, employee) => {
 }
 
 schema.statics.testAttrs = [
-  "email", "firstName", "lastName", "phone", "username"
+  "address", "email", "firstName", "lastName", "phone", "username"
+]
+
+schema.statics.updatables = [
+  "administrator", "address", "email", "enabled",
+  "firstName", "lastName", "phone", "username"
 ]
 
 const Employee = mongoose.model("Employee", schema)

@@ -72,7 +72,7 @@ employeeRouter.put("/:id", async (req, res) => {
 
     let original = await Employee.findById(req.params.id)
 
-    if ( req.auth.id !== original.id || !req.auth.admin )
+    if ( !req.auth.admin && req.auth.id !== original.id )
       return res
         .status(401)
         .json({ error : "Invalid or inadequate credentials" })

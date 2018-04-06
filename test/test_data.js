@@ -135,6 +135,76 @@ const invalidClients = [
   }
 ]
 
+const invalidClientUpdates = [
+  {
+    legalEntity : "    ",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "    ",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "1234567-8",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "    ",
+    email : "jonne@mopo.es",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "    ",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo",
+    phone : "0401234567"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "    "
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "040123456789"
+  },
+  {
+    legalEntity : "Jonnen Mopopaja Oy",
+    businessId : "9999999-9",
+    contactPerson : "Jonne McMopoface",
+    email : "jonne@mopo.es",
+    phone : "0401234567",
+    address :{
+      streetExt : "not_a_valid_address",
+      zipCode : "not_a_valid_zipcode"
+    }
+  }
+]
+
 const invalidCredentials = [
   { bestDogEver : "Gooby" },
   { password : "trustno1" },
@@ -156,7 +226,6 @@ const invalidCredentials = [
 ]
 
 const invalidEmployees = [
-  { bestDuckEver : "Dolan" },
   {
     password : "Qwerty_123",
     firstName : "Jonne",
@@ -260,6 +329,139 @@ const invalidEmployees = [
   }
 ]
 
+const invalidEmployeeUpdates = [
+  {
+    administrator : "   ",
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : "not_boolean",
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    address : {
+      streetExt : "not_a_valid_address",
+      zipCode : "not_a_valid_zipcode"
+    },
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "    ",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : "    ",
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : 12345,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "    ",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "    ",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "    ",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "040123456789",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "    "
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jon"
+  },
+  {
+    administrator : true,
+    email : "jonne@mopo.es",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "basic_user"
+  }
+]
+
 const newClients = [
   {
     legalEntity : "GottaGoFast Inc.",
@@ -267,6 +469,13 @@ const newClients = [
     contactPerson : "Sonic McHedgehogface",
     email : "sonic@hedge.hog",
     phone : "13-42 65536 "
+  },
+  {
+    legalEntity : "Quadruple Roundhouse Kicks LLC",
+    businessId : "5179382-0",
+    contactPerson : "Chuck McNorrisface",
+    email : "cnorris@sauma.io",
+    phone : "134265526"
   },
   {
     legalEntity : "Tonnin Stiflat Oy",
@@ -279,7 +488,7 @@ const newClients = [
     legalEntity : "Wayne Enterprises",
     businessId : "1357924-6",
     contactPerson : "Batman McBatmanface",
-    email : "batsyn@batm.an",
+    email : "batsy@batm.an",
     phone : "040 1234 567"
   }
 ]
@@ -316,6 +525,180 @@ const newEmployees = [
     lastName : "McDuckface",
     email : "dolan@sauma.io",
     phone : "0403131337"
+  },
+  {
+    username : "tylerdurden",
+    password : "Qwerty_123",
+    firstName : "Tyler",
+    lastName : "McDurdenface",
+    email : "t_durd@sauma.io",
+    phone : "0 4 0 4 2 6 5 5 3 6"
+  }
+]
+
+const updateClients = [
+  {
+    legalEntity : "Altered Explosives Inc.",
+    businessId : "0000000-0",
+    contactPerson : "Altered McAlterface",
+    email : "altered_email@sauma.io",
+    phone : "048048048",
+    address : {
+      street : "480 Altered Avenue",
+      zipCode : "40404",
+      city : "Altertown",
+      country : "Alterstan"
+    },
+    createdOn : new Date(1986,3,7),
+    lastEditedBy : "this_shall_not_pass"
+  },
+  {
+    legalEntity : "Changed Explosives Inc.",
+    businessId : "1111111-1",
+    contactPerson : "Changed McChangeface",
+    email : "changed_email@sauma.io",
+    phone : "0000000000",
+    address : {
+      street : "313 Changed Street",
+      zipCode : "00000",
+      city : "Changedtown",
+      country : "Changedstan"
+    },
+    createdOn : new Date(1999,1,1),
+    lastEditedBy : "this_shall_not_pass"
+  },
+  {
+    legalEntity : "Different Explosives Inc.",
+    businessId : "2222222-2",
+    contactPerson : "Different McDifferentface",
+    email : "different_email@sauma.io",
+    phone : "8888-8888",
+    address : {
+      street : "313 Different Avenue",
+      zipCode : "30303",
+      city : "Differenttown",
+      country : "Differentland"
+    },
+    createdOn : new Date(2003,3,3),
+    lastEditedBy : "this_shall_not_pass"
+  },
+  {
+    legalEntity : "Not the Same Explosives Inc.",
+    businessId : "3333333-3",
+    contactPerson : "Notthe McSameface",
+    email : "not_the_same@sauma.io",
+    phone : "999-999-999",
+    address : {
+      street : "99 Not the Same Street",
+      zipCode : "90909",
+      city : "Not the same town",
+      country : "Not the Same States of America"
+    },
+    createdOn : new Date(1993,9,9),
+    lastEditedBy : "this_shall_not_pass"
+  },
+  {
+    legalEntity : "Updated Explosives Inc.",
+    businessId : "4444444-4",
+    contactPerson : "Updated McUpdateface",
+    email : "updated_email@sauma.io",
+    phone : "4 44 444 4444",
+    address : {
+      street : "444 Updated Street",
+      zipCode : "44444",
+      city : "Updateville",
+      country : "Updated States of America"
+    },
+    createdOn : new Date(2006,6,6),
+    lastEditedBy : "this_shall_not_pass"
+  }
+]
+
+const updateEmployees = [
+  {
+    username : "altered_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Altered firstName",
+    lastName : "Altered lastName",
+    email : "altered_email@sauma.io",
+    phone : "048048048",
+    enabled : false,
+    administrator : true,
+    address : {
+      street : "480 Altered Avenue",
+      zipCode : "40404",
+      city : "Altertown",
+      country : "Alterstan"
+    },
+    createdOn : new Date(1986,3,7)
+  },
+  {
+    username : "changed_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Changed firstName",
+    lastName : "Changed lastName",
+    email : "changed_email@sauma.io",
+    phone : "0000000000",
+    enabled : false,
+    administrator : true,
+    address : {
+      street : "313 Changed Street",
+      zipCode : "00000",
+      city : "Changedtown",
+      country : "Changedstan"
+    },
+    createdOn : new Date(1999,1,1)
+  },
+  {
+    username : "different_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Different firstName",
+    lastName : "Different lastName",
+    email : "different_email@sauma.io",
+    phone : "8888-8888",
+    enabled : false,
+    administrator : true,
+    address : {
+      street : "313 Different Avenue",
+      zipCode : "30303",
+      city : "Differenttown",
+      country : "Differentland"
+    },
+    createdOn : new Date(2003,3,3)
+  },
+  {
+    username : "not_the_same_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Not the same firstName",
+    lastName : "Not the same lastName",
+    email : "not_the_same@sauma.io",
+    phone : "999-999-999",
+    enabled : false,
+    administrator : true,
+    address : {
+      street : "99 Not the Same Street",
+      zipCode : "90909",
+      city : "Not the same town",
+      country : "Not the Same States of America"
+    },
+    createdOn : new Date(1993,9,9)
+  },
+  {
+    username : "updated_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Updated firstName",
+    lastName : "Updated lastName",
+    email : "updated_email@sauma.io",
+    phone : "4 44 444 4444",
+    enabled : false,
+    administrator : true,
+    address : {
+      street : "444 Updated Street",
+      zipCode : "44444",
+      city : "Updateville",
+      country : "Updated States of America"
+    },
+    createdOn : new Date(2006,6,6)
   }
 ]
 
@@ -383,5 +766,7 @@ module.exports = {
   validAddresses,
   initClients, initEmployees,
   invalidClients, invalidCredentials, invalidEmployees,
-  newClients, newEmployees
+  invalidClientUpdates, invalidEmployeeUpdates,
+  newClients, newEmployees,
+  updateClients, updateEmployees
 }

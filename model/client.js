@@ -69,7 +69,13 @@ schema.statics.overwrite = (data, client) => {
 }
 
 schema.statics.testAttrs = [
-  "businessId", "contactPerson", "email", "legalEntity", "phone"
+  "address", "businessId", "contactPerson",
+  "email", "legalEntity", "phone"
+]
+
+schema.statics.updatables = [
+  "address", "businessId", "contactPerson",
+  "email", "lastEditedBy", "legalEntity", "phone"
 ]
 
 const Client = mongoose.model("Client", schema)
