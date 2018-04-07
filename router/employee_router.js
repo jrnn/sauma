@@ -78,7 +78,7 @@ employeeRouter.put("/:id", async (req, res) => {
         .json({ error : "Invalid or inadequate credentials" })
 
     let { employee, errors } = await service
-      .validateExisting(req.body, original)
+      .validateExisting(req.body, original, req.auth.admin)
     if (errors.length > 0)
       throw ({ message : errors })
 

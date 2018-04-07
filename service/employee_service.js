@@ -7,11 +7,19 @@ const usernameExists = async (employee) => {
   let employees = await Employee
     .find({ username : employee.username })
     .where({ _id : { $ne : employee.id } })
+
   return employees.length > 0
 }
 
-const validateExisting = async (updates, employee) => {
+const validateExisting = async (updates, employee, adminRights) => {
+  let { administrator, enabled } = employee
   Employee.overwrite(updates, employee)
+
+  if ( !adminRights ) {
+    employee.administrator = administrator
+    employee.enabled = enabled
+  }
+
   let errors = parser.parseValidationErrors(employee)
 
   if (await usernameExists(employee))
@@ -36,4 +44,7 @@ const validateNew = async (reqBody) => {
   return { employee, errors }
 }
 
-module.exports = { validateExisting, validateNew }
+module.exports = {
+  validateExisting,
+  validateNew
+}

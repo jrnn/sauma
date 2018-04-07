@@ -8,7 +8,7 @@ const getReturnsAllAsJSON = async (api, Entity, path, token) => {
     .expect(200)
     .expect("content-type", /application\/json/)
 
-  // voiko yksinkertaistaa ?????????????????
+  // CAN THIS BE SIMPLIFIED ???
   Entity.testAttrs.map(attr => {
     data = { ...data, [attr] : [] }
     res.body.map(entity =>
@@ -59,6 +59,23 @@ const postReturnsNewAsJson = async (api, Entity, entity, path, token) => {
       .toEqual(JSON.stringify(entity[attr])))
 }
 
+const postDoesNotAffectExisting = async (api, Entity, entity, path, token) => {
+  let entitiesBefore = await Entity.find().sort("_id")
+
+  let res = await api
+    .post(path)
+    .set("authorization", `bearer ${token}`)
+    .send(entity)
+
+  let entitiesAfter = await Entity
+    .find()
+    .where({ _id : { $ne : res.body.id } })
+    .sort("_id")
+
+  expect(JSON.stringify(entitiesBefore))
+    .toEqual(JSON.stringify(entitiesAfter))
+}
+
 const postFailsWithStatusCode = async (api, Entity, entities, path, statusCode, token) => {
   let entitiesBefore = await Entity.find()
 
@@ -99,6 +116,7 @@ const putOnlyAffectsOne = async (api, Entity, original, updates, path, token) =>
   let entitiesBefore = await Entity
     .find()
     .where({ _id : { $ne : original.id } })
+    .sort("_id")
 
   await api
     .put(path)
@@ -109,6 +127,7 @@ const putOnlyAffectsOne = async (api, Entity, original, updates, path, token) =>
   let entitiesAfter = await Entity
     .find()
     .where({ _id : { $ne : original.id } })
+    .sort("_id")
 
   expect(JSON.stringify(entitiesBefore))
     .toEqual(JSON.stringify(entitiesAfter))
@@ -131,7 +150,13 @@ const putFailsWithStatusCode = async (api, Entity, updates, path, statusCode, to
 }
 
 module.exports = {
-  getReturnsAllAsJSON, getReturnsOneAsJSON, getFailsWithStatusCode,
-  postReturnsNewAsJson, postFailsWithStatusCode,
-  putReturnsUpdatedAsJson, putOnlyAffectsOne, putFailsWithStatusCode
+  getReturnsAllAsJSON,
+  getReturnsOneAsJSON,
+  getFailsWithStatusCode,
+  postReturnsNewAsJson,
+  postDoesNotAffectExisting,
+  postFailsWithStatusCode,
+  putReturnsUpdatedAsJson,
+  putOnlyAffectsOne,
+  putFailsWithStatusCode
 }

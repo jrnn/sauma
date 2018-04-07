@@ -20,6 +20,7 @@ const tokenParser = (req, res, next) => {
 
   try {
     let token = jwt.verify(auth.substring(7), process.env.SECRET)
+
     if ( token.handshake === process.env.HANDSHAKE ) {
       delete token.handshake
       req.auth = token
@@ -29,4 +30,7 @@ const tokenParser = (req, res, next) => {
   next()
 }
 
-module.exports = { logger, tokenParser }
+module.exports = {
+  logger,
+  tokenParser
+}

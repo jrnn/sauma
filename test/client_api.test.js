@@ -1,6 +1,7 @@
-const supertest = require("supertest")
 const { app, server } = require("../index")
+const supertest = require("supertest")
 const api = supertest(app)
+
 const Client = require("../model/client")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
@@ -20,6 +21,7 @@ describe("Client API", async () => {
   let userId
 
   beforeAll(async () => {
+    await helper.clearDb()
     await helper.initEmployees()
     await helper.initClients()
 
@@ -74,6 +76,10 @@ describe("Client API", async () => {
       await tests.postReturnsNewAsJson(
         api, Client, helper.newClient(userId), url, tokens.admin)})
 
+    test("does not affect existing clients in DB", async () =>
+      await tests.postDoesNotAffectExisting(
+        api, Client, helper.newClient(userId), url, tokens.admin))
+
     test("fails if not authed as admin", async () => {
       client = [ helper.newClient(userId) ]
       await Promise
@@ -84,7 +90,7 @@ describe("Client API", async () => {
 
     test("fails with invalid input", async () =>
       await tests.postFailsWithStatusCode(
-        api, Client, helper.invalidClients, url, 400, tokens.admin))
+        api, Client, helper.invalidClients(userId), url, 400, tokens.admin))
   })
 
   describe(`PUT ${url}/:id`, async () => {
@@ -120,10 +126,9 @@ describe("Client API", async () => {
           api, Client, updates, path, 400, tokens.admin))
       )})
 
-    test("fails with invalid input", async () => {
+    test("fails with invalid input", async () =>
       await tests.putFailsWithStatusCode(
-        api, Client, helper.invalidClientUpdates, path, 400, tokens.admin)
-    })
+        api, Client, helper.invalidClientUpdates(userId), path, 400, tokens.admin))
   })
 })
 

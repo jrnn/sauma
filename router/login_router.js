@@ -1,28 +1,22 @@
 const bcrypt = require("bcrypt")
+const { createToken } = require("../util/parser")
 const Employee = require("../model/employee")
-const jwt = require("jsonwebtoken")
 const loginRouter = require("express").Router()
 const url = "/api/login"
 
 loginRouter.post("/", async (req, res) => {
   try {
-    let employee = await Employee.findOne({ username : req.body.username })
+    let { username, password } = req.body
+    let employee = await Employee.findOne({ username })
 
     let pwCheck = ( !employee )
       ? false
-      : await bcrypt.compare(req.body.password, employee.pwHash)
+      : await bcrypt.compare(password, employee.pwHash)
 
     if ( !(employee && pwCheck) || !employee.enabled )
       throw new Error("Login attempt with wrong credentials")
 
-    let { id, firstName, administrator } = employee
-    let token = jwt.sign({
-      handshake : process.env.HANDSHAKE,
-      id,
-      firstName,
-      admin : administrator
-    }, process.env.SECRET)
-
+    let token = createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
     res
       .status(200)
       .json({ token })

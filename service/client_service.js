@@ -5,6 +5,7 @@ const businessIdExists = async (client) => {
   let clients = await Client
     .find({ businessId : client.businessId })
     .where({ _id : { $ne : client.id } })
+
   return clients.length > 0
 }
 
@@ -28,4 +29,7 @@ const validateNew = async (reqBody) => {
   return { client, errors }
 }
 
-module.exports = { validateExisting, validateNew }
+module.exports = {
+  validateExisting,
+  validateNew
+}

@@ -1,7 +1,16 @@
+const createToken = (employee, key, handshake) =>
+  require("jsonwebtoken").sign({
+    handshake,
+    id : employee.id,
+    firstName : employee.firstName,
+    admin : employee.administrator
+  }, key)
+
 const filterByKeys = (allowedKeys, obj) => {
   Object.keys(obj)
     .filter(key => !allowedKeys.includes(key))
     .map(key => delete obj[key])
+
   return obj
 }
 
@@ -28,6 +37,7 @@ const formatPhone = (phone) => {
 
 const parseValidationErrors = (obj) => {
   let res = obj.validateSync()
+
   return ( !res )
     ? []
     : Object.keys(res.errors)
@@ -45,5 +55,9 @@ const trimDbObject = (obj) => {
 }
 
 module.exports = {
-  filterByKeys, formatPhone, parseValidationErrors, trimDbObject
+  createToken,
+  filterByKeys,
+  formatPhone,
+  parseValidationErrors,
+  trimDbObject
 }

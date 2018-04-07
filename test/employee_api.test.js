@@ -1,6 +1,8 @@
-const supertest = require("supertest")
 const { app, server } = require("../index")
+const supertest = require("supertest")
 const api = supertest(app)
+
+const { createToken } = require("../util/parser")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
@@ -18,7 +20,9 @@ describe("Employee API", async () => {
   let tokens
 
   beforeAll(async () => {
+    await helper.clearDb()
     await helper.initEmployees()
+
     tokens = await helper.initTokens()
   })
 
@@ -76,6 +80,10 @@ describe("Employee API", async () => {
       await tests.postReturnsNewAsJson(
         api, Employee, helper.newEmployee(), url, tokens.admin))
 
+    test("does not affect existing employees in DB", async () =>
+      await tests.postDoesNotAffectExisting(
+        api, Employee, helper.newEmployee(), url, tokens.admin))
+
     test("fails if not authed as admin", async () => {
       let employees = [ helper.newEmployee() ]
       await Promise
@@ -86,7 +94,7 @@ describe("Employee API", async () => {
 
     test("fails with invalid input", async () =>
       await tests.postFailsWithStatusCode(
-        api, Employee, helper.invalidEmployees, url, 400, tokens.admin))
+        api, Employee, helper.invalidEmployees(), url, 400, tokens.admin))
   })
 
   describe(`PUT ${url}/:id`, async () => {
@@ -101,9 +109,37 @@ describe("Employee API", async () => {
         api, Employee, employee, helper.updateEmployee(), path, tokens.admin))
 
     test("succeeds also if authed as the employee in question", async () => {
-      let token = helper.createToken(employee, process.env.SECRET)
+      let token = createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
       await tests.putReturnsUpdatedAsJson(
         api, Employee, employee, helper.updateEmployee(), path, token)
+    })
+
+    test("only admin can change 'admin' and 'enabled' fields", async () => {
+      let updates = {
+        administrator : !employee.administrator,
+        enabled : !employee.enabled
+      }
+      let token = createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
+
+      let res = await api
+        .put(path)
+        .set("authorization", `bearer ${token}`)
+        .send(updates)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.administrator).toBe(employee.administrator)
+      expect(res.body.enabled).toBe(employee.enabled)
+
+      res = await api
+        .put(path)
+        .set("authorization", `bearer ${tokens.admin}`)
+        .send(updates)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.administrator).toBe(!employee.administrator)
+      expect(res.body.enabled).toBe(!employee.enabled)
     })
 
     test("does not affect any other employees in DB", async () =>
@@ -128,10 +164,9 @@ describe("Employee API", async () => {
           api, Employee, updates, path, 400, tokens.admin))
       )})
 
-    test("fails with invalid input", async () => {
+    test("fails with invalid input", async () =>
       await tests.putFailsWithStatusCode(
-        api, Employee, helper.invalidEmployeeUpdates, path, 400, tokens.admin)
-    })
+        api, Employee, helper.invalidEmployeeUpdates(), path, 400, tokens.admin))
   })
 })
 

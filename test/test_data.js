@@ -1,66 +1,59 @@
-const initClients = (userId) => {
-  return [
-    {
-      legalEntity : "ACME Explosives Inc.",
-      businessId : "1234567-8",
-      contactPerson : "Acme McExplosiveface",
-      email : "acme@explosives.inc",
-      phone : "42 313 666",
-      lastEditedBy : userId
-    },
-    {
-      legalEntity : "Foobar Solutions LLC",
-      businessId : "1123581-3",
-      contactPerson : "Foo McBarface",
-      email : "foo@bar.io",
-      phone : "42-3131337",
-      lastEditedBy : userId
-    },
-    {
-      legalEntity : "EVVK Yhtiöt Oyj",
-      businessId : "2481632-6",
-      contactPerson : "Evvk McEvoface",
-      email : "info@evvk.fi",
-      phone : "0406661337",
-      lastEditedBy : userId
-    }
-  ]
-}
+const initClients = [
+  {
+    legalEntity : "ACME Explosives Inc.",
+    businessId : "1234567-8",
+    contactPerson : "Acme McExplosiveface",
+    email : "acme@explosives.inc",
+    phone : "42 313 666"
+  },
+  {
+    legalEntity : "Foobar Solutions LLC",
+    businessId : "1123581-3",
+    contactPerson : "Foo McBarface",
+    email : "foo@bar.io",
+    phone : "42-3131337"
+  },
+  {
+    legalEntity : "EVVK Yhtiöt Oyj",
+    businessId : "2481632-6",
+    contactPerson : "Evvk McEvoface",
+    email : "info@evvk.fi",
+    phone : "0406661337"
+  }
+]
 
-const initEmployees = () => {
-  return [
-    {
-      username : "admin_user",
-      pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
-      firstName : "Admin",
-      lastName : "McAdminface",
-      email : "admin@sauma.io",
-      phone : "42 1337 666",
-      enabled : true,
-      administrator : true
-    },
-    {
-      username : "basic_user",
-      pwHash : "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK",
-      firstName : "Basic",
-      lastName : "McBasicface",
-      email : "basic@sauma.io",
-      phone : "42-31-31-337",
-      enabled : true,
-      administrator : false
-    },
-    {
-      username : "blocked_user",
-      pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
-      firstName : "Blocked",
-      lastName : "McBlockface",
-      email : "blocked@sauma.io",
-      phone : "313 6661337",
-      enabled : false,
-      administrator : false
-    }
-  ]
-}
+const initEmployees = [
+  {
+    username : "admin_user",
+    pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
+    firstName : "Admin",
+    lastName : "McAdminface",
+    email : "admin@sauma.io",
+    phone : "42 1337 666",
+    enabled : true,
+    administrator : true
+  },
+  {
+    username : "basic_user",
+    pwHash : "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK",
+    firstName : "Basic",
+    lastName : "McBasicface",
+    email : "basic@sauma.io",
+    phone : "42-31-31-337",
+    enabled : true,
+    administrator : false
+  },
+  {
+    username : "blocked_user",
+    pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
+    firstName : "Blocked",
+    lastName : "McBlockface",
+    email : "blocked@sauma.io",
+    phone : "313 6661337",
+    enabled : false,
+    administrator : false
+  }
+]
 
 const invalidClients = [
   { bestHarkimoEver : "Hjallis" },
@@ -622,8 +615,6 @@ const updateEmployees = [
     lastName : "Altered lastName",
     email : "altered_email@sauma.io",
     phone : "048048048",
-    enabled : false,
-    administrator : true,
     address : {
       street : "480 Altered Avenue",
       zipCode : "40404",
@@ -639,8 +630,6 @@ const updateEmployees = [
     lastName : "Changed lastName",
     email : "changed_email@sauma.io",
     phone : "0000000000",
-    enabled : false,
-    administrator : true,
     address : {
       street : "313 Changed Street",
       zipCode : "00000",
@@ -656,8 +645,6 @@ const updateEmployees = [
     lastName : "Different lastName",
     email : "different_email@sauma.io",
     phone : "8888-8888",
-    enabled : false,
-    administrator : true,
     address : {
       street : "313 Different Avenue",
       zipCode : "30303",
@@ -673,8 +660,6 @@ const updateEmployees = [
     lastName : "Not the same lastName",
     email : "not_the_same@sauma.io",
     phone : "999-999-999",
-    enabled : false,
-    administrator : true,
     address : {
       street : "99 Not the Same Street",
       zipCode : "90909",
@@ -690,8 +675,6 @@ const updateEmployees = [
     lastName : "Updated lastName",
     email : "updated_email@sauma.io",
     phone : "4 44 444 4444",
-    enabled : false,
-    administrator : true,
     address : {
       street : "444 Updated Street",
       zipCode : "44444",
@@ -763,10 +746,16 @@ const validAddresses = [
 ]
 
 module.exports = {
-  validAddresses,
-  initClients, initEmployees,
-  invalidClients, invalidCredentials, invalidEmployees,
-  invalidClientUpdates, invalidEmployeeUpdates,
-  newClients, newEmployees,
-  updateClients, updateEmployees
+  initClients,
+  initEmployees,
+  invalidClients,
+  invalidClientUpdates,
+  invalidCredentials,
+  invalidEmployees,
+  invalidEmployeeUpdates,
+  newClients,
+  newEmployees,
+  updateClients,
+  updateEmployees,
+  validAddresses
 }

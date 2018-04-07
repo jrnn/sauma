@@ -9,4 +9,7 @@ if (process.env.NODE_ENV === "test") {
   dbUri = process.env.DB_URI_TEST
 }
 
-module.exports = { port, dbUri }
+module.exports = {
+  port,
+  dbUri
+}
