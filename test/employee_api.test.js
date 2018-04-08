@@ -2,13 +2,13 @@ const { app, server } = require("../index")
 const supertest = require("supertest")
 const api = supertest(app)
 
-const { createToken } = require("../util/parser")
+const { createToken } = require("../service/auth_service")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
 const url = "/api/employees"
 
-if (process.env.NODE_ENV !== "test") {
+if ( process.env.NODE_ENV !== "test" ) {
   server.close()
   throw new Error("Tests must be run in test mode")
 }
@@ -18,6 +18,9 @@ describe("Employee API", async () => {
   let employee
   let path
   let tokens
+
+  let invalidId = `${url}/all_your_base_are_belong_to_us`
+  let nonExistingId = `${url}/${new Employee()._id}`
 
   beforeAll(async () => {
     await helper.clearDb()
@@ -67,10 +70,10 @@ describe("Employee API", async () => {
 
     test("fails with invalid or nonexisting id", async () => {
       await tests.getFailsWithStatusCode(
-        api, `${url}/${new Employee().id}`, 404, tokens.basic)
+        api, nonExistingId, 404, tokens.basic)
 
       await tests.getFailsWithStatusCode(
-        api, `${url}/all_your_base_are_belong_to_us`, 400, tokens.basic)
+        api, invalidId, 400, tokens.basic)
     })
   })
 
@@ -156,13 +159,13 @@ describe("Employee API", async () => {
 
     test("fails with invalid or nonexisting id", async () => {
       let updates = [ helper.updateEmployee() ]
-      await Promise.all([
-        `${url}/${new Employee().id}`,
-        `${url}/all_your_base_are_belong_to_us`
-      ].map(path => tests
-        .putFailsWithStatusCode(
-          api, Employee, updates, path, 400, tokens.admin))
-      )})
+
+      await tests.putFailsWithStatusCode(
+        api, Employee, updates, nonExistingId, 404, tokens.basic)
+
+      await tests.putFailsWithStatusCode(
+        api, Employee, updates, invalidId, 400, tokens.basic)
+    })
 
     test("fails with invalid input", async () =>
       await tests.putFailsWithStatusCode(

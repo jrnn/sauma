@@ -105,7 +105,7 @@ const putReturnsUpdatedAsJson = async (api, Entity, original, updates, path, tok
 
   Object.keys(updates._doc).map(key => {
     let u = JSON.stringify(updated[key])
-    if (Entity.updatables.includes(key))
+    if ( Entity.updatables.includes(key) )
       expect(u).toEqual(JSON.stringify(updates[key]))
     else
       expect(u).toEqual(JSON.stringify(original[key]))

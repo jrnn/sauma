@@ -8,7 +8,7 @@ const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
 const url = "/api/clients"
 
-if (process.env.NODE_ENV !== "test") {
+if ( process.env.NODE_ENV !== "test" ) {
   server.close()
   throw new Error("Tests must be run in test mode")
 }
@@ -19,6 +19,9 @@ describe("Client API", async () => {
   let path
   let tokens
   let userId
+
+  let invalidId = `${url}/all_your_base_are_belong_to_us`
+  let nonExistingId = `${url}/${new Client().id}`
 
   beforeAll(async () => {
     await helper.clearDb()
@@ -63,10 +66,10 @@ describe("Client API", async () => {
 
     test("fails with invalid or nonexisting id", async () => {
       await tests.getFailsWithStatusCode(
-        api, `${url}/${new Client().id}`, 404, tokens.admin)
+        api, nonExistingId, 404, tokens.admin)
 
       await tests.getFailsWithStatusCode(
-        api, `${url}/all_your_base_are_belong_to_us`, 400, tokens.admin)
+        api, invalidId, 400, tokens.admin)
     })
   })
 
@@ -118,13 +121,13 @@ describe("Client API", async () => {
 
     test("fails with invalid or nonexisting id", async () => {
       let updates = [ helper.updateClient(userId) ]
-      await Promise.all([
-        `${url}/${new Client().id}`,
-        `${url}/all_your_base_are_belong_to_us`
-      ].map(path => tests
-        .putFailsWithStatusCode(
-          api, Client, updates, path, 400, tokens.admin))
-      )})
+
+      await tests.putFailsWithStatusCode(
+        api, Client, updates, nonExistingId, 404, tokens.admin)
+
+      await tests.putFailsWithStatusCode(
+        api, Client, updates, invalidId, 400, tokens.admin)
+    })
 
     test("fails with invalid input", async () =>
       await tests.putFailsWithStatusCode(

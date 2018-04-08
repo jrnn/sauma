@@ -1,5 +1,5 @@
 const Client = require("../model/client")
-const { createToken } = require("../util/parser")
+const { createToken } = require("../service/auth_service")
 const data = require("./test_data")
 const Employee = require("../model/employee")
 

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt")
-const { createToken } = require("../util/parser")
+const { createToken } = require("../service/auth_service")
 const Employee = require("../model/employee")
 const loginRouter = require("express").Router()
 const url = "/api/login"

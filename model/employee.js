@@ -61,10 +61,6 @@ const schema = new mongoose.Schema({
    */
 })
 
-schema.options.toObject = {
-  transform : (doc, ret) => parser.trimDbObject(ret)
-}
-
 schema.options.toJSON = {
   transform : (doc, ret) => {
     ret = parser.trimDbObject(ret)
@@ -73,12 +69,32 @@ schema.options.toJSON = {
   }
 }
 
-schema.statics.overwrite = (data, employee) => {
-  let newValues = parser.filterByKeys([
+schema.pre("validate", async function (next) {
+  if ( this.isNew && !this.pwHash )
+    this.invalidate(
+      "pwHash", "Password does not meet requirements", this.pwHash)
+
+  let count = await this.model("Employee")
+    .count({ username : this.username })
+    .where({ _id : { $ne : this._id } })
+  if ( count > 0 )
+    this.invalidate(
+      "username", "Username is already in use", this.username)
+
+  next()
+})
+
+schema.statics.overwrite = (employee, data, isAdmin = false) => {
+  let keys = [
     "administrator", "address", "email", "enabled",
     "firstName", "lastName", "phone", "username"
-  ], data)
-  Object.keys(newValues)
+  ]
+  if ( !isAdmin ) keys = keys
+    .filter(key => key !== "administrator" && key !== "enabled")
+
+  let newValues = parser.filterByKeys(keys, data)
+  Object
+    .keys(newValues)
     .map(key => employee[key] = newValues[key])
 }
 

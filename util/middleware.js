@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 
 const logger = (req, res, next) => {
-  if (process.env.NODE_ENV === "test")
+  if ( process.env.NODE_ENV === "test" )
     return next()
 
   console.log("Request :", req.method, req.path)
@@ -15,7 +15,7 @@ const logger = (req, res, next) => {
 const tokenParser = (req, res, next) => {
   let auth = req.get("authorization")
 
-  if (!auth || !auth.toLowerCase().startsWith("bearer "))
+  if ( !auth || !auth.toLowerCase().startsWith("bearer ") )
     return next()
 
   try {
@@ -24,6 +24,7 @@ const tokenParser = (req, res, next) => {
     if ( token.handshake === process.env.HANDSHAKE ) {
       delete token.handshake
       req.auth = token
+      req.body.lastEditedBy = token.id
     }
   } catch (ex) { req.auth = undefined }
 

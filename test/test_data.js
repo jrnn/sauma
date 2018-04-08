@@ -219,6 +219,7 @@ const invalidCredentials = [
 ]
 
 const invalidEmployees = [
+  { bestDuckEver : "Dolan" },
   {
     password : "Qwerty_123",
     firstName : "Jonne",

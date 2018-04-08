@@ -19,5 +19,5 @@ const validatePhone = (phone) => {
 module.exports = {
   validateEmail,
   validatePassword,
-  validatePhone
+  validatePhone,
 }

@@ -28,7 +28,7 @@ const address = new mongoose.Schema({
   }
 })
 
-address.options.toObject = {
+address.options.toJSON = {
   transform : (doc, ret) => {
     delete ret._id
     return ret

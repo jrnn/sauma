@@ -7,7 +7,7 @@ const helper = require("../test/api_test_helper")
 const jwt = require("jsonwebtoken")
 const url = "/api/login"
 
-if (process.env.NODE_ENV !== "test") {
+if ( process.env.NODE_ENV !== "test" ) {
   server.close()
   throw new Error("Tests must be run in test mode")
 }

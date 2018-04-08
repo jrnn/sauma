@@ -4,14 +4,14 @@ const schemas = require("./shared_schemas")
 const validator = require("../util/validator")
 
 const schema = new mongoose.Schema({
-  legalEntity : {
-    type : String,
-    required : [ true, "Legal entity name missing" ],
-    trim : true
-  },
   businessId : {
     type : String,
     required : [ true, "Business ID missing" ],
+    trim : true
+  },
+  legalEntity : {
+    type : String,
+    required : [ true, "Legal entity name missing" ],
     trim : true
   },
   contactPerson : {
@@ -55,16 +55,28 @@ const schema = new mongoose.Schema({
    */
 })
 
-schema.options.toObject = {
+schema.pre("validate", async function (next) {
+  let count = await this.model("Client")
+    .count({ businessId : this.businessId })
+    .where({ _id : { $ne : this._id } })
+  if ( count > 0 )
+    this.invalidate(
+      "businessId", "Business ID is already in use", this.businessId)
+
+  next()
+})
+
+schema.options.toJSON = {
   transform : (doc, ret) => parser.trimDbObject(ret)
 }
 
-schema.statics.overwrite = (data, client) => {
+schema.statics.overwrite = (client, data, isAdmin = false) => {
   let newValues = parser.filterByKeys([
     "address", "businessId", "contactPerson",
     "email", "legalEntity", "phone"
   ], data)
-  Object.keys(newValues)
+  Object
+    .keys(newValues)
     .map(key => client[key] = newValues[key])
 }
 
