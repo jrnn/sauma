@@ -1,104 +1,110 @@
-const Client = require("../model/client")
-const clientRouter = require("express").Router()
 const croppedFields = { createdOn : 0, lastEditedBy : 0 }
 const parser = require("../util/parser")
-const url = "/api/clients"
+const Project = require("../model/project")
+const projectRouter = require("express").Router()
+const url = "/api/projects"
 
-clientRouter.get("/", async (req, res) => {
+projectRouter.get("/", async (req, res) => {
   try {
     if ( !req.auth || !req.auth.admin )
       return res
         .status(401)
         .json({ error : "Invalid or inadequate credentials" })
 
-    let clients = await Client
-      .find()
-      .populate("lastEditedBy", croppedFields)
+    // FOR BASIC USERS, COULD FILTER ONLY TO THOSE WHICH USER IS ASSIGNED TO ...?
 
-    res.json(clients)
+    let projects = await Project
+      .find()
+      .populate("client", croppedFields)
+      .populate("lastEditedBy", croppedFields)
+      .populate("manager", croppedFields)
+
+    res.json(projects)
 
   } catch (ex) {
-    console.log(`Error @ GET ${url}`, ex.message)
+    console.log(`ERROR @ GET ${url}`, ex.message)
     res
       .status(400)
       .json({ error : ex.message })
   }
 })
 
-clientRouter.get("/:id", async (req, res) => {
+projectRouter.get("/:id", async (req, res) => {
   try {
     if ( !req.auth || !req.auth.admin )
       return res
         .status(401)
         .json({ error : "Invalid or inadequate credentials" })
 
-    let client = await Client
+    let project = await Project
       .findById(req.params.id)
+      .populate("client", croppedFields)
       .populate("lastEditedBy", croppedFields)
+      .populate("manager", croppedFields)
 
-    if ( client ) res.json(client)
+    if ( project ) res.json(project)
     else
       res
         .status(404)
         .end()
 
   } catch (ex) {
-    console.log(`Error @ GET ${url}/${req.params.id}`, ex.message)
+    console.log(`ERROR @ GET ${url}/${req.params.id}`, ex.message)
     res
       .status(400)
       .json({ error : ex.message })
   }
 })
 
-clientRouter.post("/", async (req, res) => {
+projectRouter.post("/", async (req, res) => {
   try {
     if ( !req.auth || !req.auth.admin )
       return res
         .status(401)
         .json({ error : "Invalid or inadequate credentials" })
 
-    let client = await new Client(req.body).save()
+    let project = await new Project(req.body).save()
     res
       .status(201)
-      .json(client)  // populate() needed...?
+      .json(project)  // populate() needed...?
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )
       ex.message = await parser.parseValidationErrors(ex)
 
-    console.log(`Error @ POST ${url}`, ex.message)
+    console.log(`ERROR @ POST ${url}`, ex.message)
     res
       .status(400)
       .json({ error : ex.message })
   }
 })
 
-clientRouter.put("/:id", async (req, res) => {
+projectRouter.put("/:id", async (req, res) => {
   try {
     if ( !req.auth || !req.auth.admin )
       return res
         .status(401)
         .json({ error : "Invalid or inadequate credentials" })
 
-    let client = await Client.findById(req.params.id)
-    if ( !client )
+    let project = await Project.findById(req.params.id)
+    if ( !project )
       return res
         .status(404)
         .end()
 
-    Client.overwrite(client, req.body, req.auth.admin)
-    let updated = await client.save()
+    Project.overwrite(project, req.body, req.auth.admin)
+    let updated = await project.save()
     res.json(updated)  // populate() needed...?
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )
       ex.message = await parser.parseValidationErrors(ex)
 
-    console.log(`Error @ PUT ${url}/${req.params.id}`, ex.message)
+    console.log(`ERROR @ PUT ${url}/${req.params.id}`, ex.message)
     res
       .status(400)
       .json({ error : ex.message })
   }
 })
 
-module.exports = clientRouter
+module.exports = projectRouter
