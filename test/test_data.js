@@ -19,6 +19,13 @@ const initClients = [
     contactPerson : "Evvk McEvoface",
     email : "info@evvk.fi",
     phone : "0406661337"
+  },
+  {
+    legalEntity : "Soylent Corporations",
+    businessId : "50YL3N7-G",
+    contactPerson : "Soylent McGreenface",
+    email : "ceo@soyle.nt",
+    phone : "1-13-42-65536"
   }
 ]
 
@@ -30,6 +37,16 @@ const initEmployees = [
     lastName : "McAdminface",
     email : "admin@sauma.io",
     phone : "42 1337 666",
+    enabled : true,
+    administrator : true
+  },
+  {
+    username : "admin_user_two",
+    pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
+    firstName : "Twadmin",
+    lastName : "McTwadminface",
+    email : "admin_two@sauma.io",
+    phone : "1 42 313 666",
     enabled : true,
     administrator : true
   },
@@ -52,6 +69,29 @@ const initEmployees = [
     phone : "313 6661337",
     enabled : false,
     administrator : false
+  }
+]
+
+const initProjects = [
+  {
+    projectId : "my_first_project",
+    startDate : new Date(2014, 4, 4),
+    endDate : new Date(2015, 5, 5)
+  },
+  {
+    projectId : "my_second_project",
+    startDate : new Date(2015, 5, 5),
+    endDate : new Date(2016, 6, 6)
+  },
+  {
+    projectId : "my_third_project",
+    startDate : new Date(2016, 6, 6),
+    endDate : new Date(2017, 7, 7)
+  },
+  {
+    projectId : "my_fourth_project",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8)
   }
 ]
 
@@ -456,6 +496,171 @@ const invalidEmployeeUpdates = [
   }
 ]
 
+const invalidProjects = (managerId, clientId) => [
+  { bestNameForCatEver : "Ari" },
+  {
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "my_first_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : "this is not a valid date",
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : "this is not a valid date",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2017, 7, 7),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      streetExt : "Mopo avenue 13 ES",
+      city : "Kerava"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : "this_is_not_a_valid_id",
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : "this_is_not_a_valid_id"
+  }
+]
+
+const invalidProjectUpdates = [
+  { projectId : "my_first_project" },
+  { startDate : "this_is_not_a_valid_date" },
+  { endDate : "this_is_not_a_valid_date" },
+  {
+    startDate : new Date(2019, 9, 9),
+    endDate : new Date(2017, 7, 7)
+  },
+  {
+    address : {
+      streetExt : "Mopo avenue 13 ES",
+      city : "Kerava"
+    }
+  },
+  { manager : "this_is_not_a_valid_id" }
+]
+
 const newClients = [
   {
     legalEntity : "GottaGoFast Inc.",
@@ -530,6 +735,39 @@ const newEmployees = [
   }
 ]
 
+const newProjects = [
+  {
+    projectId : "yet_another_project",
+    startDate : new Date(2010, 10, 10),
+    endDate : new Date(2012, 2, 2)
+  },
+  {
+    projectId : "one_more_project",
+    startDate : new Date(2011, 11, 11),
+    endDate : new Date(2013, 3, 3)
+  },
+  {
+    projectId : "not_the_last_project",
+    startDate : new Date(2012, 2, 2),
+    endDate : new Date(2014, 4, 4)
+  },
+  {
+    projectId : "however_manyeth_project",
+    startDate : new Date(2013, 3, 3),
+    endDate : new Date(2015, 5, 5)
+  },
+  {
+    projectId : "dime_a_dozen_project",
+    startDate : new Date(2014, 4, 4),
+    endDate : new Date(2016, 6, 6)
+  },
+  {
+    projectId : "run_of_the_mill_project",
+    startDate : new Date(2015, 5, 5),
+    endDate : new Date(2017, 7, 7)
+  }
+]
+
 const updateClients = [
   {
     legalEntity : "Altered Explosives Inc.",
@@ -543,8 +781,7 @@ const updateClients = [
       city : "Altertown",
       country : "Alterstan"
     },
-    createdOn : new Date(1986,3,7),
-    lastEditedBy : "this_shall_not_pass"
+    createdOn : new Date(1986,3,7)
   },
   {
     legalEntity : "Changed Explosives Inc.",
@@ -558,8 +795,7 @@ const updateClients = [
       city : "Changedtown",
       country : "Changedstan"
     },
-    createdOn : new Date(1999,1,1),
-    lastEditedBy : "this_shall_not_pass"
+    createdOn : new Date(1999,1,1)
   },
   {
     legalEntity : "Different Explosives Inc.",
@@ -573,13 +809,26 @@ const updateClients = [
       city : "Differenttown",
       country : "Differentland"
     },
-    createdOn : new Date(2003,3,3),
-    lastEditedBy : "this_shall_not_pass"
+    createdOn : new Date(2003,3,3)
+  },
+  {
+    legalEntity : "Modified Explosives Inc.",
+    businessId : "5315315-3",
+    contactPerson : "Modded McModiface",
+    email : "modified_email@sauma.io",
+    phone : "531-531-531",
+    address : {
+      street : "531 Modified Street",
+      zipCode : "531531",
+      city : "Modificationtown",
+      country : "Modificzstan"
+    },
+    createdOn : new Date(1979,7,9)
   },
   {
     legalEntity : "Not the Same Explosives Inc.",
     businessId : "3333333-3",
-    contactPerson : "Notthe McSameface",
+    contactPerson : "Not the McSameface",
     email : "not_the_same@sauma.io",
     phone : "999-999-999",
     address : {
@@ -588,8 +837,7 @@ const updateClients = [
       city : "Not the same town",
       country : "Not the Same States of America"
     },
-    createdOn : new Date(1993,9,9),
-    lastEditedBy : "this_shall_not_pass"
+    createdOn : new Date(1993,9,9)
   },
   {
     legalEntity : "Updated Explosives Inc.",
@@ -603,8 +851,7 @@ const updateClients = [
       city : "Updateville",
       country : "Updated States of America"
     },
-    createdOn : new Date(2006,6,6),
-    lastEditedBy : "this_shall_not_pass"
+    createdOn : new Date(2006,6,6)
   }
 ]
 
@@ -655,6 +902,21 @@ const updateEmployees = [
     createdOn : new Date(2003,3,3)
   },
   {
+    username : "modified_username",
+    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    firstName : "Modified firstName",
+    lastName : "Modified lastName",
+    email : "modified_email@sauma.io",
+    phone : "531-531-531",
+    address : {
+      street : "531 Modified Street",
+      zipCode : "531531",
+      city : "Modificationtown",
+      country : "Modificzstan"
+    },
+    createdOn : new Date(1979,7,9)
+  },
+  {
     username : "not_the_same_username",
     pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
     firstName : "Not the same firstName",
@@ -676,6 +938,81 @@ const updateEmployees = [
     lastName : "Updated lastName",
     email : "updated_email@sauma.io",
     phone : "4 44 444 4444",
+    address : {
+      street : "444 Updated Street",
+      zipCode : "44444",
+      city : "Updateville",
+      country : "Updated States of America"
+    },
+    createdOn : new Date(2006,6,6)
+  }
+]
+
+const updateProjects = [
+  {
+    projectId : "altered_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "480 Altered Avenue",
+      zipCode : "40404",
+      city : "Altertown",
+      country : "Alterstan"
+    },
+    createdOn : new Date(1986,3,7)
+  },
+  {
+    projectId : "changed_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "313 Changed Street",
+      zipCode : "00000",
+      city : "Changedtown",
+      country : "Changedstan"
+    },
+    createdOn : new Date(1999,1,1)
+  },
+  {
+    projectId : "different_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "313 Different Avenue",
+      zipCode : "30303",
+      city : "Differenttown",
+      country : "Differentland"
+    },
+    createdOn : new Date(2003,3,3)
+  },
+  {
+    projectId : "modified_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "531 Modified Street",
+      zipCode : "531531",
+      city : "Modificationtown",
+      country : "Modificzstan"
+    },
+    createdOn : new Date(1979,7,9)
+  },
+  {
+    projectId : "not_the_same_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "99 Not the Same Street",
+      zipCode : "90909",
+      city : "Not the same town",
+      country : "Not the Same States of America"
+    },
+    createdOn : new Date(1993,9,9)
+  },
+  {
+    projectId : "updated_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
     address : {
       street : "444 Updated Street",
       zipCode : "44444",
@@ -749,14 +1086,19 @@ const validAddresses = [
 module.exports = {
   initClients,
   initEmployees,
+  initProjects,
   invalidClients,
   invalidClientUpdates,
   invalidCredentials,
   invalidEmployees,
   invalidEmployeeUpdates,
+  invalidProjects,
+  invalidProjectUpdates,
   newClients,
   newEmployees,
+  newProjects,
   updateClients,
   updateEmployees,
+  updateProjects,
   validAddresses
 }

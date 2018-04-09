@@ -10,8 +10,7 @@ const schema = new mongoose.Schema({
   },
   startDate : {
     type : Date,
-    required : [ true, "Start date missing" ],
-    default : Date.now
+    required : [ true, "Start date missing" ]
   },
   endDate : { type : Date },
   address : {

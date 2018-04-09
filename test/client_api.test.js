@@ -21,7 +21,7 @@ describe("Client API", async () => {
   let userId
 
   let invalidId = `${url}/all_your_base_are_belong_to_us`
-  let nonExistingId = `${url}/${new Client().id}`
+  let nonExistingId = `${url}/${new Client()._id}`
 
   beforeAll(async () => {
     await helper.clearDb()
@@ -29,7 +29,7 @@ describe("Client API", async () => {
     await helper.initClients()
 
     let user = await Employee.findOne({ username : "admin_user" })
-    userId = user.id
+    userId = user._id
 
     tokens = await helper.initTokens()
   })
@@ -75,9 +75,9 @@ describe("Client API", async () => {
 
   describe(`POST ${url}`, async () => {
 
-    test("succeeds with valid input, and returns new client as JSON", async () => {
+    test("succeeds with valid input, and returns new client as JSON", async () =>
       await tests.postReturnsNewAsJson(
-        api, Client, helper.newClient(userId), url, tokens.admin)})
+        api, Client, helper.newClient(userId), url, tokens.admin))
 
     test("does not affect existing clients in DB", async () =>
       await tests.postDoesNotAffectExisting(
