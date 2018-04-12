@@ -35,9 +35,11 @@ describe("Login API", async () => {
 
       let token = jwt.verify(res.body.token, process.env.SECRET)
 
-      expect(employee.id.toString()).toEqual(token.id.toString())
-      expect(employee.firstName).toEqual(token.firstName)
+      expect(employee.administrator).toEqual(res.body.admin)
       expect(employee.administrator).toEqual(token.admin)
+      expect(employee.firstName).toEqual(res.body.firstName)
+      expect(employee._id.toString()).toEqual(res.body.id.toString())
+      expect(employee._id.toString()).toEqual(token.id.toString())
     })
 
     test("fails when account is disabled", async () => {

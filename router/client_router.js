@@ -69,7 +69,7 @@ clientRouter.post("/", async (req, res) => {
     console.log(`Error @ POST ${url}`, ex.message)
     res
       .status(400)
-      .json({ error : ex.message })
+      .json({ [ex.name] : ex.message })
   }
 })
 
@@ -97,7 +97,7 @@ clientRouter.put("/:id", async (req, res) => {
     console.log(`Error @ PUT ${url}/${req.params.id}`, ex.message)
     res
       .status(400)
-      .json({ error : ex.message })
+      .json({ [ex.name] : ex.message })
   }
 })
 

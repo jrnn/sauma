@@ -75,7 +75,7 @@ projectRouter.post("/", async (req, res) => {
     console.log(`ERROR @ POST ${url}`, ex.message)
     res
       .status(400)
-      .json({ error : ex.message })
+      .json({ [ex.name] : ex.message })
   }
 })
 
@@ -103,7 +103,7 @@ projectRouter.put("/:id", async (req, res) => {
     console.log(`ERROR @ PUT ${url}/${req.params.id}`, ex.message)
     res
       .status(400)
-      .json({ error : ex.message })
+      .json({ [ex.name] : ex.message })
   }
 })
 

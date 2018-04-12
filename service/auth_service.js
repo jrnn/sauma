@@ -5,7 +5,6 @@ const createToken = (employee, key, handshake) =>
   require("jsonwebtoken").sign({
     handshake,
     id : employee._id,
-    firstName : employee.firstName,
     admin : employee.administrator
   }, key)
 

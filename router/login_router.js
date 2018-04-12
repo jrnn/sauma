@@ -17,9 +17,15 @@ loginRouter.post("/", async (req, res) => {
       throw new Error("Login attempt with wrong credentials")
 
     let token = createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
+    let auth = {
+      admin : employee.administrator,
+      firstName : employee.firstName,
+      id : employee._id,
+      token
+    }
     res
       .status(200)
-      .json({ token })
+      .json(auth)
 
   } catch (ex) {
     console.log(`Error @ POST ${url}`, ex.message)
