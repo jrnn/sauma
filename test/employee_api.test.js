@@ -88,11 +88,14 @@ describe("Employee API", async () => {
         api, Employee, helper.newEmployee(), url, tokens.admin))
 
     test("fails if not authed as admin", async () => {
-      let employees = [ helper.newEmployee() ]
+      let employee = [ helper.newEmployee() ]
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .postFailsWithStatusCode(api, Employee, employees, url, 401, token)))
+            .postFailsWithStatusCode(api, Employee, employee, url, 401, token)))
+
+      await tests.postFailsWithStatusCode(
+        api, Employee, employee, url, 403, tokens.basic)
     })
 
     test("fails with invalid input", async () =>
@@ -152,9 +155,12 @@ describe("Employee API", async () => {
     test("fails if not authed as admin or employee in question", async () => {
       let updates = [ helper.updateEmployee() ]
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
             .putFailsWithStatusCode(api, Employee, updates, path, 401, token)))
+
+      await tests.putFailsWithStatusCode(
+        api, Employee, updates, path, 403, tokens.basic)
     })
 
     test("fails with invalid or nonexisting id", async () => {

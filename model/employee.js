@@ -6,38 +6,38 @@ const validator = require("../util/validator")
 const schema = new mongoose.Schema({
   username : {
     type : String,
-    required : [ true, "Username missing" ],
-    minlength : [ 4, "Username must be at least 4 characters long" ],
+    required : [ true, "Käyttäjätunnus puuttuu" ],
+    minlength : [ 4, "Pituus oltava vähintään 4 merkkiä" ],
     trim : true
   },
   pwHash : { type : String },
   firstName : {
     type : String,
-    required : [ true, "First name missing" ],
+    required : [ true, "Etunimi puuttuu" ],
     trim : true
   },
   lastName : {
     type : String,
-    required : [ true, "Last name missing" ],
+    required : [ true, "Sukunimi puuttuu" ],
     trim : true
   },
   email : {
     type : String,
-    required : [ true, "Email missing" ],
+    required : [ true, "Email puuttuu" ],
     lowercase : true,
     trim : true,
     validate : {
       validator : validator.validateEmail,
-      message : "Invalid email"
+      message : "Virheellinen email"
     }
   },
   phone : {
     type : String,
-    required : [ true, "Phone number missing" ],
+    required : [ true, "Puhelin puuttuu" ],
     set : parser.formatPhone,
     validate : {
       validator : validator.validatePhone,
-      message : "Invalid phone number"
+      message : "Virheellinen numero"
     }
   },
   address : { type : schemas.address },
@@ -72,14 +72,14 @@ schema.options.toJSON = {
 schema.pre("validate", async function (next) {
   if ( this.isNew && !this.pwHash )
     this.invalidate(
-      "pwHash", "Password does not meet requirements", this.pwHash)
+      "pwHash", "Salasana ei täytä vaatimuksia", this.pwHash)
 
   let count = await this.model("Employee")
     .count({ username : this.username })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(
-      "username", "Username is already in use", this.username)
+      "username", "Käyttäjänimi on varattu", this.username)
 
   next()
 })

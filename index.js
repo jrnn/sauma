@@ -13,7 +13,7 @@ mongoose
     console.log(ex))
 mongoose.Promise = global.Promise
 
-// middleware
+// middleware and routers
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const middleWare = require("./util/middleware")
@@ -22,18 +22,21 @@ app.use(bodyParser.json())
 app.use(middleWare.tokenParser)
 app.use(middleWare.logger)
 
-// routers
+// api/login accessible without authentication
+const loginRouter = require("./router/login_router")
+app.use("/api/login", loginRouter)
+app.use(middleWare.bouncer)
+
+// unauthed reqs to all other paths are bounced
 const clientRouter = require("./router/client_router")
 const employeeRouter = require("./router/employee_router")
-const loginRouter = require("./router/login_router")
 const projectRouter = require("./router/project_router")
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
-app.use("/api/login", loginRouter)
 app.use("/api/projects", projectRouter)
 
 // static resources
-// app.use(express.static("build")) <-- NOT SURE IF NEEDED?
+app.use(express.static("build"))
 
 server.listen(config.port, () =>
   console.log(`Server now listening on port ${config.port}`))

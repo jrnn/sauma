@@ -5,17 +5,17 @@ const schemas = require("./shared_schemas")
 const schema = new mongoose.Schema({
   projectId : {
     type : String,
-    required : [ true, "Project ID missing" ],
+    required : [ true, "Työnumero puuttuu" ],
     trim : true
   },
   startDate : {
     type : Date,
-    required : [ true, "Start date missing" ]
+    required : [ true, "Anna päivämäärä" ]
   },
   endDate : { type : Date },
   address : {
     type : schemas.address,
-    required : [ true, "Address missing" ]
+    required : [ true, "Osoite puuttuu" ]
   },
   createdOn : {
     type : Date,
@@ -24,12 +24,12 @@ const schema = new mongoose.Schema({
   client : {
     type : mongoose.Schema.Types.ObjectId,
     ref : "Client",
-    required : [ true, "Client missing" ]
+    required : [ true, "Asiakas puuttuu" ]
   },
   manager : {
     type : mongoose.Schema.Types.ObjectId,
     ref : "Employee",
-    required : [ true, "Manager missing" ]
+    required : [ true, "Työnjohtaja puuttuu" ]
   },
   lastEditedBy : {
     type : mongoose.Schema.Types.ObjectId,
@@ -49,21 +49,21 @@ schema.options.toJSON = {
 schema.pre("validate", async function (next) {
   if ( this.endDate && this.startDate > this.endDate )
     this.invalidate(
-      "endDate", "End date must be later than start date", this.endDate)
+      "endDate", "Loppupvm ei voi edeltää alkupvm:ää", this.endDate)
 
   let count = await this.model("Project")
     .count({ projectId : this.projectId })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(
-      "projectId", "Project ID is already in use", this.projectId)
+      "projectId", "Työnumero on jo käytössä", this.projectId)
 
   if ( this.manager ) {
     let manager = await this.model("Employee")
       .findById(this.manager)
     if ( !manager || !manager.administrator )
       this.invalidate(
-        "manager", "Manager must have admin rights", this.manager)
+        "manager", "Ei työnjohtajan valtuuksia", this.manager)
   }
 
   next()

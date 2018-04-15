@@ -6,36 +6,36 @@ const validator = require("../util/validator")
 const schema = new mongoose.Schema({
   businessId : {
     type : String,
-    required : [ true, "Business ID missing" ],
+    required : [ true, "Y-tunnus puuttuu" ],
     trim : true
   },
   legalEntity : {
     type : String,
-    required : [ true, "Legal entity name missing" ],
+    required : [ true, "Toiminimi puuttuu" ],
     trim : true
   },
   contactPerson : {
     type : String,
-    required : [ true, "Contact person missing" ],
+    required : [ true, "Yhteyshenkilö puuttuu" ],
     trim : true
   },
   email : {
     type : String,
-    required : [ true, "Email missing" ],
+    required : [ true, "Email puuttuu" ],
     lowercase : true,
     trim : true,
     validate : {
       validator : validator.validateEmail,
-      message : "Invalid email"
+      message : "Virheellinen email"
     }
   },
   phone : {
     type : String,
-    required : [ true, "Phone number missing" ],
+    required : [ true, "Puhelin puuttuu" ],
     set : parser.formatPhone,
     validate : {
       validator : validator.validatePhone,
-      message : "Invalid phone number"
+      message : "Virheellinen numero"
     }
   },
   address : { type : schemas.address },
@@ -61,7 +61,7 @@ schema.pre("validate", async function (next) {
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(
-      "businessId", "Business ID is already in use", this.businessId)
+      "businessId", "Y-tunnus on jo käytössä", this.businessId)
 
   next()
 })

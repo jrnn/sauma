@@ -46,11 +46,15 @@ describe("Project API", async () => {
       await tests.getReturnsAllAsJSON(
         api, Project, url, tokens.admin))
 
-    test("fails if not authed as admin, or if invalid token", async () =>
+    test("fails if not authed as admin, or if invalid token", async () => {
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, url, 401, token))))
+            .getFailsWithStatusCode(api, url, 401, token)))
+
+      await tests.getFailsWithStatusCode(
+        api, url, 403, tokens.basic)
+    })
   })
 
   describe(`GET ${url}/:id`, async () => {
@@ -64,11 +68,15 @@ describe("Project API", async () => {
       await tests.getReturnsOneAsJSON(
         api, Project, project, path, tokens.admin))
 
-    test("fails if not authed as admin", async () =>
+    test("fails if not authed as admin", async () => {
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, path, 401, token))))
+            .getFailsWithStatusCode(api, path, 401, token)))
+
+      await tests.getFailsWithStatusCode(
+        api, path, 403, tokens.basic)
+    })
 
     test("fails with invalid or nonexisting id", async () => {
       await tests.getFailsWithStatusCode(
@@ -92,9 +100,12 @@ describe("Project API", async () => {
     test("fails if not authed as admin", async () => {
       project = [ helper.newProject(userId, clientIds) ]
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
             .postFailsWithStatusCode(api, Project, project, url, 401, token)))
+
+      await tests.postFailsWithStatusCode(
+        api, Project, project, url, 403, tokens.basic)
     })
 
     test("fails with invalid input", async () => {
@@ -141,9 +152,12 @@ describe("Project API", async () => {
     test("fails if not authed as admin", async () => {
       let updates = helper.updateProject(userId, newManager._id, newClient._id)
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
             .putFailsWithStatusCode(api, Project, [ updates ], path, 401, token)))
+
+      await tests.putFailsWithStatusCode(
+        api, Project, [ updates ], path, 403, tokens.basic)
     })
 
     test("fails with invalid or nonexisting id", async () => {

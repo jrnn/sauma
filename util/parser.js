@@ -26,11 +26,14 @@ const formatPhone = (phone) => {
   }
 }
 
-const parseValidationErrors = (ex) =>
+const parseValidationErrors = (ex, res = {}) => {
   Object
     .keys(ex.errors)
     .filter(key => ex.errors[key].path)
-    .map(key => ({ [key] : ex.errors[key].message }))
+    .map(key => res = { ...res, [key] : ex.errors[key].message })
+
+  return res
+}
 
 const trimDbObject = (obj) => {
   obj.id = obj._id

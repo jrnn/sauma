@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const address = new mongoose.Schema({
   street : {
     type : String,
-    required : [ true, "Street address missing" ],
+    required : [ true, "Katuosoite puuttuu" ],
     trim : true
   },
   streetExt : {
@@ -12,18 +12,18 @@ const address = new mongoose.Schema({
   },
   zipCode : {
     type : String,
-    required : [ true, "Postal code missing" ],
-    maxlength : [ 10, "Postal code must not exceed 10 characters" ],
+    required : [ true, "Postinumero puuttuu" ],
+    maxlength : [ 10, "Korkeintaan 10 merkkiä" ],
     trim : true
   },
   city : {
     type : String,
-    required : [ true, "City missing" ],
+    required : [ true, "Kaupunki puuttuu" ],
     trim : true
   },
   country : {
     type : String,
-    required : [ true, "Country missing" ],
+    required : [ true, "Valtio puuttuu" ],
     trim : true
   }
 })

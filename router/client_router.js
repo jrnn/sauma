@@ -6,10 +6,10 @@ const url = "/api/clients"
 
 clientRouter.get("/", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     let clients = await Client
       .find()
@@ -27,10 +27,10 @@ clientRouter.get("/", async (req, res) => {
 
 clientRouter.get("/:id", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     let client = await Client
       .findById(req.params.id)
@@ -52,12 +52,14 @@ clientRouter.get("/:id", async (req, res) => {
 
 clientRouter.post("/", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
+    req.body.lastEditedBy = req.auth.id
     let client = await new Client(req.body).save()
+
     res
       .status(201)
       .json(client)  // populate() needed...?
@@ -75,10 +77,10 @@ clientRouter.post("/", async (req, res) => {
 
 clientRouter.put("/:id", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     let client = await Client.findById(req.params.id)
     if ( !client )
@@ -87,6 +89,8 @@ clientRouter.put("/:id", async (req, res) => {
         .end()
 
     Client.overwrite(client, req.body, req.auth.admin)
+    client.lastEditedBy = req.auth.id
+
     let updated = await client.save()
     res.json(updated)  // populate() needed...?
 

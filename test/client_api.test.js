@@ -40,11 +40,15 @@ describe("Client API", async () => {
       await tests.getReturnsAllAsJSON(
         api, Client, url, tokens.admin))
 
-    test("fails if not authed as admin, or if invalid token", async () =>
+    test("fails if not authed as admin, or if invalid token", async () => {
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, url, 401, token))))
+            .getFailsWithStatusCode(api, url, 401, token)))
+
+      await tests.getFailsWithStatusCode(
+        api, url, 403, tokens.basic)
+    })
   })
 
   describe(`GET ${url}/:id`, async () => {
@@ -58,11 +62,15 @@ describe("Client API", async () => {
       await tests.getReturnsOneAsJSON(
         api, Client, client, path, tokens.admin))
 
-    test("fails if not authed as admin", async () =>
+    test("fails if not authed as admin", async () => {
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, path, 401, token))))
+            .getFailsWithStatusCode(api, path, 401, token)))
+
+      await tests.getFailsWithStatusCode(
+        api, path, 403, tokens.basic)
+    })
 
     test("fails with invalid or nonexisting id", async () => {
       await tests.getFailsWithStatusCode(
@@ -86,9 +94,12 @@ describe("Client API", async () => {
     test("fails if not authed as admin", async () => {
       client = [ helper.newClient(userId) ]
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
             .postFailsWithStatusCode(api, Client, client, url, 401, token)))
+
+      await tests.postFailsWithStatusCode(
+        api, Client, client, url, 403, tokens.basic)
     })
 
     test("fails with invalid input", async () =>
@@ -114,9 +125,12 @@ describe("Client API", async () => {
     test("fails if not authed as admin", async () => {
       let updates = [ helper.updateClient(userId) ]
       await Promise
-        .all([ undefined, tokens.invalid, tokens.basic ]
+        .all([ undefined, tokens.invalid ]
           .map(token => tests
             .putFailsWithStatusCode(api, Client, updates, path, 401, token)))
+
+      await tests.putFailsWithStatusCode(
+        api, Client, updates, path, 403, tokens.basic)
     })
 
     test("fails with invalid or nonexisting id", async () => {

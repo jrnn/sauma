@@ -6,11 +6,6 @@ const url = "/api/employees"
 
 employeeRouter.get("/", async (req, res) => {
   try {
-    if ( !req.auth )
-      return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
-
     let employees = await Employee.find()
     res.json(employees)
 
@@ -24,11 +19,6 @@ employeeRouter.get("/", async (req, res) => {
 
 employeeRouter.get("/:id", async (req, res) => {
   try {
-    if ( !req.auth )
-      return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
-
     let employee = await Employee.findById(req.params.id)
     if ( employee ) res.json(employee)
     else
@@ -46,12 +36,15 @@ employeeRouter.get("/:id", async (req, res) => {
 
 employeeRouter.post("/", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
-    req.body.pwHash = await hashPassword(req.body.password)
+    // temporary bullshit arrangement just for dev purposes
+    // should be  ... await hashPassword(req.body.password)
+    req.body.pwHash = await hashPassword("Qwerty_123")
+
     let employee = await new Employee(req.body).save()
     res
       .status(201)
@@ -70,11 +63,6 @@ employeeRouter.post("/", async (req, res) => {
 
 employeeRouter.put("/:id", async (req, res) => {
   try {
-    if ( !req.auth )
-      return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
-
     let employee = await Employee.findById(req.params.id)
     if ( !employee )
       return res
@@ -83,8 +71,8 @@ employeeRouter.put("/:id", async (req, res) => {
 
     if ( !req.auth.admin && req.auth.id !== employee.id )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     Employee.overwrite(employee, req.body, req.auth.admin)
     let updated = await employee.save()

@@ -6,10 +6,10 @@ const url = "/api/projects"
 
 projectRouter.get("/", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     // FOR BASIC USERS, COULD FILTER ONLY TO THOSE WHICH USER IS ASSIGNED TO ...?
 
@@ -31,10 +31,10 @@ projectRouter.get("/", async (req, res) => {
 
 projectRouter.get("/:id", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     let project = await Project
       .findById(req.params.id)
@@ -58,12 +58,14 @@ projectRouter.get("/:id", async (req, res) => {
 
 projectRouter.post("/", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
+    req.body.lastEditedBy = req.auth.id
     let project = await new Project(req.body).save()
+
     res
       .status(201)
       .json(project)  // populate() needed...?
@@ -81,10 +83,10 @@ projectRouter.post("/", async (req, res) => {
 
 projectRouter.put("/:id", async (req, res) => {
   try {
-    if ( !req.auth || !req.auth.admin )
+    if ( !req.auth.admin )
       return res
-        .status(401)
-        .json({ error : "Invalid or inadequate credentials" })
+        .status(403)
+        .json({ error : "You do not have permission to this resource" })
 
     let project = await Project.findById(req.params.id)
     if ( !project )
@@ -93,6 +95,8 @@ projectRouter.put("/:id", async (req, res) => {
         .end()
 
     Project.overwrite(project, req.body, req.auth.admin)
+    project.lastEditedBy = req.auth.id
+
     let updated = await project.save()
     res.json(updated)  // populate() needed...?
 

@@ -1,5 +1,16 @@
 const jwt = require("jsonwebtoken")
 
+const bouncer = (req, res, next) => {
+  if ( !req.auth ) {
+    console.log("Unauthorized request bounced")
+    return res
+      .status(401)
+      .json({ error : "Invalid credentials" })
+  }
+
+  next()
+}
+
 const logger = (req, res, next) => {
   if ( process.env.NODE_ENV === "test" )
     return next()
@@ -24,14 +35,15 @@ const tokenParser = (req, res, next) => {
     if ( token.handshake === process.env.HANDSHAKE ) {
       delete token.handshake
       req.auth = token
-      req.body.lastEditedBy = token.id
     }
+
   } catch (ex) { req.auth = undefined }
 
   next()
 }
 
 module.exports = {
+  bouncer,
   logger,
   tokenParser
 }

@@ -283,21 +283,21 @@ const invalidEmployees = [
     email : "jonne@mopo.es",
     phone : "0401234567"
   },
-  {
-    username : "jonne",
+  /*{
+    username : "jonne",       TEMPORARILY OUT
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
     phone : "0401234567"
   },
   {
-    username : "jonne",
+    username : "jonne",       TEMPORARILY OUT
     password : "trustno1",
     firstName : "Jonne",
     lastName : "McMopoface",
     email : "jonne@mopo.es",
     phone : "0401234567"
-  },
+  },*/
   {
     username : "jonne",
     password : "Qwerty_123",
