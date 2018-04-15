@@ -4,6 +4,13 @@ const Project = require("../model/project")
 const projectRouter = require("express").Router()
 const url = "/api/projects"
 
+const findOneAndPopulate = async (id) =>
+  await Project
+    .findById(id)
+    .populate("client", croppedFields)
+    .populate("lastEditedBy", croppedFields)
+    .populate("manager", croppedFields)
+
 projectRouter.get("/", async (req, res) => {
   try {
     if ( !req.auth.admin )
@@ -36,11 +43,7 @@ projectRouter.get("/:id", async (req, res) => {
         .status(403)
         .json({ error : "You do not have permission to this resource" })
 
-    let project = await Project
-      .findById(req.params.id)
-      .populate("client", croppedFields)
-      .populate("lastEditedBy", croppedFields)
-      .populate("manager", croppedFields)
+    let project = await findOneAndPopulate(req.params.id)
 
     if ( project ) res.json(project)
     else
@@ -65,10 +68,11 @@ projectRouter.post("/", async (req, res) => {
 
     req.body.lastEditedBy = req.auth.id
     let project = await new Project(req.body).save()
+    project = await findOneAndPopulate(project._id)
 
     res
       .status(201)
-      .json(project)  // populate() needed...?
+      .json(project)
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )
@@ -97,8 +101,10 @@ projectRouter.put("/:id", async (req, res) => {
     Project.overwrite(project, req.body, req.auth.admin)
     project.lastEditedBy = req.auth.id
 
-    let updated = await project.save()
-    res.json(updated)  // populate() needed...?
+    await project.save()
+    let updated = await findOneAndPopulate(req.params.id)
+
+    res.json(updated)
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )

@@ -13,6 +13,9 @@ mongoose
     console.log(ex))
 mongoose.Promise = global.Promise
 
+// static resources
+app.use(express.static("build"))
+
 // middleware and routers
 const cors = require("cors")
 const bodyParser = require("body-parser")
@@ -34,9 +37,6 @@ const projectRouter = require("./router/project_router")
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
 app.use("/api/projects", projectRouter)
-
-// static resources
-app.use(express.static("build"))
 
 server.listen(config.port, () =>
   console.log(`Server now listening on port ${config.port}`))

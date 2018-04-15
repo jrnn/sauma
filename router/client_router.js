@@ -4,6 +4,11 @@ const croppedFields = { createdOn : 0, lastEditedBy : 0 }
 const parser = require("../util/parser")
 const url = "/api/clients"
 
+const findOneAndPopulate = async (id) =>
+  await Client
+    .findById(id)
+    .populate("lastEditedBy", croppedFields)
+
 clientRouter.get("/", async (req, res) => {
   try {
     if ( !req.auth.admin )
@@ -32,9 +37,7 @@ clientRouter.get("/:id", async (req, res) => {
         .status(403)
         .json({ error : "You do not have permission to this resource" })
 
-    let client = await Client
-      .findById(req.params.id)
-      .populate("lastEditedBy", croppedFields)
+    let client = await findOneAndPopulate(req.params.id)
 
     if ( client ) res.json(client)
     else
@@ -43,7 +46,7 @@ clientRouter.get("/:id", async (req, res) => {
         .end()
 
   } catch (ex) {
-    console.log(`Error @ GET ${url}/${req.params.id}`, ex.message)
+    console.log(`ERROR @ GET ${url}/${req.params.id}`, ex.message)
     res
       .status(400)
       .json({ error : ex.message })
@@ -59,10 +62,11 @@ clientRouter.post("/", async (req, res) => {
 
     req.body.lastEditedBy = req.auth.id
     let client = await new Client(req.body).save()
+    client = await findOneAndPopulate(client._id)
 
     res
       .status(201)
-      .json(client)  // populate() needed...?
+      .json(client)
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )
@@ -91,8 +95,10 @@ clientRouter.put("/:id", async (req, res) => {
     Client.overwrite(client, req.body, req.auth.admin)
     client.lastEditedBy = req.auth.id
 
-    let updated = await client.save()
-    res.json(updated)  // populate() needed...?
+    await client.save()
+    let updated = await findOneAndPopulate(req.params.id)
+
+    res.json(updated)
 
   } catch (ex) {
     if ( ex.name === "ValidationError" )
