@@ -49,6 +49,12 @@ const schema = new mongoose.Schema({
     type : Boolean,
     default : false
   },
+  projects : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "Project"
+    }
+  ],
   createdOn : {
     type : Date,
     default : Date.now
@@ -57,7 +63,6 @@ const schema = new mongoose.Schema({
    *   - more detailed authorities/privileges (array of Strings?)
    *   - labour cost/hour
    *   - "perehdytykset" (array of Site ObjectIds?)
-   *   - associated Sites (-- '' --)
    */
 })
 

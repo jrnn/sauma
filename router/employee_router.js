@@ -4,9 +4,24 @@ const { hashPassword } = require("../service/auth_service")
 const parser = require("../util/parser")
 const url = "/api/employees"
 
+const projectFields = {
+  client : 1,
+  endDate : 1,
+  projectId : 1,
+  startDate : 1
+}
+
+const findOneAndPopulate = async (id) =>
+  await Employee
+    .findById(id)
+    .populate("projects", projectFields)
+
 employeeRouter.get("/", async (req, res) => {
   try {
-    let employees = await Employee.find()
+    let employees = await Employee
+      .find()
+      .populate("projects", projectFields)
+
     res.json(employees)
 
   } catch (ex) {
@@ -19,7 +34,7 @@ employeeRouter.get("/", async (req, res) => {
 
 employeeRouter.get("/:id", async (req, res) => {
   try {
-    let employee = await Employee.findById(req.params.id)
+    let employee = await findOneAndPopulate(req.params.id)
     if ( employee ) res.json(employee)
     else
       res
@@ -46,6 +61,8 @@ employeeRouter.post("/", async (req, res) => {
     req.body.pwHash = await hashPassword("Qwerty_123")
 
     let employee = await new Employee(req.body).save()
+    employee = await findOneAndPopulate(employee._id)
+
     res
       .status(201)
       .json(employee)
@@ -75,7 +92,9 @@ employeeRouter.put("/:id", async (req, res) => {
         .json({ error : "You do not have permission to this resource" })
 
     Employee.overwrite(employee, req.body, req.auth.admin)
-    let updated = await employee.save()
+    await employee.save()
+    let updated = await findOneAndPopulate(req.params.id)
+
     res.json(updated)
 
   } catch (ex) {

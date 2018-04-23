@@ -46,15 +46,11 @@ describe("Project API", async () => {
       await tests.getReturnsAllAsJSON(
         api, Project, url, tokens.admin))
 
-    test("fails if not authed as admin, or if invalid token", async () => {
+    test("fails if not authed, or if invalid token", async () =>
       await Promise
         .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, url, 401, token)))
-
-      await tests.getFailsWithStatusCode(
-        api, url, 403, tokens.basic)
-    })
+            .getFailsWithStatusCode(api, url, 401, token))))
   })
 
   describe(`GET ${url}/:id`, async () => {

@@ -31,6 +31,12 @@ const schema = new mongoose.Schema({
     ref : "Employee",
     required : [ true, "Työnjohtaja puuttuu" ]
   },
+  employees : [
+    {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : "Employee"
+    }
+  ],
   lastEditedBy : {
     type : mongoose.Schema.Types.ObjectId,
     ref : "Employee",
