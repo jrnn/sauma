@@ -26,15 +26,6 @@ const formatPhone = (phone) => {
   }
 }
 
-const parseValidationErrors = (ex, res = {}) => {
-  Object
-    .keys(ex.errors)
-    .filter(key => ex.errors[key].path)
-    .map(key => res = { ...res, [key] : ex.errors[key].message })
-
-  return res
-}
-
 const trimDbObject = (obj) => {
   obj.id = obj._id
 
@@ -47,6 +38,5 @@ const trimDbObject = (obj) => {
 module.exports = {
   filterByKeys,
   formatPhone,
-  parseValidationErrors,
   trimDbObject
 }

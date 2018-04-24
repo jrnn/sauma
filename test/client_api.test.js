@@ -72,13 +72,11 @@ describe("Client API", async () => {
         api, path, 403, tokens.basic)
     })
 
-    test("fails with invalid or nonexisting id", async () => {
-      await tests.getFailsWithStatusCode(
-        api, nonExistingId, 404, tokens.admin)
-
-      await tests.getFailsWithStatusCode(
-        api, invalidId, 400, tokens.admin)
-    })
+    test("fails with invalid or nonexisting id", async () =>
+      await Promise
+        .all([ invalidId, nonExistingId ]
+          .map(id => tests
+            .getFailsWithStatusCode(api, id, 404, tokens.admin))))
   })
 
   describe(`POST ${url}`, async () => {
@@ -136,11 +134,10 @@ describe("Client API", async () => {
     test("fails with invalid or nonexisting id", async () => {
       let updates = [ helper.updateClient(userId) ]
 
-      await tests.putFailsWithStatusCode(
-        api, Client, updates, nonExistingId, 404, tokens.admin)
-
-      await tests.putFailsWithStatusCode(
-        api, Client, updates, invalidId, 400, tokens.admin)
+      await Promise
+        .all([ invalidId, nonExistingId ]
+          .map(id => tests.putFailsWithStatusCode(
+            api, Client, updates, id, 404, tokens.admin)))
     })
 
     test("fails with invalid input", async () =>

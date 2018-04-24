@@ -9,7 +9,7 @@ mongoose
   .connect(config.dbUri)
   .then(() =>
     console.log("Now connected to database"))
-  .catch (ex =>
+  .catch(ex =>
     console.log(ex))
 mongoose.Promise = global.Promise
 
@@ -37,6 +37,10 @@ const projectRouter = require("./router/project_router")
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
 app.use("/api/projects", projectRouter)
+
+// and finally, centralized error handling
+const { errorHandler } = require("./util/errors")
+app.use(errorHandler)
 
 server.listen(config.port, () =>
   console.log(`Server now listening on port ${config.port}`))

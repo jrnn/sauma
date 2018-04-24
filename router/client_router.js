@@ -1,114 +1,71 @@
+const { AuthorizationError } = require("../util/errors")
 const Client = require("../model/client")
 const clientRouter = require("express").Router()
-const croppedFields = { createdOn : 0, lastEditedBy : 0 }
-const parser = require("../util/parser")
-const url = "/api/clients"
+const { wrapHandler } = require("../util/util")
+
+const employeeFields = {
+  administrator : 1,
+  firstName : 1,
+  lastName : 1
+}
 
 const findOneAndPopulate = async (id) =>
   await Client
     .findById(id)
-    .populate("lastEditedBy", croppedFields)
+    .populate("lastEditedBy", employeeFields)
 
-clientRouter.get("/", async (req, res) => {
-  try {
-    if ( !req.auth.admin )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
+clientRouter.get("/", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
 
-    let clients = await Client
-      .find()
-      .populate("lastEditedBy", croppedFields)
+  let clients = await Client
+    .find()
+    .populate("lastEditedBy", employeeFields)
 
-    res.json(clients)
+  res
+    .status(200)
+    .json(clients)
+}))
 
-  } catch (ex) {
-    console.log(`Error @ GET ${url}`, ex.message)
-    res
-      .status(400)
-      .json({ error : ex.message })
-  }
-})
+clientRouter.get("/:id", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
 
-clientRouter.get("/:id", async (req, res) => {
-  try {
-    if ( !req.auth.admin )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
+  let client = await findOneAndPopulate(req.params.id)
 
-    let client = await findOneAndPopulate(req.params.id)
+  client._id  // throws TypeError if !client
+  res
+    .status(200)
+    .json(client)
+}))
 
-    if ( client ) res.json(client)
-    else
-      res
-        .status(404)
-        .end()
+clientRouter.post("/", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
 
-  } catch (ex) {
-    console.log(`ERROR @ GET ${url}/${req.params.id}`, ex.message)
-    res
-      .status(400)
-      .json({ error : ex.message })
-  }
-})
+  req.body.lastEditedBy = req.auth.id
+  let client = await new Client(req.body).save()
+  client = await findOneAndPopulate(client._id)
 
-clientRouter.post("/", async (req, res) => {
-  try {
-    if ( !req.auth.admin )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
+  res
+    .status(201)
+    .json(client)
+}))
 
-    req.body.lastEditedBy = req.auth.id
-    let client = await new Client(req.body).save()
-    client = await findOneAndPopulate(client._id)
+clientRouter.put("/:id", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
 
-    res
-      .status(201)
-      .json(client)
+  let client = await Client.findById(req.params.id)
+  Client.overwrite(client, req.body, req.auth.admin)
+  client.lastEditedBy = req.auth.id
 
-  } catch (ex) {
-    if ( ex.name === "ValidationError" )
-      ex.message = await parser.parseValidationErrors(ex)
+  await client.save()
+  let updated = await findOneAndPopulate(req.params.id)
 
-    console.log(`Error @ POST ${url}`, ex.message)
-    res
-      .status(400)
-      .json({ [ex.name] : ex.message })
-  }
-})
-
-clientRouter.put("/:id", async (req, res) => {
-  try {
-    if ( !req.auth.admin )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
-
-    let client = await Client.findById(req.params.id)
-    if ( !client )
-      return res
-        .status(404)
-        .end()
-
-    Client.overwrite(client, req.body, req.auth.admin)
-    client.lastEditedBy = req.auth.id
-
-    await client.save()
-    let updated = await findOneAndPopulate(req.params.id)
-
-    res.json(updated)
-
-  } catch (ex) {
-    if ( ex.name === "ValidationError" )
-      ex.message = await parser.parseValidationErrors(ex)
-
-    console.log(`Error @ PUT ${url}/${req.params.id}`, ex.message)
-    res
-      .status(400)
-      .json({ [ex.name] : ex.message })
-  }
-})
+  res
+    .status(200)
+    .json(updated)
+}))
 
 module.exports = clientRouter

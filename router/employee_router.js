@@ -1,8 +1,8 @@
+const { AuthorizationError } = require("../util/errors")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
 const { hashPassword } = require("../service/auth_service")
-const parser = require("../util/parser")
-const url = "/api/employees"
+const { wrapHandler } = require("../util/util")
 
 const projectFields = {
   client : 1,
@@ -16,96 +16,54 @@ const findOneAndPopulate = async (id) =>
     .findById(id)
     .populate("projects", projectFields)
 
-employeeRouter.get("/", async (req, res) => {
-  try {
-    let employees = await Employee
-      .find()
-      .populate("projects", projectFields)
+employeeRouter.get("/", wrapHandler(async (req, res) => {
+  let employees = await Employee
+    .find()
+    .populate("projects", projectFields)
 
-    res.json(employees)
+  res
+    .status(200)
+    .json(employees)
+}))
 
-  } catch (ex) {
-    console.log(`Error @ GET ${url}`, ex.message)
-    res
-      .status(400)
-      .json({ error : ex.message })
-  }
-})
+employeeRouter.get("/:id", wrapHandler(async (req, res) => {
+  let employee = await findOneAndPopulate(req.params.id)
 
-employeeRouter.get("/:id", async (req, res) => {
-  try {
-    let employee = await findOneAndPopulate(req.params.id)
-    if ( employee ) res.json(employee)
-    else
-      res
-        .status(404)
-        .end()
+  employee._id  // throws TypeError if !employee
+  res
+    .status(200)
+    .json(employee)
+}))
 
-  } catch (ex) {
-    console.log(`Error @ GET ${url}/${req.params.id}`, ex.message)
-    res
-      .status(400)
-      .json({ error : ex.message })
-  }
-})
+employeeRouter.post("/", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
 
-employeeRouter.post("/", async (req, res) => {
-  try {
-    if ( !req.auth.admin )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
+  // temporary bullshit arrangement just for dev purposes
+  // should be  ... await hashPassword(req.body.password)
+  req.body.pwHash = await hashPassword("Qwerty_123")
 
-    // temporary bullshit arrangement just for dev purposes
-    // should be  ... await hashPassword(req.body.password)
-    req.body.pwHash = await hashPassword("Qwerty_123")
+  let employee = await new Employee(req.body).save()
+  employee = await findOneAndPopulate(employee._id)
 
-    let employee = await new Employee(req.body).save()
-    employee = await findOneAndPopulate(employee._id)
+  res
+    .status(201)
+    .json(employee)
+}))
 
-    res
-      .status(201)
-      .json(employee)
+employeeRouter.put("/:id", wrapHandler(async (req, res) => {
+  let employee = await Employee.findById(req.params.id)
 
-  } catch (ex) {
-    if ( ex.name === "ValidationError" )
-      ex.message = await parser.parseValidationErrors(ex)
+  if ( !req.auth.admin && req.auth.id !== employee.id )
+    throw AuthorizationError()
 
-    console.log(`Error @ POST ${url}`, ex.message)
-    res
-      .status(400)
-      .json({ [ex.name] : ex.message })
-  }
-})
+  Employee.overwrite(employee, req.body, req.auth.admin)
+  await employee.save()
+  let updated = await findOneAndPopulate(req.params.id)
 
-employeeRouter.put("/:id", async (req, res) => {
-  try {
-    let employee = await Employee.findById(req.params.id)
-    if ( !employee )
-      return res
-        .status(404)
-        .end()
-
-    if ( !req.auth.admin && req.auth.id !== employee.id )
-      return res
-        .status(403)
-        .json({ error : "You do not have permission to this resource" })
-
-    Employee.overwrite(employee, req.body, req.auth.admin)
-    await employee.save()
-    let updated = await findOneAndPopulate(req.params.id)
-
-    res.json(updated)
-
-  } catch (ex) {
-    if ( ex.name === "ValidationError" )
-      ex.message = await parser.parseValidationErrors(ex)
-
-    console.log(`Error @ PUT ${url}/${req.params.id}`, ex.message)
-    res
-      .status(400)
-      .json({ [ex.name] : ex.message })
-  }
-})
+  res
+    .status(200)
+    .json(updated)
+}))
 
 module.exports = employeeRouter

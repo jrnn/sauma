@@ -2,7 +2,9 @@ const jwt = require("jsonwebtoken")
 
 const bouncer = (req, res, next) => {
   if ( !req.auth ) {
-    console.log("Unauthorized request bounced")
+    if ( process.env.NODE_ENV !== "test" )
+      console.log("Unauthorized request bounced")
+
     return res
       .status(401)
       .json({ error : "Invalid credentials" })

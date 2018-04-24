@@ -2,6 +2,7 @@ const { app, server } = require("../index")
 const supertest = require("supertest")
 const api = supertest(app)
 
+const { createToken } = require("../service/auth_service")
 const Client = require("../model/client")
 const Employee = require("../model/employee")
 const Project = require("../model/project")
@@ -46,6 +47,46 @@ describe("Project API", async () => {
       await tests.getReturnsAllAsJSON(
         api, Project, url, tokens.admin))
 
+    test("for non-admin user, returns only projects to which user is assigned", async () => {
+      let res = await api
+        .get(url)
+        .set("authorization", `bearer ${tokens.basic}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.length).toBe(0)
+
+      let basicUser = await new Employee({
+        username : "basic_user_with_projects",
+        pwHash : "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK",
+        firstName : "Basic",
+        lastName : "McProjectface",
+        email : "basic@sauma.io",
+        phone : "123456789"
+      }).save()
+
+      let token = createToken(basicUser, process.env.SECRET, process.env.HANDSHAKE)
+
+      let projects = await Project
+        .find({ $or: [
+          { projectId : "my_first_project" },
+          { projectId : "my_third_project" }
+        ] })
+
+      projects.map(p => p.employees = [ basicUser._id ])
+      await Promise.all(projects.map(p => p.save()))
+
+      res = await api
+        .get(url)
+        .set("authorization", `bearer ${token}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.length).toBe(projects.length)
+      expect(res.body.map(p => p.projectId))
+        .toContain("my_first_project", "my_third_project")
+    })
+
     test("fails if not authed, or if invalid token", async () =>
       await Promise
         .all([ undefined, tokens.invalid ]
@@ -64,23 +105,23 @@ describe("Project API", async () => {
       await tests.getReturnsOneAsJSON(
         api, Project, project, path, tokens.admin))
 
-    test("fails if not authed as admin", async () => {
+    test("for basic user, returns project only if assigned to that project", async () => {
+      /*
+       *  TBA
+       */
+    })
+
+    test("fails if not authed as admin", async () =>
       await Promise
         .all([ undefined, tokens.invalid ]
           .map(token => tests
-            .getFailsWithStatusCode(api, path, 401, token)))
+            .getFailsWithStatusCode(api, path, 401, token))))
 
-      await tests.getFailsWithStatusCode(
-        api, path, 403, tokens.basic)
-    })
-
-    test("fails with invalid or nonexisting id", async () => {
-      await tests.getFailsWithStatusCode(
-        api, nonExistingId, 404, tokens.admin)
-
-      await tests.getFailsWithStatusCode(
-        api, invalidId, 400, tokens.admin)
-    })
+    test("fails with invalid or nonexisting id", async () =>
+      await Promise
+        .all([ invalidId, nonExistingId ]
+          .map(id => tests
+            .getFailsWithStatusCode(api, id, 404, tokens.admin))))
   })
 
   describe(`POST ${url}`, async () => {
@@ -159,11 +200,10 @@ describe("Project API", async () => {
     test("fails with invalid or nonexisting id", async () => {
       let updates = helper.updateProject(userId, newManager._id, newClient._id)
 
-      await tests.putFailsWithStatusCode(
-        api, Project, [ updates ], nonExistingId, 404, tokens.admin)
-
-      await tests.putFailsWithStatusCode(
-        api, Project, [ updates ], invalidId, 400, tokens.admin)
+      await Promise
+        .all([ invalidId, nonExistingId ]
+          .map(id => tests.putFailsWithStatusCode(
+            api, Project, [ updates ], id, 404, tokens.admin)))
     })
 
     test("fails with invalid input", async () =>
