@@ -16,6 +16,11 @@ mongoose.Promise = global.Promise
 // static resources
 app.use(express.static("build"))
 
+if ( process.env.NODE_ENV === "production" ) {
+  const enforce = require("express-sslify")
+  app.use(enforce.HTTPS({ trustProtoHeader : true }))
+}
+
 // middleware and routers
 const cors = require("cors")
 const bodyParser = require("body-parser")
