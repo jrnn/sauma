@@ -95,7 +95,7 @@ describe("Project API", async () => {
 
     beforeAll(async () => {
       project = await helper.randomProject()
-      path = `${url}/${project.id}`
+      path = `${url}/${project._id}`
     })
 
     test("with valid id returns that project as JSON", async () =>
@@ -109,9 +109,31 @@ describe("Project API", async () => {
         ))
 
     test("for basic user, returns project only if assigned to that project", async () => {
-      /*
-       *  TBA
-       */
+      let employee = await Employee
+        .findOne({ projects : project._id })
+
+      let employees = await Employee
+        .find({ administrator : false })
+        .where({ _id : { $ne : employee._id } })
+
+      await tests
+        .getReturnsOneAsJSON(
+          api,
+          Project,
+          project,
+          path,
+          createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
+        )
+
+      await Promise
+        .all(employees
+          .map(e => tests
+            .getFailsWithStatusCode(
+              api,
+              path,
+              403,
+              createToken(e, process.env.SECRET, process.env.HANDSHAKE)
+            )))
     })
 
     test("fails if invalid token", async () =>
@@ -326,6 +348,141 @@ describe("Project API", async () => {
           tokens.admin
         )
     })
+  })
+
+  describe(`POST ${url}/:id/employees`, async () => {
+
+    let employee
+
+    beforeAll(async () => {
+      employee = await helper.randomEmployee()
+      project = await helper.randomProject()
+    })
+
+    const assignEmployeeToProject = async (projectBefore, employeeBefore) => {
+      await api
+        .post(`${url}/${projectBefore._id}/employees`)
+        .set("authorization", `bearer ${tokens.admin}`)
+        .send({ id : employeeBefore._id })
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      let projectAfter = await Project
+        .findById(projectBefore._id)
+
+      let employeeAfter = await Employee
+        .findById(employeeBefore._id)
+
+      expect(projectAfter.employees
+        .map(id => id.toString()))
+        .toContain(employeeAfter._id.toString())
+
+      expect(employeeAfter.projects
+        .map(id => id.toString()))
+        .toContain(projectAfter._id.toString())
+
+      Employee.testAttrs.map(attr =>
+        expect(JSON.stringify(employeeBefore[attr]))
+          .toEqual(JSON.stringify(employeeAfter[attr])))
+
+      Project.testAttrs.map(attr =>
+        expect(JSON.stringify(projectBefore[attr]))
+          .toEqual(JSON.stringify(projectAfter[attr])))
+
+      return { employeeAfter, projectAfter }
+    }
+
+    test("succeeds with valid input, and affects only related fields", async () => {
+      project = await helper.randomProject()
+      employee = await Employee
+        .findOne({ projects : { $ne : project._id } })
+
+      await assignEmployeeToProject(project, employee)
+    })
+
+    test("cannot assign same employee twice to one project", async () => {
+      project = await helper.randomProject()
+      employee = await Employee
+        .findOne({ projects : { $ne : project._id } })
+
+      await assignEmployeeToProject(project, employee)
+
+      let { employeeAfter, projectAfter } =
+        await assignEmployeeToProject(project, employee)
+
+      expect(employeeAfter.projects.length)
+        .toBe(employee.projects.length + 1)
+
+      expect(projectAfter.employees.length)
+        .toBe(project.employees.length + 1)
+    })
+
+    test("can assign more than one employee to one project", async () => {
+      let employees = await Employee
+        .find({ administrator : false })
+        .limit(3)
+
+      project = await new Project(
+        helper.newProject(adminId, clientIds)).save()
+
+      expect(project.employees.length).toBe(0)
+
+      await assignEmployeeToProject(project, employees[0])
+      await assignEmployeeToProject(project, employees[1])
+
+      let { projectAfter } = await assignEmployeeToProject(
+        project, employees[2])
+
+      expect(projectAfter.employees.length).toBe(3)
+    })
+
+    test("fails if invalid project id or employee id", async () => {
+      await tests
+        .postFailsWithStatusCode(
+          api,
+          Project,
+          [{ id : employee._id }],
+          `${url}/${new Project()._id}/employees`,
+          404,
+          tokens.admin)
+
+      await tests
+        .postFailsWithStatusCode(
+          api,
+          Project,
+          [
+            undefined,
+            { id : new Employee()._id },
+            { id : "this_is_not_a_valid_id" }
+          ],
+          `${url}/${project._id}/employees`,
+          404,
+          tokens.admin)
+    })
+
+    test("fails if invalid token", async () =>
+      await Promise
+        .all(tokens.invalid
+          .map(token => tests
+            .postFailsWithStatusCode(
+              api,
+              Project,
+              [{ id : employee._id }],
+              `${url}/${project._id}/employees`,
+              401,
+              token
+            ))))
+
+    test("fails if not authed as admin", async () =>
+      await tests
+        .postFailsWithStatusCode(
+          api,
+          Project,
+          [{ id : employee._id }],
+          `${url}/${project._id}/employees`,
+          403,
+          tokens.basic
+        ))
   })
 })
 
