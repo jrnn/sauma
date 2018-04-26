@@ -8,7 +8,6 @@ const getReturnsAllAsJSON = async (api, Entity, path, token) => {
     .expect(200)
     .expect("content-type", /application\/json/)
 
-  // CAN THIS BE SIMPLIFIED ???
   Entity.testAttrs.map(attr => {
     data = { ...data, [attr] : [] }
     res.body.map(entity =>

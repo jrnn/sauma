@@ -23,8 +23,8 @@ describe("Login API", async () => {
 
     test("succeeds with valid credentials, and returns token as JSON with correct data", async () => {
       let username = (Math.random() < 0.5)
-        ? "basic_user"
-        : "admin_user"
+        ? "basic1"
+        : "admin1"
 
       let employee = await Employee.findOne({ username })
       let res = await api
@@ -44,8 +44,8 @@ describe("Login API", async () => {
 
     test("fails when account is disabled", async () => {
       let username = (Math.random() < 0.5)
-        ? "basic_user"
-        : "admin_user"
+        ? "basic2"
+        : "admin2"
 
       await api
         .post(url)

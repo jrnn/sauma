@@ -11,46 +11,70 @@ const clearDb = async () => {
 }
 
 const initClients = async () => {
-  let user = await Employee.findOne({ username : "admin_user" })
+  let user = await Employee
+    .findOne({ username : "admin1" })
 
   await Promise
     .all(data.initClients
-      .map(c => c = { ...c, address : randomAddress() })
+      .map(c => c = { ...c, address : random(data.validAddresses) })
       .map(c => c = { ...c, lastEditedBy : user.id })
-      .map(c => new Client(c))
-      .map(c => c.save()))
+      .map(c => new Client(c).save()))
 }
 
 const initEmployees = async () =>
   await Promise
     .all(data.initEmployees
-      .map(e => e = { ...e, address : randomAddress() })
-      .map(e => new Employee(e))
-      .map(e => e.save()))
+      .map(e => e = { ...e, address : random(data.validAddresses) })
+      .map(e => e = { ...e, pwHash : random(data.validHashes) })
+      .map(e => new Employee(e).save()))
 
 const initProjects = async () => {
-  let manager = await Employee.findOne({ username : "admin_user" })
   let clients = await Client.find()
+  let manager = await Employee
+    .findOne({ username : "admin1" })
 
   await Promise
     .all(data.initProjects
-      .map(p => p = { ...p, address : randomAddress() })
+      .map(p => p = { ...p, address : random(data.validAddresses) })
       .map(p => p = { ...p, lastEditedBy : manager.id })
+      .map(p => p = { ...p, client : random(clients).id })
       .map(p => p = { ...p, manager : manager.id })
-      .map(p => p = { ...p, client : clients[randomIdx(clients.length)].id })
-      .map(p => new Project(p))
-      .map(p => p.save()))
+      .map(p => new Project(p).save()))
+
+  let projects = await Project.find()
+  let employees = await Employee
+    .find({ username : [ "basic1", "basic2" ] })
+
+  let i = 0
+  projects.map(p => {
+    i = (i + 1) % 2
+    p.employees = p.employees.concat(employees[i]._id)
+    employees[i].projects = employees[i].projects.concat(p._id)
+  })
+
+  await Promise.all(employees.map(e => e.save()))
+  await Promise.all(projects.map(p => p.save()))
 }
 
 const initTokens = async () => {
-  let basicUser = await Employee.findOne({ username : "basic_user" })
-  let adminUser = await Employee.findOne({ username : "admin_user" })
+  let handshake = process.env.HANDSHAKE
+  let secret = process.env.SECRET
 
-  let admin = createToken(adminUser, process.env.SECRET, process.env.HANDSHAKE)
-  let basic = createToken(basicUser, process.env.SECRET, process.env.HANDSHAKE)
-  let invalid = createToken(basicUser, "open_sesame", process.env.HANDSHAKE)
+  let basicUser = await Employee
+    .findOne({ username : "basic1" })
+  let adminUser = await Employee
+    .findOne({ username : "admin1" })
 
-  return { admin, basic, invalid }
+  return {
+    admin : createToken(adminUser, secret, handshake),
+    basic : createToken(basicUser, secret, handshake),
+    invalid : [
+      undefined,
+      createToken(basicUser, "open_sesame", handshake),
+      createToken(basicUser, secret, "open_sesame"),
+      createToken(basicUser, "open_sesame", "open_sesame")
+    ]
+  }
 }
 
 const invalidClients = (userId) => {
@@ -67,15 +91,17 @@ const invalidClientUpdates = (userId) => {
   return updates
 }
 
-const invalidCredentials = () => data.invalidCredentials
+const invalidCredentials = () =>
+  data.invalidCredentials
 
-const invalidEmployees = () => data.invalidEmployees
+const invalidEmployees = () =>
+  data.invalidEmployees
 
-const invalidEmployeeUpdates = () => data.invalidEmployeeUpdates
+const invalidEmployeeUpdates = () =>
+  data.invalidEmployeeUpdates
 
 const invalidProjects = (userId, clientIds) => {
-  let projects = data.invalidProjects(
-    userId, clientIds[randomIdx(clientIds.length)])
+  let projects = data.invalidProjects(userId, random(clientIds))
   projects.map(p => p.lastEditedBy = userId)
 
   return projects
@@ -89,59 +115,60 @@ const invalidProjectUpdates = (userId) => {
 }
 
 const newClient = (userId) => {
-  let i = randomIdx(data.newClients.length)
+  let i = randomIndex(data.newClients.length)
   let client = data.newClients.splice(i, 1)[0]
 
-  client.address = randomAddress()
+  client.address = random(data.validAddresses)
   client.lastEditedBy = userId
 
   return client
 }
 
 const newEmployee = () => {
-  let i = randomIdx(data.newEmployees.length)
+  let i = randomIndex(data.newEmployees.length)
   let employee = data.newEmployees.splice(i, 1)[0]
 
-  employee.address = randomAddress()
-  employee.pwHash = "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2"
+  employee.address = random(data.validAddresses)
+  employee.pwHash = random(data.validHashes)
 
   return employee
 }
 
 const newProject = (userId, clientIds) => {
-  let i = randomIdx(data.newProjects.length)
+  let i = randomIndex(data.newProjects.length)
   let project = data.newProjects.splice(i, 1)[0]
 
-  project.address = randomAddress()
+  project.address = random(data.validAddresses)
   project.lastEditedBy = userId
   project.manager = userId
-  project.client = clientIds[randomIdx(clientIds.length)]
+  project.client = random(clientIds)
 
   return project
 }
 
-const randomAddress = () =>
-  data.validAddresses[randomIdx(data.validAddresses.length)]
+const random = (array) =>
+  array[randomIndex(array.length)]
+
+const randomIndex = (n) =>
+  Math.floor(Math.random() * n)
 
 const randomClient = async () => {
   let clients = await Client.find()
-  return clients[randomIdx(clients.length)]
+  return random(clients)
 }
 
 const randomEmployee = async () => {
   let employees = await Employee.find()
-  return employees[randomIdx(employees.length)]
+  return random(employees)
 }
-
-const randomIdx = (n) => Math.floor(Math.random() * n)
 
 const randomProject = async () => {
   let projects = await Project.find()
-  return projects[randomIdx(projects.length)]
+  return random(projects)
 }
 
 const updateClient = (userId) => {
-  let i = randomIdx(data.updateClients.length)
+  let i = randomIndex(data.updateClients.length)
   let client = data.updateClients.splice(i, 1)[0]
   client.lastEditedBy = userId
 
@@ -149,14 +176,14 @@ const updateClient = (userId) => {
 }
 
 const updateEmployee = () => {
-  let i = randomIdx(data.updateEmployees.length)
+  let i = randomIndex(data.updateEmployees.length)
   let employee = data.updateEmployees.splice(i, 1)[0]
 
   return employee
 }
 
 const updateProject = (userId, managerId, clientId) => {
-  let i = randomIdx(data.updateProjects.length)
+  let i = randomIndex(data.updateProjects.length)
   let project = data.updateProjects.splice(i, 1)[0]
 
   project.lastEditedBy = userId
@@ -182,7 +209,6 @@ module.exports = {
   newClient,
   newEmployee,
   newProject,
-  randomAddress,
   randomClient,
   randomEmployee,
   randomProject,

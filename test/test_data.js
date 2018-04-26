@@ -1,72 +1,88 @@
 const initClients = [
   {
-    legalEntity : "ACME Explosives Inc.",
-    businessId : "1234567-8",
-    contactPerson : "Acme McExplosiveface",
-    email : "acme@explosives.inc",
+    legalEntity : "First Client Inc.",
+    businessId : "client1",
+    contactPerson : "Client McOneface",
+    email : "client1@sauma.io",
     phone : "42 313 666"
   },
   {
-    legalEntity : "Foobar Solutions LLC",
-    businessId : "1123581-3",
-    contactPerson : "Foo McBarface",
-    email : "foo@bar.io",
+    legalEntity : "Second Client Inc.",
+    businessId : "client2",
+    contactPerson : "Client McTwoface",
+    email : "client2@sauma.io",
     phone : "42-3131337"
   },
   {
-    legalEntity : "EVVK Yhtiöt Oyj",
-    businessId : "2481632-6",
-    contactPerson : "Evvk McEvoface",
-    email : "info@evvk.fi",
+    legalEntity : "Third Client Inc.",
+    businessId : "client3",
+    contactPerson : "Client McThreeface",
+    email : "client3@sauma.io",
     phone : "0406661337"
-  },
-  {
-    legalEntity : "Soylent Corporations",
-    businessId : "50YL3N7-G",
-    contactPerson : "Soylent McGreenface",
-    email : "ceo@soyle.nt",
-    phone : "1-13-42-65536"
   }
 ]
 
 const initEmployees = [
   {
-    username : "admin_user",
-    pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
+    username : "admin1",
     firstName : "Admin",
-    lastName : "McAdminface",
-    email : "admin@sauma.io",
+    lastName : "McOneface",
+    email : "admin1@sauma.io",
     phone : "42 1337 666",
     enabled : true,
     administrator : true
   },
   {
-    username : "admin_user_two",
-    pwHash : "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
-    firstName : "Twadmin",
-    lastName : "McTwadminface",
-    email : "admin_two@sauma.io",
+    username : "admin2",
+    firstName : "Admin",
+    lastName : "McTwoface",
+    email : "admin2@sauma.io",
     phone : "1 42 313 666",
     enabled : true,
     administrator : true
   },
   {
-    username : "basic_user",
-    pwHash : "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK",
+    username : "admin3",
+    firstName : "Admin",
+    lastName : "McThreeface",
+    email : "admin3@sauma.io",
+    phone : "42-31-31-313",
+    enabled : true,
+    administrator : true
+  },
+  {
+    username : "basic1",
     firstName : "Basic",
-    lastName : "McBasicface",
-    email : "basic@sauma.io",
-    phone : "42-31-31-337",
+    lastName : "McOneface",
+    email : "basic1@sauma.io",
+    phone : "03 798 1337",
     enabled : true,
     administrator : false
   },
   {
-    username : "blocked_user",
-    pwHash : "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
+    username : "basic2",
+    firstName : "Basic",
+    lastName : "McTwoface",
+    email : "basic2@sauma.io",
+    phone : "1 12 358 1321",
+    enabled : true,
+    administrator : false
+  },
+  {
+    username : "basic3",
+    firstName : "Basic",
+    lastName : "McThreeface",
+    email : "basic3@sauma.io",
+    phone : "040-12-34-567",
+    enabled : true,
+    administrator : false
+  },
+  {
+    username : "blocked1",
     firstName : "Blocked",
-    lastName : "McBlockface",
-    email : "blocked@sauma.io",
-    phone : "313 6661337",
+    lastName : "McOneface",
+    email : "blocked1@sauma.io",
+    phone : "3136661337",
     enabled : false,
     administrator : false
   }
@@ -74,22 +90,22 @@ const initEmployees = [
 
 const initProjects = [
   {
-    projectId : "my_first_project",
+    projectId : "project1",
     startDate : new Date(2014, 4, 4),
     endDate : new Date(2015, 5, 5)
   },
   {
-    projectId : "my_second_project",
+    projectId : "project2",
     startDate : new Date(2015, 5, 5),
     endDate : new Date(2016, 6, 6)
   },
   {
-    projectId : "my_third_project",
+    projectId : "project3",
     startDate : new Date(2016, 6, 6),
     endDate : new Date(2017, 7, 7)
   },
   {
-    projectId : "my_fourth_project",
+    projectId : "project4",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8)
   }
@@ -111,7 +127,7 @@ const invalidClients = [
   },
   {
     legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "1234567-8",
+    businessId : "client1",
     contactPerson : "Jonne McMopoface",
     email : "jonne@mopo.es",
     phone : "0401234567"
@@ -185,7 +201,7 @@ const invalidClientUpdates = [
   },
   {
     legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "1234567-8",
+    businessId : "client1",
     contactPerson : "Jonne McMopoface",
     email : "jonne@mopo.es",
     phone : "0401234567"
@@ -251,9 +267,9 @@ const invalidCredentials = [
     username : "jonne",
     password : "Qwerty_123"
   },
-  { username : "basic_user" },
+  { username : "basic1" },
   {
-    username : "basic_user",
+    username : "basic1",
     password : "trustno1"
   }
 ]
@@ -276,7 +292,7 @@ const invalidEmployees = [
     phone : "0401234567"
   },
   {
-    username : "  basic_user",
+    username : "  basic1 ",
     password : "Qwerty_123",
     firstName : "Jonne",
     lastName : "McMopoface",
@@ -492,7 +508,7 @@ const invalidEmployeeUpdates = [
     firstName : "Jonne",
     lastName : "McMopoface",
     phone : "0401234567",
-    username : "basic_user"
+    username : "  basic1"
   }
 ]
 
@@ -511,7 +527,7 @@ const invalidProjects = (managerId, clientId) => [
     manager : managerId
   },
   {
-    projectId : "my_first_project",
+    projectId : "project1",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
     address : {
@@ -645,7 +661,7 @@ const invalidProjects = (managerId, clientId) => [
 ]
 
 const invalidProjectUpdates = [
-  { projectId : "my_first_project" },
+  { projectId : "project1" },
   { startDate : "this_is_not_a_valid_date" },
   { endDate : "this_is_not_a_valid_date" },
   {
@@ -663,43 +679,64 @@ const invalidProjectUpdates = [
 
 const newClients = [
   {
-    legalEntity : "GottaGoFast Inc.",
-    businessId : "1392781-2",
-    contactPerson : "Sonic McHedgehogface",
-    email : "sonic@hedge.hog",
+    legalEntity : "First New Client Inc.",
+    businessId : "new_client1",
+    contactPerson : "First McNewface",
+    email : "new1@client.io",
     phone : "13-42 65536 "
   },
   {
-    legalEntity : "Quadruple Roundhouse Kicks LLC",
-    businessId : "5179382-0",
-    contactPerson : "Chuck McNorrisface",
-    email : "cnorris@sauma.io",
+    legalEntity : "Second New Client Inc.",
+    businessId : "new_client2",
+    contactPerson : "Second McNewface",
+    email : "new2@client.io",
     phone : "134265526"
   },
   {
-    legalEntity : "Tonnin Stiflat Oy",
-    businessId : "3357446-8",
-    contactPerson : "Tuomari McNurmioface",
-    email : "tuomari@nurm.io",
+    legalEntity : "Third New Client Inc.",
+    businessId : "new_client3",
+    contactPerson : "Third McNewface",
+    email : "new3@client.io",
     phone : "096661337"
   },
   {
-    legalEntity : "Wayne Enterprises",
-    businessId : "1357924-6",
-    contactPerson : "Batman McBatmanface",
-    email : "batsy@batm.an",
+    legalEntity : "Fourth New Client Inc.",
+    businessId : "new_client4",
+    contactPerson : "Fourth McNewface",
+    email : "new4@client.io",
     phone : "040 1234 567"
+  },
+  {
+    legalEntity : "Fifth New Client Inc.",
+    businessId : "new_client5",
+    contactPerson : "Fifth McNewface",
+    email : "new5@client.io",
+    phone : "112-358-132"
+  },
+  {
+    legalEntity : "Sixth New Client Inc.",
+    businessId : "new_client6",
+    contactPerson : "Sixth McNewface",
+    email : "new6@client.io",
+    phone : "    4266 6 1337"
+  },
+  {
+    legalEntity : "Se7enth New Client Inc.",
+    businessId : "new_client7",
+    contactPerson : "Seventh McNewface",
+    email : "new7@client.io",
+    phone : "1-3141   3141"
   }
 ]
 
 const newEmployees = [
   {
-    username : "boaty",
+    username : "ari_jarno",
     password : "Qwerty_123",
-    firstName : "Boaty",
-    lastName : "McBoatface",
-    email : "boaty@sauma.io",
-    phone : "040-123 45 67"
+    firstName : "Ari",
+    lastName : "McJarnoface",
+    email : "ari@sauma.io",
+    phone : "09-798 1337"
   },
   {
     username : "beardy",
@@ -710,6 +747,14 @@ const newEmployees = [
     phone : "04 01 23 45 67"
   },
   {
+    username : "boaty",
+    password : "Qwerty_123",
+    firstName : "Boaty",
+    lastName : "McBoatface",
+    email : "boaty@sauma.io",
+    phone : "040-123 45 67"
+  },
+  {
     username : "chucky",
     password : "Qwerty_123",
     firstName : "Chuck",
@@ -718,12 +763,20 @@ const newEmployees = [
     phone : "0401234567"
   },
   {
-    username : "the_dolan",
+    username : "dolan",
     password : "Qwerty_123",
     firstName : "Dolan",
     lastName : "McDuckface",
     email : "dolan@sauma.io",
     phone : "0403131337"
+  },
+  {
+    username : "nuusq_",
+    password : "Qwerty_123",
+    firstName : "Nuuska",
+    lastName : "McMuikQnenface",
+    email : "nuuskq@sauma.io",
+    phone : "045 666 42 42"
   },
   {
     username : "tylerdurden",
@@ -736,6 +789,11 @@ const newEmployees = [
 ]
 
 const newProjects = [
+  {
+    projectId : "two_a_penny_project",
+    startDate : new Date(2009, 9, 9),
+    endDate : new Date(2011, 11, 11)
+  },
   {
     projectId : "yet_another_project",
     startDate : new Date(2010, 10, 10),
@@ -840,6 +898,20 @@ const updateClients = [
     createdOn : new Date(1993,9,9)
   },
   {
+    legalEntity : "Revised Explosives Inc.",
+    businessId : "5555555-5",
+    contactPerson : "Revised McReviseface",
+    email : "revised_email@sauma.io",
+    phone : "555 555 555",
+    address : {
+      street : "55 Revision Street",
+      zipCode : "50505",
+      city : "Revisiontown",
+      country : "Revised Kingdom"
+    },
+    createdOn : new Date(2011,11,11)
+  },
+  {
     legalEntity : "Updated Explosives Inc.",
     businessId : "4444444-4",
     contactPerson : "Updated McUpdateface",
@@ -858,7 +930,6 @@ const updateClients = [
 const updateEmployees = [
   {
     username : "altered_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
     firstName : "Altered firstName",
     lastName : "Altered lastName",
     email : "altered_email@sauma.io",
@@ -873,7 +944,7 @@ const updateEmployees = [
   },
   {
     username : "changed_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    pwHash : "$2a$10$Z2cZgvEb7tFVkGA32Wne4.0eq8AYXKhxIj96CZIOX//T5fe0BG9Wi",
     firstName : "Changed firstName",
     lastName : "Changed lastName",
     email : "changed_email@sauma.io",
@@ -888,7 +959,6 @@ const updateEmployees = [
   },
   {
     username : "different_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
     firstName : "Different firstName",
     lastName : "Different lastName",
     email : "different_email@sauma.io",
@@ -903,7 +973,7 @@ const updateEmployees = [
   },
   {
     username : "modified_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    pwHash : "$2a$10$6zOLtcxE0lxd.Oy/xGInu.QC/lMwauOif0LJ94v6BAssP3dJ2ZF8e",
     firstName : "Modified firstName",
     lastName : "Modified lastName",
     email : "modified_email@sauma.io",
@@ -918,7 +988,6 @@ const updateEmployees = [
   },
   {
     username : "not_the_same_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
     firstName : "Not the same firstName",
     lastName : "Not the same lastName",
     email : "not_the_same@sauma.io",
@@ -932,8 +1001,22 @@ const updateEmployees = [
     createdOn : new Date(1993,9,9)
   },
   {
+    username : "revised_username",
+    firstName : "Revised firstName",
+    lastName : "Revised lastName",
+    email : "revised@sauma.io",
+    phone : "555-555-555",
+    address : {
+      street : "55 Revision Street",
+      zipCode : "50505",
+      city : "Revisiontown",
+      country : "Revised Kingdom"
+    },
+    createdOn : new Date(2011,11,11)
+  },
+  {
     username : "updated_username",
-    pwHash : "$2a$10$xr.lo..fz4nP5WewEMMI3OKIZ.51x2DXdr0Rf9wByi3H3MPC5CBK.",
+    pwHash : "$2a$10$UyK5sPmD8F1k.ck73xZd0en9XddW0jN55V.rWI08liCrhx5NvUW1e",
     firstName : "Updated firstName",
     lastName : "Updated lastName",
     email : "updated_email@sauma.io",
@@ -1010,6 +1093,18 @@ const updateProjects = [
     createdOn : new Date(1993,9,9)
   },
   {
+    projectId : "revised_project",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    address : {
+      street : "99 Not the Same Street",
+      zipCode : "90909",
+      city : "Not the same town",
+      country : "Not the Same States of America"
+    },
+    createdOn : new Date(2011,11,11)
+  },
+  {
     projectId : "updated_project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
@@ -1083,6 +1178,16 @@ const validAddresses = [
   }
 ]
 
+const validHashes = [
+  "$2a$10$AHMSsWzm//1w6Lqqgip9huS4KEbODZOS..ZMu1bfhB5gJsumYz1E2",
+  "$2a$10$Z2cZgvEb7tFVkGA32Wne4.0eq8AYXKhxIj96CZIOX//T5fe0BG9Wi",
+  "$2a$10$7T64SlPwpDjHy.i7gAtNKOqJbhM1b3ghWNOy6/3Q9kS1A03pyl146",
+  "$2a$10$6zOLtcxE0lxd.Oy/xGInu.QC/lMwauOif0LJ94v6BAssP3dJ2ZF8e",
+  "$2a$10$pntUrZDmf/1ZAoUy4JIP2ukjizWcHK70DujbrAZPoqwpC.XB6UHLK",
+  "$2a$10$UyK5sPmD8F1k.ck73xZd0en9XddW0jN55V.rWI08liCrhx5NvUW1e",
+  "$2a$10$uceoVJPEuKxQw/i5TEo7cOkL8UzEu1ay.Fcte.pQkxGHooJEb8GOK"
+]
+
 module.exports = {
   initClients,
   initEmployees,
@@ -1100,5 +1205,6 @@ module.exports = {
   updateClients,
   updateEmployees,
   updateProjects,
-  validAddresses
+  validAddresses,
+  validHashes
 }
