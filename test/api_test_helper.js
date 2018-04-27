@@ -2,11 +2,13 @@ const Client = require("../model/client")
 const { createToken } = require("../service/auth_service")
 const data = require("./test_data")
 const Employee = require("../model/employee")
+const Material = require("../model/material")
 const Project = require("../model/project")
 
 const clearDb = async () => {
   await Client.remove()
   await Employee.remove()
+  await Material.remove()
   await Project.remove()
 }
 
@@ -27,6 +29,16 @@ const initEmployees = async () =>
       .map(e => e = { ...e, address : random(data.validAddresses) })
       .map(e => e = { ...e, pwHash : random(data.validHashes) })
       .map(e => new Employee(e).save()))
+
+const initMaterials = async () => {
+  let user = await Employee
+    .findOne({ username : "admin1" })
+
+  await Promise
+    .all(data.initMaterials
+      .map(m => m = { ...m, lastEditedBy : user._id })
+      .map(m => new Material(m).save()))
+}
 
 const initProjects = async () => {
   let clients = await Client.find()
@@ -100,6 +112,20 @@ const invalidEmployees = () =>
 const invalidEmployeeUpdates = () =>
   data.invalidEmployeeUpdates
 
+const invalidMaterials = (userId) => {
+  let materials = data.invalidMaterials
+  materials.map(m => m.lastEditedBy = userId)
+
+  return materials
+}
+
+const invalidMaterialUpdates = (userId) => {
+  let materials = data.invalidMaterialUpdates
+  materials.map(m => m.lastEditedBy = userId)
+
+  return materials
+}
+
 const invalidProjects = (userId, clientIds) => {
   let projects = data.invalidProjects(userId, random(clientIds))
   projects.map(p => p.lastEditedBy = userId)
@@ -134,6 +160,14 @@ const newEmployee = () => {
   return employee
 }
 
+const newMaterial = (userId) => {
+  let i = randomIndex(data.newMaterials.length)
+  let material = data.newMaterials.splice(i, 1)[0]
+
+  material.lastEditedBy = userId
+  return material
+}
+
 const newProject = (userId, clientIds) => {
   let i = randomIndex(data.newProjects.length)
   let project = data.newProjects.splice(i, 1)[0]
@@ -162,6 +196,11 @@ const randomEmployee = async () => {
   return random(employees)
 }
 
+const randomMaterial = async () => {
+  let materials = await Material.find()
+  return random(materials)
+}
+
 const randomProject = async () => {
   let projects = await Project.find()
   return random(projects)
@@ -182,6 +221,14 @@ const updateEmployee = () => {
   return employee
 }
 
+const updateMaterial = (userId) => {
+  let i = randomIndex(data.updateMaterials.length)
+  let material = data.updateMaterials.splice(i, 1)[0]
+
+  material.lastEditedBy = userId
+  return material
+}
+
 const updateProject = (userId, managerId, clientId) => {
   let i = randomIndex(data.updateProjects.length)
   let project = data.updateProjects.splice(i, 1)[0]
@@ -197,6 +244,7 @@ module.exports = {
   clearDb,
   initClients,
   initEmployees,
+  initMaterials,
   initProjects,
   initTokens,
   invalidClients,
@@ -204,15 +252,20 @@ module.exports = {
   invalidCredentials,
   invalidEmployees,
   invalidEmployeeUpdates,
+  invalidMaterials,
+  invalidMaterialUpdates,
   invalidProjects,
   invalidProjectUpdates,
   newClient,
   newEmployee,
+  newMaterial,
   newProject,
   randomClient,
   randomEmployee,
+  randomMaterial,
   randomProject,
   updateClient,
   updateEmployee,
+  updateMaterial,
   updateProject
 }
