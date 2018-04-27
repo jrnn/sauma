@@ -26,6 +26,9 @@ const formatPhone = (phone) => {
   }
 }
 
+const round2dp = (num) =>
+  Math.round((num + 0.00001) * 100) / 100
+
 const trimDbObject = (obj) => {
   obj.id = obj._id
 
@@ -38,5 +41,6 @@ const trimDbObject = (obj) => {
 module.exports = {
   filterByKeys,
   formatPhone,
+  round2dp,
   trimDbObject
 }
