@@ -38,9 +38,11 @@ app.use(middleWare.bouncer)
 // unauthed reqs to all other paths are bounced
 const clientRouter = require("./router/client_router")
 const employeeRouter = require("./router/employee_router")
+const materialRouter = require("./router/material_router")
 const projectRouter = require("./router/project_router")
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
+app.use("/api/materials", materialRouter)
 app.use("/api/projects", projectRouter)
 
 // and finally, centralized error handling
