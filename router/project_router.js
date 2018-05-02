@@ -2,6 +2,7 @@ const { AuthorizationError } = require("../util/errors")
 const Employee = require("../model/employee")
 const Project = require("../model/project")
 const projectRouter = require("express").Router()
+const Task = require("../model/task")
 const { wrapHandler } = require("../util/util")
 
 const clientFields = { legalEntity : 1 }
@@ -79,6 +80,24 @@ projectRouter.put("/:id", wrapHandler(async (req, res) => {
     .json(updated)
 }))
 
+projectRouter.get("/:id/tasks", wrapHandler(async (req, res) => {
+  let project = await findOneAndPopulate(req.params.id)
+  let idCheck = await Project
+    .findOne({ _id : req.params.id, employees : req.auth.id })
+
+  if ( !req.auth.admin && !idCheck )
+    throw AuthorizationError()
+
+  project._id  // throws TypeError if !project
+  let tasks = await Task
+    .find({ project : req.params.id })
+    .populate("lastEditedBy", employeeFields)
+
+  res
+    .status(200)
+    .json(tasks)
+}))
+
 projectRouter.post("/:id/employees", wrapHandler(async (req, res) => {
   if ( !req.auth.admin )
     throw AuthorizationError()
@@ -89,6 +108,7 @@ projectRouter.post("/:id/employees", wrapHandler(async (req, res) => {
   project.employees = project.employees
     .filter(id => id.toString() !== employee._id.toString())
     .concat(employee._id)
+
   employee.projects = employee.projects
     .filter(id => id.toString() !== project._id.toString())
     .concat(project._id)
