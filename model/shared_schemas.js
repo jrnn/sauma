@@ -35,4 +35,27 @@ address.options.toJSON = {
   }
 }
 
-module.exports = { address }
+const quota = new mongoose.Schema({
+  material : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Material",
+    required : [ true, "Nimike puuttuu" ]
+  },
+  quantity : {
+    type : Number,
+    required : [ true, "Määrä puuttuu" ],
+    min : 0
+  }
+})
+
+quota.options.toJSON = {
+  transform : (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+}
+
+module.exports = {
+  address,
+  quota
+}
