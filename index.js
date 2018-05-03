@@ -40,10 +40,12 @@ const clientRouter = require("./router/client_router")
 const employeeRouter = require("./router/employee_router")
 const materialRouter = require("./router/material_router")
 const projectRouter = require("./router/project_router")
+const taskRouter = require("./router/task_router")
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
 app.use("/api/materials", materialRouter)
 app.use("/api/projects", projectRouter)
+app.use("/api/tasks", taskRouter)
 
 // and finally, centralized error handling
 const { errorHandler } = require("./util/errors")

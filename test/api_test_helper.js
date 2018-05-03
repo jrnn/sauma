@@ -4,12 +4,14 @@ const data = require("./test_data")
 const Employee = require("../model/employee")
 const Material = require("../model/material")
 const Project = require("../model/project")
+const Task = require("../model/task")
 
 const clearDb = async () => {
   await Client.remove()
   await Employee.remove()
   await Material.remove()
   await Project.remove()
+  await Task.remove()
 }
 
 const initClients = async () => {
@@ -66,6 +68,22 @@ const initProjects = async () => {
 
   await Promise.all(employees.map(e => e.save()))
   await Promise.all(projects.map(p => p.save()))
+}
+
+const initTasks = async () => {
+  let materials = await Material.find()
+  let materialIds = materials.map(m => m._id)
+
+  let projects = await Project.find()
+  let user = await Employee
+    .findOne({ username : "admin1" })
+
+  await Promise
+    .all(data.initTasks
+      .map(t => t = { ...t, lastEditedBy : user._id })
+      .map(t => t = { ...t, project : random(projects)._id })
+      .map(t => t = { ...t, quotas : randomQuotas(materialIds) })
+      .map(t => new Task(t).save()))
 }
 
 const initTokens = async () => {
@@ -140,6 +158,16 @@ const invalidProjectUpdates = (userId) => {
   return updates
 }
 
+const invalidTasks = (userId, projectIds, materialIds) => {
+  let tasks = data.invalidTasks(random(projectIds), random(materialIds))
+  tasks.map(t => t.lastEditedBy = userId)
+
+  return tasks
+}
+
+const invalidTaskUpdates = (materialIds) =>
+  data.invalidTaskUpdates(random(materialIds))
+
 const newClient = (userId) => {
   let i = randomIndex(data.newClients.length)
   let client = data.newClients.splice(i, 1)[0]
@@ -180,6 +208,17 @@ const newProject = (userId, clientIds) => {
   return project
 }
 
+const newTask = (userId, projectIds, materialIds) => {
+  let i = randomIndex(data.newTasks.length)
+  let task = data.newTasks.splice(i, 1)[0]
+
+  task.lastEditedBy = userId
+  task.project = random(projectIds)
+  task.quotas = randomQuotas(materialIds)
+
+  return task
+}
+
 const random = (array) =>
   array[randomIndex(array.length)]
 
@@ -204,6 +243,29 @@ const randomMaterial = async () => {
 const randomProject = async () => {
   let projects = await Project.find()
   return random(projects)
+}
+
+const randomQuotas = (materialIds, quotas = []) => {
+  let ids = materialIds.slice(0)
+  let n = Math.floor(Math.random() * 4)
+
+  while (n > 0) {
+    n--
+    let i = randomIndex(ids.length)
+    quotas = [ ...quotas,
+      {
+        material : ids.splice(i, 1)[0],
+        quantity : Math.floor(Math.random() * 9999)
+      }
+    ]
+  }
+
+  return quotas
+}
+
+const randomTask = async () => {
+  let tasks = await Task.find()
+  return random(tasks)
 }
 
 const updateClient = (userId) => {
@@ -240,12 +302,23 @@ const updateProject = (userId, managerId, clientId) => {
   return project
 }
 
+const updateTask = (projectIds, materialIds) => {
+  let i = randomIndex(data.updateTasks.length)
+  let task = data.updateTasks.splice(i, 1)[0]
+
+  task.project = random(projectIds)
+  task.quotas = randomQuotas(materialIds)
+
+  return task
+}
+
 module.exports = {
   clearDb,
   initClients,
   initEmployees,
   initMaterials,
   initProjects,
+  initTasks,
   initTokens,
   invalidClients,
   invalidClientUpdates,
@@ -256,16 +329,21 @@ module.exports = {
   invalidMaterialUpdates,
   invalidProjects,
   invalidProjectUpdates,
+  invalidTasks,
+  invalidTaskUpdates,
   newClient,
   newEmployee,
   newMaterial,
   newProject,
+  newTask,
   randomClient,
   randomEmployee,
   randomMaterial,
   randomProject,
+  randomTask,
   updateClient,
   updateEmployee,
   updateMaterial,
-  updateProject
+  updateProject,
+  updateTask
 }

@@ -7,6 +7,7 @@ const Client = require("../model/client")
 const Employee = require("../model/employee")
 const Project = require("../model/project")
 const helper = require("./api_test_helper")
+const Task = require("../model/task")
 const tests = require("./standard_tests")
 const url = "/api/projects"
 
@@ -31,8 +32,10 @@ describe("Project API", async () => {
   beforeAll(async () => {
     await helper.clearDb()
     await helper.initEmployees()
+    await helper.initMaterials()
     await helper.initClients()
     await helper.initProjects()
+    await helper.initTasks()
 
     let clients = await Client.find()
     let admin = await Employee
@@ -108,7 +111,7 @@ describe("Project API", async () => {
           tokens.admin
         ))
 
-    test("for basic user, returns project only if assigned to that project", async () => {
+    test("for non-admin user, returns project only if assigned to that project", async () => {
       let employee = await Employee
         .findOne({ projects : project._id })
 
@@ -255,7 +258,7 @@ describe("Project API", async () => {
 
       clientId = newClient._id
       managerId = newManager._id
-      path = `${url}/${project.id}`
+      path = `${url}/${project._id}`
     })
 
     test("succeeds with valid input, and affects only allowed fields", async () =>
@@ -348,6 +351,78 @@ describe("Project API", async () => {
           tokens.admin
         )
     })
+  })
+
+  describe(`GET ${url}/:id/tasks`, async () => {
+
+    test("returns only tasks that belong to project in question", async () => {
+      let projects = await Project.find()
+
+      await Promise
+        .all(projects
+          .map(async (p) => {
+            let tasks = await Task
+              .find({ project : p._id })
+
+            let res = await api
+              .get(`${url}/${p._id}/tasks`)
+              .set("authorization", `bearer ${tokens.admin}`)
+              .expect(200)
+              .expect("content-type", /application\/json/)
+
+            expect(res.body.length).toBe(tasks.length)
+            tasks.map(t => expect(t.project).toEqual(p._id))
+          }))
+    })
+
+    test("for non-admin user, returns tasks only if assigned to the parent project", async () => {
+      let user = await Employee
+        .findOne({ administrator : false })
+        .where({ projects : { $ne : [] } })
+
+      project = await Project
+        .findOne({ _id : { $in : user.projects } })
+
+      let tasks = await Task
+        .find({ project : project._id })
+
+      let token = createToken(
+        user, process.env.SECRET, process.env.HANDSHAKE)
+
+      let res = await api
+        .get(`${url}/${project._id}/tasks`)
+        .set("authorization", `bearer ${token}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body.length).toBe(tasks.length)
+      tasks.map(t => expect(t.project).toEqual(project._id))
+
+      let users = await Employee
+        .find({ administrator : false })
+        .where({ projects : { $ne : project._id } })
+
+      await Promise
+        .all(users
+          .map(u => tests
+            .getFailsWithStatusCode(
+              api,
+              `${url}/${project._id}/tasks`,
+              403,
+              createToken(u, process.env.SECRET, process.env.HANDSHAKE)
+            )))
+    })
+
+    test("fails if invalid or nonexisting id", async () =>
+      await Promise
+        .all(invalidIds
+          .map(id => tests
+            .getFailsWithStatusCode(
+              api,
+              `${id}/tasks`,
+              404,
+              tokens.admin
+            ))))
   })
 
   describe(`POST ${url}/:id/employees`, async () => {

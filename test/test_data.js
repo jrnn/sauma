@@ -122,24 +122,58 @@ const initMaterials = [
 
 const initProjects = [
   {
-    projectId : "project1",
+    projectId : "first_project",
     startDate : new Date(2014, 4, 4),
     endDate : new Date(2015, 5, 5)
   },
   {
-    projectId : "project2",
+    projectId : "second_project",
     startDate : new Date(2015, 5, 5),
     endDate : new Date(2016, 6, 6)
   },
   {
-    projectId : "project3",
+    projectId : "third_project",
     startDate : new Date(2016, 6, 6),
     endDate : new Date(2017, 7, 7)
+  }
+]
+
+const initTasks = [
+  {
+    description : "Get stuff done",
+    startDate : new Date(2018, 1, 1),
+    endDate : new Date(2018, 1, 10),
+    daysNeeded : 5
   },
   {
-    projectId : "project4",
-    startDate : new Date(2017, 7, 7),
-    endDate : new Date(2018, 8, 8)
+    description : "Take care of business",
+    startDate : new Date(2017, 3, 7),
+    endDate : new Date(2017, 3, 17),
+    daysNeeded : 10
+  },
+  {
+    description : "Do this one really important thing",
+    startDate : new Date(2017, 7, 13),
+    endDate : new Date(2017, 8, 21),
+    daysNeeded : 30
+  },
+  {
+    description : "Handle another important errand",
+    startDate : new Date(2017, 5, 1),
+    endDate : new Date(2017, 5, 31),
+    daysNeeded : 15
+  },
+  {
+    description : "Make that one thing happen",
+    startDate : new Date(2017, 9, 9),
+    endDate : new Date(2017, 10, 10),
+    daysNeeded : 25
+  },
+  {
+    description : "Wrap up loose ends",
+    startDate : new Date(2017, 11, 11),
+    endDate : new Date(2017, 12, 12),
+    daysNeeded : 20
   }
 ]
 
@@ -609,7 +643,7 @@ const invalidProjects = (managerId, clientId) => [
     manager : managerId
   },
   {
-    projectId : "project1",
+    projectId : "first_project",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
     address : {
@@ -743,7 +777,7 @@ const invalidProjects = (managerId, clientId) => [
 ]
 
 const invalidProjectUpdates = [
-  { projectId : "project1" },
+  { projectId : "first_project" },
   { startDate : "this_is_not_a_valid_date" },
   { endDate : "this_is_not_a_valid_date" },
   {
@@ -757,6 +791,158 @@ const invalidProjectUpdates = [
     }
   },
   { manager : "this_is_not_a_valid_id" }
+]
+
+const invalidTasks = (projectId, materialId) => [
+  { bestPaperEver : "Kofii peippör" },
+  {
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : "this_is_not_a_valid_date",
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(1999, 9, 9),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : "this_is_not_a_valid_date",
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : "kuha_on_varaani",
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : -1,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 1337,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : "this_is_not_a_valid_id",
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : "this_is_not_a_valid_id", quantity : 42 }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : "kuha_on_varaani" }]
+  },
+  {
+    description : "Buy ES and mopo for Jonne",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : -1 }]
+  }
+]
+
+const invalidTaskUpdates = (materialId) => [
+  { startDate : "this_is_not_a_valid_date" },
+  { endDate : "this_is_not_a_valid_date" },
+  {
+    startDate : new Date(2019, 9, 9),
+    endDate : new Date(2017, 7, 7)
+  },
+  { daysNeeded : "kuha_on_varaani" },
+  { daysNeeded : -13 },
+  { daysNeeded : 65536 },
+  { quotas : [{ quantity : 1337 }] },
+  { quotas : [{ material : "this_is_not_a_valid_id", quantity : 1337 }] },
+  { quotas : [{ material : materialId }] },
+  { quotas : [{ material : materialId, quantity : "kuha_on_varaani" }] },
+  { quotas : [{ material : materialId, quantity : -1 }] }
 ]
 
 const newClients = [
@@ -950,6 +1136,51 @@ const newProjects = [
     startDate : new Date(2015, 5, 5),
     endDate : new Date(2017, 7, 7)
   }
+]
+
+const newTasks = [
+  {
+    description : "Get all ducks in a row",
+    startDate : new Date(2018, 1, 1),
+    endDate : new Date(2018, 1, 10),
+    daysNeeded : 1
+  },
+  {
+    description : "Explore further avenues",
+    startDate : new Date(2018, 2, 2),
+    endDate : new Date(2018, 2, 12),
+    daysNeeded : 2
+  },
+  {
+    description : "Get more stuff off the plate",
+    startDate : new Date(2018, 3, 3),
+    endDate : new Date(2018, 3, 13),
+    daysNeeded : 3
+  },
+  {
+    description : "See some stuff through",
+    startDate : new Date(2018, 4, 4),
+    endDate : new Date(2018, 4, 14),
+    daysNeeded : 4
+  },
+  {
+    description : "Conduct important transactions",
+    startDate : new Date(2018, 5, 5),
+    endDate : new Date(2018, 5, 15),
+    daysNeeded : 5
+  },
+  {
+    description : "Engage in productive activity",
+    startDate : new Date(2018, 6, 6),
+    endDate : new Date(2018, 6, 16),
+    daysNeeded : 6
+  },
+  {
+    description : "Run for the hills",
+    startDate : new Date(2018, 7, 7),
+    endDate : new Date(2018, 7, 17),
+    daysNeeded : 7
+  },
 ]
 
 const updateClients = [
@@ -1296,6 +1527,58 @@ const updateProjects = [
   }
 ]
 
+const updateTasks = [
+  {
+    description : "Alter some stuff",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(1986,3,7)
+  },
+  {
+    description : "Change some stuff",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(1999,1,1)
+  },
+  {
+    description : "Do some stuff differently",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(2003,3,3)
+  },
+  {
+    description : "Modify some stuff",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(1979,7,9)
+  },
+  {
+    description : "Do not do the same stuff this time",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(1993,9,9)
+  },
+  {
+    description : "Revise some stuff",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(2011,11,11)
+  },
+  {
+    description : "Update some stuff",
+    startDate : new Date(1999, 9, 9),
+    endDate : new Date(2042, 4, 2),
+    daysNeeded : 42,
+    createdOn : new Date(2006,6,6)
+  }
+]
+
 const validAddresses = [
   {
     name : "Dolan Duck",
@@ -1371,6 +1654,7 @@ module.exports = {
   initEmployees,
   initMaterials,
   initProjects,
+  initTasks,
   invalidClients,
   invalidClientUpdates,
   invalidCredentials,
@@ -1380,14 +1664,18 @@ module.exports = {
   invalidMaterialUpdates,
   invalidProjects,
   invalidProjectUpdates,
+  invalidTasks,
+  invalidTaskUpdates,
   newClients,
   newEmployees,
   newMaterials,
   newProjects,
+  newTasks,
   updateClients,
   updateEmployees,
   updateMaterials,
   updateProjects,
+  updateTasks,
   validAddresses,
   validHashes
 }
