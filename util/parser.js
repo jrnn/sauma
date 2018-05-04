@@ -26,8 +26,9 @@ const formatPhone = (phone) => {
   }
 }
 
-const round2dp = (num) =>
-  Math.round((num + 0.00001) * 100) / 100
+const round2dp = (num) => {
+  return Math.round((num + 0.00001) * 100) / 100
+}
 
 const trimDbObject = (obj) => {
   obj.id = obj._id

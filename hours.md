@@ -42,5 +42,6 @@
 | 27.4. | 1 | backend | tests | tests for material API |
 | 2.5. | 2 | backend | new code | task model and API, extending project API |
 | 3.5. | 4 | backend | tests | tests for task API and new project API endpoint |
-| TOTAL | 91 |
+| 4.5. | 6 | frontend | new code | assigning employees to projects; materials management; embedded Google maps; etc. |
+| TOTAL | 97 |
 

@@ -20,7 +20,7 @@ const schema = new mongoose.Schema({
   },
   unitCost : {
     type : Number,
-    required : [ true, "Yksikkökustannus puuttuu" ],
+    default : 0,
     min : 0,
     set : parser.round2dp
   },
