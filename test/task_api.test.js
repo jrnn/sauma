@@ -83,7 +83,7 @@ describe("Task API", async () => {
             .expect("content-type", /application\/json/)
 
           expect(res.body.length).toBe(tasks.length)
-          res.body.map(t => expect(user.projects).toContain(t.project))
+          res.body.map(t => expect(user.projects).toContain(t.project.id))
         })))
 
     test("fails if invalid token", async () =>
