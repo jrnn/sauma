@@ -602,11 +602,6 @@ const invalidMaterials = [
     unit : "not_short_enough",
     unitCost : 1337
   },
-  /*{
-    name : "Jonnen mopo",
-    color : "Pink",
-    unit : "pcs"
-  },*/
   {
     name : "Jonnen mopo",
     color : "Pink",

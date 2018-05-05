@@ -14,6 +14,7 @@ const findOneAndPopulate = async (id) =>
   await Task
     .findById(id)
     .populate("lastEditedBy", employeeFields)
+    .populate("project")
 
 taskRouter.get("/", wrapHandler(async (req, res) => {
   let employee = await Employee.findById(req.auth.id)
@@ -25,6 +26,7 @@ taskRouter.get("/", wrapHandler(async (req, res) => {
   let tasks = await Task
     .find(selector)
     .populate("lastEditedBy", employeeFields)
+    .populate("project")
 
   res
     .status(200)
