@@ -46,5 +46,6 @@
 | 3.5. | 4 | backend | tests | tests for task API and new project API endpoint |
 | 4.5. | 6 | frontend | functionality | assigning employees to projects; materials management; embedded Google maps; etc. |
 | 5.5. | 6 | frontend | functionality | listing, adding, updating tasks (tied to projects so a bit more involved than earlier) |
-| TOTAL | 107 |
+| 6.5. | 4 | frontend | functionality | managing material quotas on a task |
+| TOTAL | 111 |
 

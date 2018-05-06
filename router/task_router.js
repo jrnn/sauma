@@ -9,12 +9,28 @@ const employeeFields = {
   firstName : 1,
   lastName : 1
 }
+const materialFields = {
+  color : 1,
+  _id : 1,
+  name : 1,
+  unit : 1,
+  unitCost : 1
+}
+const projectFields = {
+  _id : 1,
+  client : 1,
+  endDate : 1,
+  manager : 1,
+  projectId : 1,
+  startDate : 1
+}
 
 const findOneAndPopulate = async (id) =>
   await Task
     .findById(id)
     .populate("lastEditedBy", employeeFields)
-    .populate("project")
+    .populate("project", projectFields)
+    .populate("quotas.material", materialFields)
 
 taskRouter.get("/", wrapHandler(async (req, res) => {
   let employee = await Employee.findById(req.auth.id)
@@ -26,7 +42,8 @@ taskRouter.get("/", wrapHandler(async (req, res) => {
   let tasks = await Task
     .find(selector)
     .populate("lastEditedBy", employeeFields)
-    .populate("project")
+    .populate("project", projectFields)
+    .populate("quotas.material", materialFields)
 
   res
     .status(200)
