@@ -1,16 +1,12 @@
 const { AuthenticationError } = require("../util/errors")
-const bcrypt = require("bcrypt")
-const { createToken } = require("../service/auth_service")
+const { checkPassword, createToken } = require("../util/auth")
 const Employee = require("../model/employee")
 const loginRouter = require("express").Router()
 
 loginRouter.post("/", loginWrapHandler(async (req, res) => {
   let { username, password } = req.body
   let employee = await Employee.findOne({ username })
-
-  let pwCheck = ( !employee )
-    ? false
-    : await bcrypt.compare(password, employee.pwHash)  // move to authService??
+  let pwCheck = await checkPassword(password, employee)
 
   if ( !(employee && pwCheck) || !employee.enabled )
     throw AuthenticationError()

@@ -2,7 +2,7 @@ const { app, server } = require("../index")
 const supertest = require("supertest")
 const api = supertest(app)
 
-const { createToken } = require("../service/auth_service")
+const { createToken } = require("../util/auth")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const Material = require("../model/material")

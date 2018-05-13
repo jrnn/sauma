@@ -1,7 +1,7 @@
-const { AuthorizationError } = require("../util/errors")
+const { AuthorizationError, FauxValidationError } = require("../util/errors")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
-const { hashPassword } = require("../service/auth_service")
+const { checkNewPassword, hashPassword } = require("../util/auth")
 const { wrapHandler } = require("../util/util")
 
 const projectFields = {
@@ -41,7 +41,7 @@ employeeRouter.post("/", wrapHandler(async (req, res) => {
 
   // temporary bullshit arrangement just for dev purposes
   // should be  ... await hashPassword(req.body.password)
-  req.body.pwHash = await hashPassword("Qwerty_123")
+  req.body.pwHash = await hashPassword(process.env.STD_PW || "Qwerty_123")
 
   let employee = await new Employee(req.body).save()
   employee = await findOneAndPopulate(employee._id)
@@ -64,6 +64,26 @@ employeeRouter.put("/:id", wrapHandler(async (req, res) => {
   res
     .status(200)
     .json(updated)
+}))
+
+employeeRouter.put("/:id/password", wrapHandler(async (req, res) => {
+  let { id } = req.params
+
+  if ( req.auth.id !== id )
+    throw AuthorizationError()
+
+  let employee = await Employee.findById(id)
+  let errors = await checkNewPassword(req.body, employee)
+
+  if ( errors )
+    throw FauxValidationError(errors)
+
+  let pwHash = await hashPassword(req.body.newPassword)
+  await Employee.findByIdAndUpdate(id, { pwHash })
+
+  res
+    .status(200)
+    .end()
 }))
 
 module.exports = employeeRouter

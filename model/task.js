@@ -3,6 +3,11 @@ const parser = require("../util/parser")
 const schemas = require("./shared_schemas")
 
 const schema = new mongoose.Schema({
+  name : {
+    type : String,
+    required : [ true, "Otsikko puuttuu" ],
+    trim : true
+  },
   description : {
     type : String,
     required : [ true, "Kuvaus puuttuu" ],
@@ -71,7 +76,7 @@ schema.options.toJSON = {
 schema.statics.overwrite = (task, data, isAdmin = false) => {
   let keys = [
     "completed", "daysNeeded", "description",
-    "endDate", "quotas", "startDate"
+    "endDate", "quotas", "name", "startDate"
   ]
   let newValues = parser.filterByKeys(keys, data)
   Object
@@ -80,12 +85,12 @@ schema.statics.overwrite = (task, data, isAdmin = false) => {
 }
 
 schema.statics.testAttrs = [
-  "daysNeeded", "description", "endDate", "startDate"
+  "daysNeeded", "description", "endDate", "name", "startDate"
 ]
 
 schema.statics.updatables = [
   "completed", "daysNeeded", "description", "endDate",
-  "lastEditedBy", "quotas", "startDate"
+  "lastEditedBy", "quotas", "name", "startDate"
 ]
 
 const Task = mongoose.model("Task", schema)

@@ -140,36 +140,42 @@ const initProjects = [
 
 const initTasks = [
   {
+    name : "Get stuff done",
     description : "Get stuff done",
     startDate : new Date(2018, 1, 1),
     endDate : new Date(2018, 1, 10),
     daysNeeded : 5
   },
   {
+    name : "Take care of business",
     description : "Take care of business",
     startDate : new Date(2017, 3, 7),
     endDate : new Date(2017, 3, 17),
     daysNeeded : 10
   },
   {
+    name : "Do this one really important thing",
     description : "Do this one really important thing",
     startDate : new Date(2017, 7, 13),
     endDate : new Date(2017, 8, 21),
     daysNeeded : 30
   },
   {
+    name : "Handle another important errand",
     description : "Handle another important errand",
     startDate : new Date(2017, 5, 1),
     endDate : new Date(2017, 5, 31),
     daysNeeded : 15
   },
   {
+    name : "Make that one thing happen",
     description : "Make that one thing happen",
     startDate : new Date(2017, 9, 9),
     endDate : new Date(2017, 10, 10),
     daysNeeded : 25
   },
   {
+    name : "Wrap up loose ends",
     description : "Wrap up loose ends",
     startDate : new Date(2017, 11, 11),
     endDate : new Date(2017, 12, 12),
@@ -791,6 +797,7 @@ const invalidProjectUpdates = [
 const invalidTasks = (projectId, materialId) => [
   { bestPaperEver : "Kofii peippör" },
   {
+    description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
     daysNeeded : 42,
@@ -798,6 +805,15 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
+    startDate : new Date(2017, 7, 7),
+    endDate : new Date(2018, 8, 8),
+    daysNeeded : 42,
+    project : projectId,
+    quotas : [{ material : materialId, quantity : 42 }]
+  },
+  {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     endDate : new Date(2018, 8, 8),
     daysNeeded : 42,
@@ -805,6 +821,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : "this_is_not_a_valid_date",
     endDate : new Date(2018, 8, 8),
@@ -813,6 +830,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     daysNeeded : 42,
@@ -820,6 +838,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(1999, 9, 9),
@@ -828,6 +847,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : "this_is_not_a_valid_date",
@@ -836,6 +856,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -843,6 +864,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -851,6 +873,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -859,6 +882,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -867,6 +891,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -874,6 +899,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -882,6 +908,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -890,6 +917,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -898,6 +926,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : "this_is_not_a_valid_id", quantity : 42 }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -906,6 +935,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -914,6 +944,7 @@ const invalidTasks = (projectId, materialId) => [
     quotas : [{ material : materialId, quantity : "kuha_on_varaani" }]
   },
   {
+    name : "Jonnen mopotask",
     description : "Buy ES and mopo for Jonne",
     startDate : new Date(2017, 7, 7),
     endDate : new Date(2018, 8, 8),
@@ -1135,42 +1166,49 @@ const newProjects = [
 
 const newTasks = [
   {
+    name : "Get all ducks in a row",
     description : "Get all ducks in a row",
     startDate : new Date(2018, 1, 1),
     endDate : new Date(2018, 1, 10),
     daysNeeded : 1
   },
   {
+    name : "Explore further avenues",
     description : "Explore further avenues",
     startDate : new Date(2018, 2, 2),
     endDate : new Date(2018, 2, 12),
     daysNeeded : 2
   },
   {
+    name : "Get more stuff off the plate",
     description : "Get more stuff off the plate",
     startDate : new Date(2018, 3, 3),
     endDate : new Date(2018, 3, 13),
     daysNeeded : 3
   },
   {
+    name : "See some stuff through",
     description : "See some stuff through",
     startDate : new Date(2018, 4, 4),
     endDate : new Date(2018, 4, 14),
     daysNeeded : 4
   },
   {
+    name : "Conduct important transactions",
     description : "Conduct important transactions",
     startDate : new Date(2018, 5, 5),
     endDate : new Date(2018, 5, 15),
     daysNeeded : 5
   },
   {
+    name : "Engage in productive activity",
     description : "Engage in productive activity",
     startDate : new Date(2018, 6, 6),
     endDate : new Date(2018, 6, 16),
     daysNeeded : 6
   },
   {
+    name : "Run for the hills",
     description : "Run for the hills",
     startDate : new Date(2018, 7, 7),
     endDate : new Date(2018, 7, 17),

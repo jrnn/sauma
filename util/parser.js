@@ -26,6 +26,9 @@ const formatPhone = (phone) => {
   }
 }
 
+const isEmptyObject = (obj) =>
+  ( Object.keys(obj).length === 0 && obj.constructor === Object )
+
 const round2dp = (num) =>
   Math.round((num + 0.00001) * 100) / 100
 
@@ -41,6 +44,7 @@ const trimDbObject = (obj) => {
 module.exports = {
   filterByKeys,
   formatPhone,
+  isEmptyObject,
   round2dp,
   trimDbObject
 }

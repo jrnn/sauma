@@ -17,9 +17,9 @@ const materialFields = {
   unitCost : 1
 }
 const projectFields = {
-  _id : 1,
   client : 1,
   endDate : 1,
+  _id : 1,
   manager : 1,
   projectId : 1,
   startDate : 1

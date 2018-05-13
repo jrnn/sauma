@@ -14,6 +14,15 @@ const AuthorizationError = () => {
   return error
 }
 
+const FauxValidationError = (errors) => {
+  let error = new Error()
+  error.name = "FauxValidationError"
+  error.statusCode = 400
+  error.errors = errors
+
+  return error
+}
+
 const errorHandler = (error, req, res, next) => {
   if ( process.env.NODE_ENV === "development" )
     console.log(error)
@@ -23,6 +32,10 @@ const errorHandler = (error, req, res, next) => {
       return res
         .status(400)
         .json({ ValidationError : parseValidationErrors(error) })
+    case "FauxValidationError" :
+      return res
+        .status(400)
+        .json({ ValidationError : error.errors })
     case "AuthorizationError" :
       return res
         .status(403)
@@ -58,5 +71,6 @@ const parseValidationErrors = (error, res = {}) => {
 module.exports = {
   AuthenticationError,
   AuthorizationError,
+  FauxValidationError,
   errorHandler
 }
