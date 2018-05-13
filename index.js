@@ -36,11 +36,13 @@ app.use("/api/login", loginRouter)
 app.use(middleWare.bouncer)
 
 // unauthed reqs to all other paths are bounced
+const activityRouter = require("./router/activity_router")
 const clientRouter = require("./router/client_router")
 const employeeRouter = require("./router/employee_router")
 const materialRouter = require("./router/material_router")
 const projectRouter = require("./router/project_router")
 const taskRouter = require("./router/task_router")
+app.use("/api/activities", activityRouter)
 app.use("/api/clients", clientRouter)
 app.use("/api/employees", employeeRouter)
 app.use("/api/materials", materialRouter)

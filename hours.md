@@ -47,5 +47,7 @@
 | 4.5. | 6 | frontend | functionality | assigning employees to projects; materials management; embedded Google maps; etc. |
 | 5.5. | 6 | frontend | functionality | listing, adding, updating tasks (tied to projects so a bit more involved than earlier) |
 | 6.5. | 4 | frontend | functionality | managing material quotas on a task |
-| TOTAL | 111 |
+| 13.5. | 4 | backend | functionality | activity model and API; extending employee API (changing password) |
+| 13.5. | 6 | frontend | functionality | page for changing user’s own info and password; listing, adding, updating and signing off activities tied to tasks (most involved part thus far) |
+| TOTAL | 121 |
 

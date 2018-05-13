@@ -18,6 +18,7 @@ const materialFields = {
 }
 const projectFields = {
   client : 1,
+  employees : 1,
   endDate : 1,
   _id : 1,
   manager : 1,

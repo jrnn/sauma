@@ -14,6 +14,14 @@ const AuthorizationError = () => {
   return error
 }
 
+const CustomError = (name, message, statusCode) => {
+  let error = new Error(message)
+  error.name = name
+  error.statusCode = statusCode
+
+  return error
+}
+
 const FauxValidationError = (errors) => {
   let error = new Error()
   error.name = "FauxValidationError"
@@ -71,6 +79,7 @@ const parseValidationErrors = (error, res = {}) => {
 module.exports = {
   AuthenticationError,
   AuthorizationError,
+  CustomError,
   FauxValidationError,
   errorHandler
 }
