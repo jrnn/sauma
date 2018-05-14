@@ -54,7 +54,11 @@ const schema = new mongoose.Schema({
 })
 
 schema.options.toJSON = {
-  transform : (doc, ret) => parser.trimDbObject(ret)
+  transform : (doc, ret) => {
+    ret = parser.trimDbObject(ret)
+    ret.hours = String(ret.hours)
+    return ret
+  }
 }
 
 schema.statics.overwrite = (activity, data, isAdmin = false) => {

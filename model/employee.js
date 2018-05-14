@@ -60,7 +60,6 @@ const schema = new mongoose.Schema({
     default : Date.now
   }
   /*  possible additions
-   *   - more detailed authorities/privileges (array of Strings?)
    *   - labour cost/hour
    *   - "perehdytykset" (array of Site ObjectIds?)
    */

@@ -44,7 +44,6 @@ const schema = new mongoose.Schema({
   }
   /*  possible additions
    *   - description
-   *   - something else...?
    */
 })
 

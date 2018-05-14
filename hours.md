@@ -45,6 +45,6 @@
 | 6.5. | 4 | frontend | functionality | managing material quotas on a task |
 | 13.5. | 4 | backend | functionality | activity model and API; extending employee API (changing password) |
 | 13.5. | 6 | frontend | functionality | page for changing user’s own info and password; listing, adding, updating and signing off activities tied to tasks (most involved part thus far) |
-| 14.5. | 5 | frontend | refactoring | generalizing highly repetitive code on Redux side; decentralizing data fetch requests downward in container hierarchy; minor spring cleaning here and there |
-| TOTAL | 126 |
+| 14.5. | 10 | frontend | refactoring | generalizing highly repetitive code on Redux side; decentralizing data fetch requests downward in container hierarchy; trying out more clear-cut division of responsibility between containers; tweaks to how numbers are handled |
+| TOTAL | 131 |
 

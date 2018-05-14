@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const parser = require("../util/parser")
 
 const address = new mongoose.Schema({
   street : {
@@ -44,13 +45,15 @@ const quota = new mongoose.Schema({
   quantity : {
     type : Number,
     required : [ true, "Määrä puuttuu" ],
-    min : 0
+    min : 0,
+    set : parser.round2dp
   }
 })
 
 quota.options.toJSON = {
   transform : (doc, ret) => {
     delete ret._id
+    ret.quantity = String(ret.quantity)
     return ret
   }
 }

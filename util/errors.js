@@ -68,7 +68,7 @@ const parseValidationErrors = (error, res = {}) => {
     .filter(key => errors[key].path)
     .map(key => {
       let message = ( errors[key].name === "CastError" )
-        ? "Virheellinen tunniste"
+        ? "Vääränlainen syöte"
         : errors[key].message
       res = { ...res, [key] : message }
     })

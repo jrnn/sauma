@@ -20,8 +20,8 @@ const schema = new mongoose.Schema({
   },
   unitCost : {
     type : Number,
-    default : 0,
-    min : 0,
+    required : [ true, "Yksikkökustannus puuttuu" ],
+    min : [ 0, "Ei voi olla negatiivinen luku" ],
     set : parser.round2dp
   },
   createdOn : {
@@ -47,7 +47,11 @@ schema.pre("validate", async function (next) {
 })
 
 schema.options.toJSON = {
-  transform : (doc, ret) => parser.trimDbObject(ret)
+  transform : (doc, ret) => {
+    ret = parser.trimDbObject(ret)
+    ret.unitCost = ret.unitCost.toFixed(2)
+    return ret
+  }
 }
 
 schema.statics.overwrite = (material, data, isAdmin = false) => {

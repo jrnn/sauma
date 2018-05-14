@@ -51,7 +51,6 @@ const schema = new mongoose.Schema({
   /*  possible additions
    *   - documentation (e.g. contracts)
    *   - saumapojat client manager (--> Employee)
-   *   - associated Sites (array of Site ObjectIds)
    */
 })
 

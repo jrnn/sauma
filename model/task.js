@@ -28,7 +28,7 @@ const schema = new mongoose.Schema({
   daysNeeded : {
     type : Number,
     required : [ true, "Työmääräarvio puuttuu" ],
-    min : 0,
+    min : [ 0, "Anna positiivinen kokonaisluku" ],
     set : i => Math.round(i)
   },
   quotas : [{ type : schemas.quota }],
@@ -70,7 +70,11 @@ schema.pre("validate", async function (next) {
 })
 
 schema.options.toJSON = {
-  transform : (doc, ret) => parser.trimDbObject(ret)
+  transform : (doc, ret) => {
+    ret = parser.trimDbObject(ret)
+    ret.daysNeeded = String(ret.daysNeeded)
+    return ret
+  }
 }
 
 schema.statics.overwrite = (task, data, isAdmin = false) => {
