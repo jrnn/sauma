@@ -65,7 +65,7 @@ schema.statics.overwrite = (material, data, isAdmin = false) => {
 }
 
 schema.statics.testAttrs = [
-  "color", "name", "unit", "unitCost"
+  "color", "name", "unit"
 ]
 
 schema.statics.updatables = [

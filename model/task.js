@@ -89,7 +89,7 @@ schema.statics.overwrite = (task, data, isAdmin = false) => {
 }
 
 schema.statics.testAttrs = [
-  "daysNeeded", "description", "endDate", "name", "startDate"
+  "description", "endDate", "name", "startDate"
 ]
 
 schema.statics.updatables = [
