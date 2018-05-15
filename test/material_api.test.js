@@ -15,7 +15,6 @@ if ( process.env.NODE_ENV !== "test" ) {
 
 describe("Material API", async () => {
 
-  let adminId
   let material
   let path
   let tokens
@@ -30,10 +29,6 @@ describe("Material API", async () => {
     await helper.initEmployees()
     await helper.initMaterials()
 
-    let admin = await Employee
-      .findOne({ username : "admin1" })
-
-    adminId = admin._id
     tokens = await helper.initTokens()
   })
 
@@ -107,7 +102,7 @@ describe("Material API", async () => {
         .postReturnsNewAsJson(
           api,
           Material,
-          helper.newMaterial(adminId),
+          helper.newMaterial(),
           url,
           tokens.admin
         ))
@@ -117,13 +112,13 @@ describe("Material API", async () => {
         .postDoesNotAffectExisting(
           api,
           Material,
-          helper.newMaterial(adminId),
+          helper.newMaterial(),
           url,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      material = helper.newMaterial(adminId)
+      material = helper.newMaterial()
 
       await Promise
         .all(tokens.invalid
@@ -143,7 +138,7 @@ describe("Material API", async () => {
         .postFailsWithStatusCode(
           api,
           Material,
-          [ helper.newMaterial(adminId) ],
+          [ helper.newMaterial() ],
           url,
           403,
           tokens.basic
@@ -154,7 +149,7 @@ describe("Material API", async () => {
         .postFailsWithStatusCode(
           api,
           Material,
-          helper.invalidMaterials(adminId),
+          helper.invalidMaterials(),
           url,
           400,
           tokens.admin
@@ -164,8 +159,9 @@ describe("Material API", async () => {
   describe(`PUT ${url}/:id`, async () => {
 
     beforeAll(async () => {
-      material = await new Material(
-        helper.newMaterial(adminId)).save()
+      material = helper.newMaterial()
+      material.lastEditedBy = new Employee()._id
+      material = await new Material(material).save()
 
       path = `${url}/${material._id}`
     })
@@ -176,7 +172,7 @@ describe("Material API", async () => {
           api,
           Material,
           material,
-          helper.updateMaterial(adminId),
+          helper.updateMaterial(),
           path,
           tokens.admin
         ))
@@ -187,13 +183,13 @@ describe("Material API", async () => {
           api,
           Material,
           material,
-          helper.updateMaterial(adminId),
+          helper.updateMaterial(),
           path,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      let updates = helper.updateMaterial(adminId)
+      let updates = helper.updateMaterial()
 
       await Promise
         .all(tokens.invalid
@@ -213,14 +209,14 @@ describe("Material API", async () => {
         .putFailsWithStatusCode(
           api,
           Material,
-          [ helper.updateMaterial(adminId) ],
+          [ helper.updateMaterial() ],
           path,
           403,
           tokens.basic
         ))
 
     test("fails with invalid or nonexisting id", async () => {
-      let updates = helper.updateMaterial(adminId)
+      let updates = helper.updateMaterial()
 
       await Promise
         .all(invalidIds
@@ -240,7 +236,7 @@ describe("Material API", async () => {
         .putFailsWithStatusCode(
           api,
           Material,
-          helper.invalidMaterialUpdates(adminId),
+          helper.invalidMaterialUpdates(),
           path,
           400,
           tokens.admin

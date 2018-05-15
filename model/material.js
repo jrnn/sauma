@@ -7,10 +7,6 @@ const schema = new mongoose.Schema({
     required : [ true, "Nimike puuttuu" ],
     trim : true
   },
-  color : {
-    type : String,
-    trim : true
-  },
   unit : {
     type : String,
     required : [ true, "Mittayksikkö puuttuu" ],
@@ -55,22 +51,17 @@ schema.options.toJSON = {
 }
 
 schema.statics.overwrite = (material, data, isAdmin = false) => {
-  let keys = [
-    "color", "name", "unit", "unitCost"
-  ]
+  let keys = [ "name", "unit", "unitCost" ]
   let newValues = parser.filterByKeys(keys, data)
+
   Object
     .keys(newValues)
     .map(key => material[key] = newValues[key])
 }
 
-schema.statics.testAttrs = [
-  "color", "name", "unit"
-]
+schema.statics.testAttrs = [ "name", "unit" ]
 
-schema.statics.updatables = [
-  "color", "lastEditedBy", "name", "unit", "unitCost"
-]
+schema.statics.updatables = [ "lastEditedBy", "name", "unit", "unitCost" ]
 
 const Material = mongoose.model("Material", schema)
 

@@ -15,12 +15,11 @@ const findOneAndPopulate = async (id) =>
     .populate("lastEditedBy", employeeFields)
 
 clientRouter.get("/", wrapHandler(async (req, res) => {
-  if ( !req.auth.admin )
-    throw AuthorizationError()
-
-  let clients = await Client
-    .find()
-    .populate("lastEditedBy", employeeFields)
+  let clients = ( !req.auth.admin )
+    ? {}
+    : await Client
+      .find()
+      .populate("lastEditedBy", employeeFields)
 
   res
     .status(200)

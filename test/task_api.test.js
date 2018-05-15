@@ -18,7 +18,6 @@ if ( process.env.NODE_ENV !== "test" ) {
 
 describe("Task API", async () => {
 
-  let adminId
   let materialIds
   let path
   let projectIds
@@ -40,13 +39,10 @@ describe("Task API", async () => {
 
     let materials = await Material.find()
     let projects = await Project.find()
-    let admin = await Employee
-      .findOne({ username : "admin1" })
 
     materialIds = materials.map(m => m._id)
     projectIds = projects.map(p => p._id)
 
-    adminId = admin._id
     tokens = await helper.initTokens()
   })
 
@@ -173,7 +169,7 @@ describe("Task API", async () => {
         .postReturnsNewAsJson(
           api,
           Task,
-          helper.newTask(adminId, projectIds, materialIds),
+          helper.newTask(projectIds, materialIds),
           url,
           tokens.admin
         ))
@@ -183,13 +179,13 @@ describe("Task API", async () => {
         .postDoesNotAffectExisting(
           api,
           Task,
-          helper.newTask(adminId, projectIds, materialIds),
+          helper.newTask(projectIds, materialIds),
           url,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      task = helper.newTask(adminId, projectIds, materialIds)
+      task = helper.newTask(projectIds, materialIds)
 
       await Promise
         .all(tokens.invalid
@@ -209,7 +205,7 @@ describe("Task API", async () => {
         .postFailsWithStatusCode(
           api,
           Task,
-          [ helper.newTask(adminId, projectIds, materialIds) ],
+          [ helper.newTask(projectIds, materialIds) ],
           url,
           403,
           tokens.basic
@@ -220,7 +216,7 @@ describe("Task API", async () => {
         .postFailsWithStatusCode(
           api,
           Task,
-          helper.invalidTasks(adminId, projectIds, materialIds),
+          helper.invalidTasks(projectIds, materialIds),
           url,
           400,
           tokens.admin
@@ -230,8 +226,9 @@ describe("Task API", async () => {
   describe(`PUT ${url}/:id`, async () => {
 
     beforeAll(async () => {
-      task = await new Task(
-        helper.newTask(adminId, projectIds, materialIds)).save()
+      task = helper.newTask(projectIds, materialIds)
+      task.lastEditedBy = new Employee()._id
+      task = await new Task(task).save()
 
       path = `${url}/${task._id}`
     })

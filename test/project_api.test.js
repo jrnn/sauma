@@ -250,13 +250,14 @@ describe("Project API", async () => {
       project = await new Project(
         helper.newProject(adminId, clientIds)).save()
 
-      let newClient = await new Client(
-        helper.newClient(adminId)).save()
+      let client = helper.newClient()
+      client.lastEditedBy = adminId
+      client = await new Client(client).save()
 
       let newManager = await Employee
         .findOne({ username : "admin2" })
 
-      clientId = newClient._id
+      clientId = client._id
       managerId = newManager._id
       path = `${url}/${project._id}`
     })
@@ -267,7 +268,7 @@ describe("Project API", async () => {
           api,
           Project,
           project,
-          helper.updateProject(adminId, managerId, clientId),
+          helper.updateProject(managerId, clientId),
           path,
           tokens.admin
         ))
@@ -278,13 +279,13 @@ describe("Project API", async () => {
           api,
           Project,
           project,
-          helper.updateProject(adminId, managerId, clientId),
+          helper.updateProject(managerId, clientId),
           path,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      let updates = helper.updateProject(adminId, managerId, clientId)
+      let updates = helper.updateProject(managerId, clientId)
 
       await Promise
         .all(tokens.invalid
@@ -304,14 +305,14 @@ describe("Project API", async () => {
         .putFailsWithStatusCode(
           api,
           Project,
-          [ helper.updateProject(adminId, managerId, clientId) ],
+          [ helper.updateProject(managerId, clientId) ],
           path,
           403,
           tokens.basic
         ))
 
     test("fails with invalid or nonexisting id", async () => {
-      let updates = helper.updateProject(adminId, managerId, clientId)
+      let updates = helper.updateProject(managerId, clientId)
 
       await Promise
         .all(invalidIds
@@ -331,7 +332,7 @@ describe("Project API", async () => {
         .putFailsWithStatusCode(
           api,
           Project,
-          helper.invalidProjectUpdates(adminId),
+          helper.invalidProjectUpdates(),
           path,
           400,
           tokens.admin
@@ -345,7 +346,7 @@ describe("Project API", async () => {
         .putFailsWithStatusCode(
           api,
           Project,
-          [ helper.updateProject(adminId, basicUser._id, clientId) ],
+          [ helper.updateProject(basicUser._id, clientId) ],
           path,
           400,
           tokens.admin

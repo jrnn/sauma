@@ -15,7 +15,6 @@ if ( process.env.NODE_ENV !== "test" ) {
 
 describe("Client API", async () => {
 
-  let adminId
   let client
   let path
   let tokens
@@ -30,10 +29,6 @@ describe("Client API", async () => {
     await helper.initEmployees()
     await helper.initClients()
 
-    let admin = await Employee
-      .findOne({ username : "admin1" })
-
-    adminId = admin._id
     tokens = await helper.initTokens()
   })
 
@@ -48,6 +43,16 @@ describe("Client API", async () => {
           tokens.admin
         ))
 
+    test("returns nothing if not authed as admin", async () => {
+      let res = await api
+        .get(url)
+        .set("authorization", `bearer ${tokens.basic}`)
+        .expect(200)
+        .expect("content-type", /application\/json/)
+
+      expect(res.body).toEqual({})
+    })
+
     test("fails if invalid token", async () =>
       await Promise
         .all(tokens.invalid
@@ -58,15 +63,6 @@ describe("Client API", async () => {
               401,
               token
             ))))
-
-    test("fails if not authed as admin", async () =>
-      await tests
-        .getFailsWithStatusCode(
-          api,
-          url,
-          403,
-          tokens.basic
-        ))
   })
 
   describe(`GET ${url}/:id`, async () => {
@@ -125,7 +121,7 @@ describe("Client API", async () => {
         .postReturnsNewAsJson(
           api,
           Client,
-          helper.newClient(adminId),
+          helper.newClient(),
           url,
           tokens.admin
         ))
@@ -135,13 +131,13 @@ describe("Client API", async () => {
         .postDoesNotAffectExisting(
           api,
           Client,
-          helper.newClient(adminId),
+          helper.newClient(),
           url,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      client = helper.newClient(adminId)
+      client = helper.newClient()
 
       await Promise
         .all(tokens.invalid
@@ -161,7 +157,7 @@ describe("Client API", async () => {
         .postFailsWithStatusCode(
           api,
           Client,
-          [ helper.newClient(adminId) ],
+          [ helper.newClient() ],
           url,
           403,
           tokens.basic
@@ -172,7 +168,7 @@ describe("Client API", async () => {
         .postFailsWithStatusCode(
           api,
           Client,
-          helper.invalidClients(adminId),
+          helper.invalidClients(),
           url,
           400,
           tokens.admin
@@ -182,8 +178,9 @@ describe("Client API", async () => {
   describe(`PUT ${url}/:id`, async () => {
 
     beforeAll(async () => {
-      client = await new Client(
-        helper.newClient(adminId)).save()
+      client = helper.newClient()
+      client.lastEditedBy = new Employee()._id
+      client = await new Client(client).save()
 
       path = `${url}/${client.id}`
     })
@@ -194,7 +191,7 @@ describe("Client API", async () => {
           api,
           Client,
           client,
-          helper.updateClient(adminId),
+          helper.updateClient(),
           path,
           tokens.admin
         ))
@@ -205,13 +202,13 @@ describe("Client API", async () => {
           api,
           Client,
           client,
-          helper.updateClient(adminId),
+          helper.updateClient(),
           path,
           tokens.admin
         ))
 
     test("fails if invalid token", async () => {
-      let updates = helper.updateClient(adminId)
+      let updates = helper.updateClient()
 
       await Promise
         .all(tokens.invalid
@@ -231,14 +228,14 @@ describe("Client API", async () => {
         .putFailsWithStatusCode(
           api,
           Client,
-          [ helper.updateClient(adminId) ],
+          [ helper.updateClient() ],
           path,
           403,
           tokens.basic
         ))
 
     test("fails with invalid or nonexisting id", async () => {
-      let updates = helper.updateClient(adminId)
+      let updates = helper.updateClient()
 
       await Promise
         .all(invalidIds
@@ -258,7 +255,7 @@ describe("Client API", async () => {
         .putFailsWithStatusCode(
           api,
           Client,
-          helper.invalidClientUpdates(adminId),
+          helper.invalidClientUpdates(),
           path,
           400,
           tokens.admin

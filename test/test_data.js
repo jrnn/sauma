@@ -91,13 +91,11 @@ const initEmployees = [
 const initMaterials = [
   {
     name : "Bananas",
-    color : "Yellow",
     unit : "kg",
     unitCost : 1.99
   },
   {
     name : "Coconuts",
-    color : "Brown",
     unit : "kg",
     unitCost : 3.95
   },
@@ -108,13 +106,11 @@ const initMaterials = [
   },
   {
     name : "Parquet",
-    color : "Woody",
     unit : "sqm",
     unitCost : 69.95
   },
   {
     name : "Toilet paper",
-    color : "White",
     unit : "roll",
     unitCost : 0.88
   }
@@ -587,36 +583,30 @@ const invalidEmployeeUpdates = [
 const invalidMaterials = [
   { bestMaterialsEver : "All New Materials" },
   {
-    color : "Pink",
     unit : "pcs",
     unitCost : 1337
   },
   {
     name : "Bananas",
-    color : "Pink",
     unit : "pcs",
     unitCost : 1337
   },
   {
     name : "Jonnen mopo",
-    color : "Pink",
     unitCost : 1337
   },
   {
     name : "Jonnen mopo",
-    color : "Pink",
     unit : "not_short_enough",
     unitCost : 1337
   },
   {
     name : "Jonnen mopo",
-    color : "Pink",
     unit : "pcs",
     unitCost : -0.01
   },
   {
     name : "Jonnen mopo",
-    color : "Pink",
     unit : "pcs",
     unitCost : "kuha_on_varaani"
   }
@@ -1085,31 +1075,26 @@ const newEmployees = [
 const newMaterials = [
   {
     name : "Bricks",
-    color : "Red",
     unit : "cube",
     unitCost : 55.55
   },
   {
     name : "Bourbon",
-    color : "Amber",
     unit : "liter",
     unitCost : 49.50
   },
   {
     name : "Catnip",
-    color : "Green",
     unit : "kg",
     unitCost : 3.33
   },
   {
     name : "Chess boards",
-    color : "Black and white",
     unit : "pcs",
     unitCost : 19.95
   },
   {
     name : "Coffee beans",
-    color : "Brown",
     unit : "kg",
     unitCost : 5.99
   },
@@ -1120,7 +1105,6 @@ const newMaterials = [
   },
   {
     name : "Yoghurt",
-    color : "White",
     unit : "liter",
     unitCost : 2.49
   }
@@ -1424,49 +1408,42 @@ const updateEmployees = [
 const updateMaterials = [
   {
     name : "Altered name",
-    color : "Altered color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(1986,3,7)
   },
   {
     name : "Changed name",
-    color : "Changed color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(1999,1,1)
   },
   {
     name : "Different name",
-    color : "Different color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(2003,3,3)
   },
   {
     name : "Modified name",
-    color : "Modified color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(1979,7,9)
   },
   {
     name : "Not the same name",
-    color : "Not the same color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(1993,9,9)
   },
   {
     name : "Revised name",
-    color : "Revised color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(2011,11,11)
   },
   {
     name : "Updated name",
-    color : "Updated color",
     unit : "sqm",
     unitCost : 13.37,
     createdOn : new Date(2006,6,6)

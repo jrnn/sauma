@@ -107,19 +107,11 @@ const initTokens = async () => {
   }
 }
 
-const invalidClients = (userId) => {
-  let clients = data.invalidClients
-  clients.map(c => c.lastEditedBy = userId)
+const invalidClients = () =>
+  data.invalidClients
 
-  return clients
-}
-
-const invalidClientUpdates = (userId) => {
-  let updates = data.invalidClientUpdates
-  updates.map(u => u.lastEditedBy = userId)
-
-  return updates
-}
+const invalidClientUpdates = () =>
+  data.invalidClientUpdates
 
 const invalidCredentials = () =>
   data.invalidCredentials
@@ -130,51 +122,29 @@ const invalidEmployees = () =>
 const invalidEmployeeUpdates = () =>
   data.invalidEmployeeUpdates
 
-const invalidMaterials = (userId) => {
-  let materials = data.invalidMaterials
-  materials.map(m => m.lastEditedBy = userId)
+const invalidMaterials = () =>
+  data.invalidMaterials
 
-  return materials
-}
+const invalidMaterialUpdates = () =>
+  data.invalidMaterialUpdates
 
-const invalidMaterialUpdates = (userId) => {
-  let materials = data.invalidMaterialUpdates
-  materials.map(m => m.lastEditedBy = userId)
+const invalidProjects = (userId, clientIds) =>
+  data.invalidProjects(userId, random(clientIds))
 
-  return materials
-}
+const invalidProjectUpdates = () =>
+  data.invalidProjectUpdates
 
-const invalidProjects = (userId, clientIds) => {
-  let projects = data.invalidProjects(userId, random(clientIds))
-  projects.map(p => p.lastEditedBy = userId)
-
-  return projects
-}
-
-const invalidProjectUpdates = (userId) => {
-  let updates = data.invalidProjectUpdates
-  updates.map(u => u.lastEditedBy = userId)
-
-  return updates
-}
-
-const invalidTasks = (userId, projectIds, materialIds) => {
-  let tasks = data.invalidTasks(random(projectIds), random(materialIds))
-  tasks.map(t => t.lastEditedBy = userId)
-
-  return tasks
-}
+const invalidTasks = (projectIds, materialIds) =>
+  data.invalidTasks(random(projectIds), random(materialIds))
 
 const invalidTaskUpdates = (materialIds) =>
   data.invalidTaskUpdates(random(materialIds))
 
-const newClient = (userId) => {
+const newClient = () => {
   let i = randomIndex(data.newClients.length)
   let client = data.newClients.splice(i, 1)[0]
 
   client.address = random(data.validAddresses)
-  client.lastEditedBy = userId
-
   return client
 }
 
@@ -188,11 +158,10 @@ const newEmployee = () => {
   return employee
 }
 
-const newMaterial = (userId) => {
+const newMaterial = () => {
   let i = randomIndex(data.newMaterials.length)
   let material = data.newMaterials.splice(i, 1)[0]
 
-  material.lastEditedBy = userId
   return material
 }
 
@@ -208,11 +177,10 @@ const newProject = (userId, clientIds) => {
   return project
 }
 
-const newTask = (userId, projectIds, materialIds) => {
+const newTask = (projectIds, materialIds) => {
   let i = randomIndex(data.newTasks.length)
   let task = data.newTasks.splice(i, 1)[0]
 
-  task.lastEditedBy = userId
   task.project = random(projectIds)
   task.quotas = randomQuotas(materialIds)
 
@@ -268,10 +236,9 @@ const randomTask = async () => {
   return random(tasks)
 }
 
-const updateClient = (userId) => {
+const updateClient = () => {
   let i = randomIndex(data.updateClients.length)
   let client = data.updateClients.splice(i, 1)[0]
-  client.lastEditedBy = userId
 
   return client
 }
@@ -283,19 +250,17 @@ const updateEmployee = () => {
   return employee
 }
 
-const updateMaterial = (userId) => {
+const updateMaterial = () => {
   let i = randomIndex(data.updateMaterials.length)
   let material = data.updateMaterials.splice(i, 1)[0]
 
-  material.lastEditedBy = userId
   return material
 }
 
-const updateProject = (userId, managerId, clientId) => {
+const updateProject = (managerId, clientId) => {
   let i = randomIndex(data.updateProjects.length)
   let project = data.updateProjects.splice(i, 1)[0]
 
-  project.lastEditedBy = userId
   project.manager = managerId
   project.client = clientId
 
