@@ -48,5 +48,7 @@
 | 14.5. | 10 | frontend | refactoring | generalizing highly repetitive code on Redux side; decentralizing data fetch requests downward in container hierarchy; trying out more clear-cut division of responsibility between containers; tweaks to how numbers are handled |
 | 15.5. | 2 | backend | refactoring | small changes to tests, material model (remove “color” attribute) and client API (GET returns empty object for non-admin users instead of 403) |
 | 15.5. | 6 | frontend | refactoring | tweaking how quota forms are controlled; converting remaining “old” components to new container structure |
-| TOTAL | 139 |
+| 17.5. | 5 | backend | functionality | blob model and API (uploading and serving files) … took a lot of trial-and-error to figure this out |
+| 17.5. | 7 | frontend | functionality | attachment views and controls for activities, clients, materials, projects and tasks |
+| TOTAL | 151 |
 

@@ -31,7 +31,7 @@ loginRouter.post("/", loginWrapHandler(async (req, res) => {
 function loginWrapHandler(fn) {
   return function(req, res, next) {
     fn(req, res, next)
-      .catch(next(AuthenticationError()))
+      .catch(error => next(AuthenticationError()))
   }
 }
 
