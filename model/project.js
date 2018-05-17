@@ -17,10 +17,6 @@ const schema = new mongoose.Schema({
     type : schemas.address,
     required : [ true, "Osoite puuttuu" ]
   },
-  createdOn : {
-    type : Date,
-    default : Date.now
-  },
   client : {
     type : mongoose.Schema.Types.ObjectId,
     ref : "Client",
@@ -37,14 +33,16 @@ const schema = new mongoose.Schema({
       ref : "Employee"
     }
   ],
+  attachments : [{ type : schemas.attachment }],
+  createdOn : {
+    type : Date,
+    default : Date.now
+  },
   lastEditedBy : {
     type : mongoose.Schema.Types.ObjectId,
     ref : "Employee",
     required : true
   }
-  /*  possible additions
-   *   - description
-   */
 })
 
 schema.options.toJSON = {
@@ -76,7 +74,8 @@ schema.pre("validate", async function (next) {
 
 schema.statics.overwrite = (project, data, isAdmin = false) => {
   let newValues = parser.filterByKeys([
-    "address", "endDate", "manager", "projectId", "startDate"
+    "address", "attachments", "endDate",
+    "manager", "projectId", "startDate"
   ], data)
   Object
     .keys(newValues)
@@ -88,7 +87,8 @@ schema.statics.testAttrs = [
 ]
 
 schema.statics.updatables = [
-  "address", "endDate", "lastEditedBy", "manager", "projectId", "startDate"
+  "address", "attachments", "endDate",
+  "lastEditedBy", "manager", "projectId", "startDate"
 ]
 
 const Project = mongoose.model("Project", schema)

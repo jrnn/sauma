@@ -12,6 +12,7 @@ const employeeFields = {
 const findOneAndPopulate = async (id) =>
   await Client
     .findById(id)
+    .populate("attachments.owner", employeeFields)
     .populate("lastEditedBy", employeeFields)
 
 clientRouter.get("/", wrapHandler(async (req, res) => {
@@ -19,6 +20,7 @@ clientRouter.get("/", wrapHandler(async (req, res) => {
     ? {}
     : await Client
       .find()
+      .populate("attachments.owner", employeeFields)
       .populate("lastEditedBy", employeeFields)
 
   res

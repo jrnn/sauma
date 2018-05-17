@@ -37,6 +37,7 @@ const schema = new mongoose.Schema({
     ref : "Project",
     required : [ true, "Työmaa puuttuu" ]
   },
+  attachments : [{ type : schemas.attachment }],
   createdOn : {
     type : Date,
     default : Date.now
@@ -47,7 +48,6 @@ const schema = new mongoose.Schema({
     required : true
   }
   /*  possible additions
-   *   - "saumaleveydet" per material
    *   - approver (--> Employee)
    *   - interior/exterior
    *   - urakka-/tuntiperustainen
@@ -79,7 +79,7 @@ schema.options.toJSON = {
 
 schema.statics.overwrite = (task, data, isAdmin = false) => {
   let keys = [
-    "completed", "daysNeeded", "description",
+    "attachments", "completed", "daysNeeded", "description",
     "endDate", "quotas", "name", "startDate"
   ]
   let newValues = parser.filterByKeys(keys, data)
@@ -93,8 +93,8 @@ schema.statics.testAttrs = [
 ]
 
 schema.statics.updatables = [
-  "completed", "daysNeeded", "description", "endDate",
-  "lastEditedBy", "quotas", "name", "startDate"
+  "attachments", "completed", "daysNeeded", "description",
+  "endDate", "lastEditedBy", "quotas", "name", "startDate"
 ]
 
 const Task = mongoose.model("Task", schema)

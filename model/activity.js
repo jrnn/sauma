@@ -42,6 +42,7 @@ const schema = new mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     ref : "Project"
   },
+  attachments : [{ type : schemas.attachment }],
   createdOn : {
     type : Date,
     default : Date.now
@@ -62,7 +63,10 @@ schema.options.toJSON = {
 }
 
 schema.statics.overwrite = (activity, data, isAdmin = false) => {
-  let keys = [ "contractScope", "date", "description", "hours", "quotas" ]
+  let keys = [
+    "attachments", "contractScope", "date",
+    "description", "hours", "quotas"
+  ]
   let newValues = parser.filterByKeys(keys, data)
   Object
     .keys(newValues)
@@ -72,7 +76,8 @@ schema.statics.overwrite = (activity, data, isAdmin = false) => {
 schema.statics.testAttrs = [ "date", "description", "hours" ]
 
 schema.statics.updatables = [
-  "contractScope", "date", "description", "hours", "quotas", "signed"
+  "attachments", "contractScope", "date",
+  "description", "hours", "quotas", "signed"
 ]
 
 const Activity = mongoose.model("Activity", schema)

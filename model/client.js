@@ -39,6 +39,7 @@ const schema = new mongoose.Schema({
     }
   },
   address : { type : schemas.address },
+  attachments : [{ type : schemas.attachment }],
   createdOn : {
     type : Date,
     default : Date.now
@@ -48,10 +49,6 @@ const schema = new mongoose.Schema({
     ref : "Employee",
     required : true
   }
-  /*  possible additions
-   *   - documentation (e.g. contracts)
-   *   - saumapojat client manager (--> Employee)
-   */
 })
 
 schema.pre("validate", async function (next) {
@@ -71,8 +68,8 @@ schema.options.toJSON = {
 
 schema.statics.overwrite = (client, data, isAdmin = false) => {
   let newValues = parser.filterByKeys([
-    "address", "businessId", "contactPerson",
-    "email", "legalEntity", "phone"
+    "address", "attachments", "businessId",
+    "contactPerson", "email", "legalEntity", "phone"
   ], data)
   Object
     .keys(newValues)
@@ -85,7 +82,7 @@ schema.statics.testAttrs = [
 ]
 
 schema.statics.updatables = [
-  "address", "businessId", "contactPerson",
+  "address", "attachments", "businessId", "contactPerson",
   "email", "lastEditedBy", "legalEntity", "phone"
 ]
 

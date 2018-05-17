@@ -50,6 +50,7 @@ const errorHandler = (error, req, res, next) => {
         .json({ error : "You do not have permission to that resource" })
     case "TypeError" :
     case "CastError" :
+    case "MissingSchemaError" :
       return res
         .status(404)
         .json({ error : "Resource not found" })

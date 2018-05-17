@@ -34,6 +34,7 @@ const taskFields = {
 const findOneAndPopulate = async (id) =>
   await Activity
     .findById(id)
+    .populate("attachments.owner", employeeFields)
     .populate("lastEditedBy", employeeFields)
     .populate("owner", employeeFields)
     .populate("project", projectFields)
@@ -49,6 +50,7 @@ activityRouter.get("/", wrapHandler(async (req, res) => {
 
   let activities = await Activity
     .find(selector)
+    .populate("attachments.owner", employeeFields)
     .populate("lastEditedBy", employeeFields)
     .populate("owner", employeeFields)
     .populate("project", projectFields)

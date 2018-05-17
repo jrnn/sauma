@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const parser = require("../util/parser")
+const schemas = require("./shared_schemas")
 
 const schema = new mongoose.Schema({
   name : {
@@ -20,6 +21,7 @@ const schema = new mongoose.Schema({
     min : [ 0, "Ei voi olla negatiivinen luku" ],
     set : parser.round2dp
   },
+  attachments : [{ type : schemas.attachment }],
   createdOn : {
     type : Date,
     default : Date.now
@@ -51,7 +53,7 @@ schema.options.toJSON = {
 }
 
 schema.statics.overwrite = (material, data, isAdmin = false) => {
-  let keys = [ "name", "unit", "unitCost" ]
+  let keys = [ "attachments", "name", "unit", "unitCost" ]
   let newValues = parser.filterByKeys(keys, data)
 
   Object
@@ -61,7 +63,9 @@ schema.statics.overwrite = (material, data, isAdmin = false) => {
 
 schema.statics.testAttrs = [ "name", "unit" ]
 
-schema.statics.updatables = [ "lastEditedBy", "name", "unit", "unitCost" ]
+schema.statics.updatables = [
+  "attachments", "lastEditedBy", "name", "unit", "unitCost"
+]
 
 const Material = mongoose.model("Material", schema)
 

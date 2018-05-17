@@ -4,6 +4,7 @@ node_js:
 env:
   global:
     - BCRYPT_COST=10
+    - MAX_FILESIZE=4194304
     - NODE_ENV=test
     - PORT_TEST=7777
 cache:

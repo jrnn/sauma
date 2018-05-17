@@ -15,6 +15,7 @@ const employeeFields = {
 const findOneAndPopulate = async (id) =>
   await Project
     .findById(id)
+    .populate("attachments.owner", employeeFields)
     .populate("client", clientFields)
     .populate("employees", employeeFields)
     .populate("lastEditedBy", employeeFields)
@@ -27,6 +28,7 @@ projectRouter.get("/", wrapHandler(async (req, res) => {
 
   let projects = await Project
     .find(selector)
+    .populate("attachments.owner", employeeFields)
     .populate("client", clientFields)
     .populate("employees", employeeFields)
     .populate("lastEditedBy", employeeFields)

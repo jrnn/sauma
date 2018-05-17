@@ -11,7 +11,11 @@ loginRouter.post("/", loginWrapHandler(async (req, res) => {
   if ( !(employee && pwCheck) || !employee.enabled )
     throw AuthenticationError()
 
-  let token = createToken(employee, process.env.SECRET, process.env.HANDSHAKE)
+  let token = createToken(
+    employee,
+    process.env.SECRET,
+    process.env.HANDSHAKE
+  )
   let auth = {
     admin : employee.administrator,
     firstName : employee.firstName,
@@ -27,7 +31,7 @@ loginRouter.post("/", loginWrapHandler(async (req, res) => {
 function loginWrapHandler(fn) {
   return function(req, res, next) {
     fn(req, res, next)
-      .catch(error => next(AuthenticationError()))
+      .catch(next(AuthenticationError()))
   }
 }
 

@@ -12,11 +12,13 @@ const employeeFields = {
 const findOneAndPopulate = async (id) =>
   await Material
     .findById(id)
+    .populate("attachments.owner", employeeFields)
     .populate("lastEditedBy", employeeFields)
 
 materialRouter.get("/", wrapHandler(async (req, res) => {
   let materials = await Material
     .find()
+    .populate("attachments.owner", employeeFields)
     .populate("lastEditedBy", employeeFields)
 
   res

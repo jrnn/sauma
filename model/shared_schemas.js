@@ -36,6 +36,35 @@ address.options.toJSON = {
   }
 }
 
+const attachment = new mongoose.Schema({
+  name : {
+    type : String,
+    required : true,
+    trim : true
+  },
+  blob : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Blob",
+    required : true
+  },
+  createdOn : {
+    type : Date,
+    default : Date.now
+  },
+  owner : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Employee",
+    required : true
+  }
+})
+
+attachment.options.toJSON = {
+  transform : (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+}
+
 const quota = new mongoose.Schema({
   material : {
     type : mongoose.Schema.Types.ObjectId,
@@ -60,5 +89,6 @@ quota.options.toJSON = {
 
 module.exports = {
   address,
+  attachment,
   quota
 }
