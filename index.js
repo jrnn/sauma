@@ -31,23 +31,17 @@ app.use(middleWare.tokenParser)
 app.use(middleWare.logger)
 
 // api/login accessible without authentication
-const loginRouter = require("./router/login_router")
-app.use("/api/login", loginRouter)
+app.use("/api/login", require("./router/login_router"))
 app.use(middleWare.bouncer)
 
 // unauthed reqs to all other paths are bounced
-const activityRouter = require("./router/activity_router")
-const clientRouter = require("./router/client_router")
-const employeeRouter = require("./router/employee_router")
-const materialRouter = require("./router/material_router")
-const projectRouter = require("./router/project_router")
-const taskRouter = require("./router/task_router")
-app.use("/api/activities", activityRouter)
-app.use("/api/clients", clientRouter)
-app.use("/api/employees", employeeRouter)
-app.use("/api/materials", materialRouter)
-app.use("/api/projects", projectRouter)
-app.use("/api/tasks", taskRouter)
+app.use("/api/activities", require("./router/activity_router"))
+app.use("/api/blobs", require("./router/blob_router"))
+app.use("/api/clients", require("./router/client_router"))
+app.use("/api/employees", require("./router/employee_router"))
+app.use("/api/materials", require("./router/material_router"))
+app.use("/api/projects", require("./router/project_router"))
+app.use("/api/tasks", require("./router/task_router"))
 
 // and finally, centralized error handling
 const { errorHandler } = require("./util/errors")

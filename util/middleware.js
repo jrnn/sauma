@@ -14,7 +14,7 @@ const bouncer = (req, res, next) => {
 }
 
 const logger = (req, res, next) => {
-  if ( process.env.NODE_ENV === "test" )
+  if ( process.env.NODE_ENV !== "development" )
     return next()
 
   console.log("Request :", req.method, req.path)
