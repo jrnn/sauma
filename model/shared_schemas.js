@@ -42,9 +42,12 @@ const attachment = new mongoose.Schema({
     required : true,
     trim : true
   },
-  blob : {
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "Blob",
+  key : {
+    type : String,
+    required : true
+  },
+  url : {
+    type : String,
     required : true
   },
   createdOn : {

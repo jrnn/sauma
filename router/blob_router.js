@@ -1,5 +1,5 @@
-const Blob = require("../model/blob")
 const blobRouter = require("express").Router()
+const cloudinary = require("cloudinary")
 const mongoose = require("mongoose")
 const multer = require("multer")
 const { wrapHandler } = require("../util/util")
@@ -11,17 +11,11 @@ const upload = multer(
     limits : { fileSize }
   }
 )
-
-blobRouter.get("/:id", wrapHandler(async (req, res) => {
-  let blob = await Blob.findById(req.params.id)
-
-  blob._id  // throws TypeError if !blob
-  res
-    .header("content-disposition", `inline; filename=${blob.name}`)
-    .header("content-type", blob.mime)
-    .status(200)
-    .send(blob.data)
-}))
+cloudinary.config({
+  cloud_name : process.env.CLOUDINARY_CLOUD_NAME,
+  api_key : process.env.CLOUDINARY_API_KEY,
+  api_secret : process.env.CLOUDINARY_API_SECRET
+})
 
 blobRouter.post("/", upload.single("file"), wrapHandler(async (req, res) => {
   let entity = await mongoose
@@ -29,26 +23,25 @@ blobRouter.post("/", upload.single("file"), wrapHandler(async (req, res) => {
     .findById(req.body.id)
 
   entity._id  // throws TypeError if !entity
-  let blob = await new Blob(
-    {
-      data : req.file.buffer,
-      mime : req.file.mimetype,
-      name : req.file.originalname,
-      size : req.file.size
-    }
-  ).save()
 
-  let attachments = entity.attachments.concat(
-    {
-      name : req.body.name,
-      blob : blob._id,
-      owner : req.auth.id
-    }
-  )
-
-  res
-    .status(201)
-    .json(attachments)
+  cloudinary.v2.uploader
+    .upload_stream(
+      { type : "private" },
+      (error, result) => {
+        let attachments = entity.attachments.concat(
+          {
+            name : req.body.name,
+            key : result.public_id,
+            url : result.secure_url,
+            owner : req.auth.id
+          }
+        )
+        res
+          .status(201)
+          .json({ attachments })
+      }
+    )
+    .end(req.file.buffer)
 }))
 
 module.exports = blobRouter
