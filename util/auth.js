@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const { isEmptyObject } = require("./parser")
 const { validatePassword } = require("./validator")
 
@@ -27,7 +28,7 @@ const checkNewPassword = async (passwords, employee) => {
 }
 
 const createToken = (employee, key, handshake) =>
-  require("jsonwebtoken").sign({
+  jwt.sign({
     handshake,
     id : employee._id,
     admin : employee.administrator

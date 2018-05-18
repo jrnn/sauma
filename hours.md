@@ -50,6 +50,6 @@
 | 15.5. | 6 | frontend | refactoring | tweaking how quota forms are controlled; converting remaining “old” components to new container structure |
 | 17.5. | 5 | backend | functionality | blob model and API (uploading and serving files) … took a lot of trial-and-error to figure this out |
 | 17.5. | 7 | frontend | functionality | attachment views and controls for activities, clients, materials, projects and tasks |
-| 18.5. | 2 | backend | refactoring | switching to cloudinary for file storage instead of mongodb (...what a waste of time yesterday!!) |
-| TOTAL | 153 |
+| 18.5. | 4 | backend | refactoring | switching to cloudinary for file storage instead of mongodb (...what a waste of time yesterday!!); adjustments to client and project models (removing attributes from one and adding to the other) |
+| TOTAL | 155 |
 

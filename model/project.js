@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const parser = require("../util/parser")
 const schemas = require("./shared_schemas")
+const validator = require("../util/validator")
 
 const schema = new mongoose.Schema({
   projectId : {
@@ -8,11 +9,30 @@ const schema = new mongoose.Schema({
     required : [ true, "Työnumero puuttuu" ],
     trim : true
   },
+  name : {
+    type : String,
+    required : [ true, "Työmaan nimi puuttuu" ],
+    trim : true
+  },
   startDate : {
     type : Date,
     required : [ true, "Anna päivämäärä" ]
   },
   endDate : { type : Date },
+  contactPerson : {
+    type : String,
+    required : [ true, "Yhteyshenkilö puuttuu" ],
+    trim : true
+  },
+  phone : {
+    type : String,
+    required : [ true, "Puhelin puuttuu" ],
+    set : parser.formatPhone,
+    validate : {
+      validator : validator.validatePhone,
+      message : "Virheellinen numero"
+    }
+  },
   address : {
     type : schemas.address,
     required : [ true, "Osoite puuttuu" ]
@@ -72,10 +92,10 @@ schema.pre("validate", async function (next) {
   next()
 })
 
-schema.statics.overwrite = (project, data, isAdmin = false) => {
+schema.statics.overwrite = (project, data) => {
   let newValues = parser.filterByKeys([
-    "address", "attachments", "endDate",
-    "manager", "projectId", "startDate"
+    "address", "attachments", "contactPerson", "endDate",
+    "manager", "name", "phone", "projectId", "startDate"
   ], data)
   Object
     .keys(newValues)
@@ -83,12 +103,13 @@ schema.statics.overwrite = (project, data, isAdmin = false) => {
 }
 
 schema.statics.testAttrs = [
-  "address", "endDate", "projectId", "startDate"
+  "address", "contactPerson", "endDate",
+  "name", "phone", "projectId", "startDate"
 ]
 
 schema.statics.updatables = [
-  "address", "attachments", "endDate",
-  "lastEditedBy", "manager", "projectId", "startDate"
+  "address", "attachments", "contactPerson", "endDate", "lastEditedBy",
+  "manager", "name", "phone", "projectId", "startDate"
 ]
 
 const Project = mongoose.model("Project", schema)

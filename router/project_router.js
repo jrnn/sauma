@@ -71,7 +71,7 @@ projectRouter.put("/:id", wrapHandler(async (req, res) => {
     throw AuthorizationError()
 
   let project = await Project.findById(req.params.id)
-  Project.overwrite(project, req.body, req.auth.admin)
+  Project.overwrite(project, req.body)
   project.lastEditedBy = req.auth.id
 
   await project.save()

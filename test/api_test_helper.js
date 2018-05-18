@@ -98,7 +98,7 @@ const initTokens = async () => {
     admin : createToken(adminUser, secret, handshake),
     basic : createToken(basicUser, secret, handshake),
     invalid : [
-      undefined,
+      null,
       createToken(basicUser, "open_sesame", handshake),
       createToken(basicUser, secret, "open_sesame"),
       createToken(basicUser, "open_sesame", "open_sesame")

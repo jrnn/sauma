@@ -20,6 +20,7 @@ loginRouter.post("/", loginWrapHandler(async (req, res) => {
     admin : employee.administrator,
     firstName : employee.firstName,
     id : employee._id,
+    lastName : employee.lastName,
     token
   }
 

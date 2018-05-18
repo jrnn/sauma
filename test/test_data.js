@@ -113,18 +113,27 @@ const initMaterials = [
 const initProjects = [
   {
     projectId : "first_project",
+    name : "First project",
     startDate : new Date(2014, 4, 4),
-    endDate : new Date(2015, 5, 5)
+    endDate : new Date(2015, 5, 5),
+    contactPerson : "Client McOneface",
+    phone : "42 313 666"
   },
   {
     projectId : "second_project",
+    name : "Second project",
     startDate : new Date(2015, 5, 5),
-    endDate : new Date(2016, 6, 6)
+    endDate : new Date(2016, 6, 6),
+    contactPerson : "Client McTwoface",
+    phone : "42-3131337"
   },
   {
     projectId : "third_project",
+    name : "Third project",
     startDate : new Date(2016, 6, 6),
-    endDate : new Date(2017, 7, 7)
+    endDate : new Date(2017, 7, 7),
+    contactPerson : "Client McThreeface",
+    phone : "0406661337"
   }
 ]
 
@@ -532,8 +541,27 @@ const invalidMaterialUpdates = [
 const invalidProjects = (managerId, clientId) => [
   { bestNameForCatEver : "Ari" },
   {
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "       ",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
@@ -545,59 +573,11 @@ const invalidProjects = (managerId, clientId) => [
   },
   {
     projectId : "first_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
-    address : {
-      street : "Mopo avenue 13 ES",
-      zipCode : "13579",
-      city : "Kerava",
-      country : "Finland"
-    },
-    client : clientId,
-    manager : managerId
-  },
-  {
-    projectId : "jonnen_mopo_project",
-    endDate : new Date(2019, 9, 9),
-    address : {
-      street : "Mopo avenue 13 ES",
-      zipCode : "13579",
-      city : "Kerava",
-      country : "Finland"
-    },
-    client : clientId,
-    manager : managerId
-  },
-  {
-    projectId : "jonnen_mopo_project",
-    startDate : "this is not a valid date",
-    endDate : new Date(2019, 9, 9),
-    address : {
-      street : "Mopo avenue 13 ES",
-      zipCode : "13579",
-      city : "Kerava",
-      country : "Finland"
-    },
-    client : clientId,
-    manager : managerId
-  },
-  {
-    projectId : "jonnen_mopo_project",
-    startDate : new Date(2018, 8, 8),
-    endDate : "this is not a valid date",
-    address : {
-      street : "Mopo avenue 13 ES",
-      zipCode : "13579",
-      city : "Kerava",
-      country : "Finland"
-    },
-    client : clientId,
-    manager : managerId
-  },
-  {
-    projectId : "jonnen_mopo_project",
-    startDate : new Date(2018, 8, 8),
-    endDate : new Date(2017, 7, 7),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
@@ -611,15 +591,177 @@ const invalidProjects = (managerId, clientId) => [
     projectId : "jonnen_mopo_project",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
     client : clientId,
     manager : managerId
   },
   {
     projectId : "jonnen_mopo_project",
+    name : "       ",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
-      streetExt : "Mopo avenue 13 ES",
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : "this_is_not_a_valid_date",
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : "this_is_not_a_valid_date",
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2018, 8, 7),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "    ",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "04O123A567",
+    address : {
+      street : "Mopo avenue 13 ES",
+      zipCode : "13579",
+      city : "Kerava",
+      country : "Finland"
+    },
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    client : clientId,
+    manager : managerId
+  },
+  {
+    projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
+    address : {
+      street : "Mopo avenue 13 ES",
       city : "Kerava"
     },
     client : clientId,
@@ -627,8 +769,11 @@ const invalidProjects = (managerId, clientId) => [
   },
   {
     projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
@@ -639,21 +784,27 @@ const invalidProjects = (managerId, clientId) => [
   },
   {
     projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
       city : "Kerava",
       country : "Finland"
     },
-    client : "this_is_not_a_valid_id",
+    client : "this_is_not_a_valid_oid",
     manager : managerId
   },
   {
     projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
@@ -664,8 +815,11 @@ const invalidProjects = (managerId, clientId) => [
   },
   {
     projectId : "jonnen_mopo_project",
+    name : "Jonnen Mopo- ja ES-prokkis",
     startDate : new Date(2018, 8, 8),
     endDate : new Date(2019, 9, 9),
+    contactPerson : "Jonne McMopoface",
+    phone : "0401234567",
     address : {
       street : "Mopo avenue 13 ES",
       zipCode : "13579",
@@ -673,18 +827,25 @@ const invalidProjects = (managerId, clientId) => [
       country : "Finland"
     },
     client : clientId,
-    manager : "this_is_not_a_valid_id"
+    manager : "this_is_not_a_valid_oid"
   }
 ]
 
 const invalidProjectUpdates = [
+  { projectId : "        " },
   { projectId : "first_project" },
+  { name : "    " },
   { startDate : "this_is_not_a_valid_date" },
+  { startDate : new Date(2079, 11, 11) },
   { endDate : "this_is_not_a_valid_date" },
   {
-    startDate : new Date(2019, 9, 9),
-    endDate : new Date(2017, 7, 7)
+    startDate : new Date(2018, 8, 8),
+    endDate : new Date(2018, 8, 7)
   },
+  { contactPerson : "           " },
+  { phone : "045-313-65536" },
+  { phone : "C4LL-M3-N0W" },
+  { address : {} },
   {
     address : {
       streetExt : "Mopo avenue 13 ES",
@@ -1009,38 +1170,59 @@ const newMaterials = [
 const newProjects = [
   {
     projectId : "two_a_penny_project",
+    name : "Two-a-Penny Project",
     startDate : new Date(2009, 9, 9),
-    endDate : new Date(2011, 11, 11)
+    endDate : new Date(2011, 11, 11),
+    contactPerson : "First McNewface",
+    phone : "13-42 65536 "
   },
   {
     projectId : "yet_another_project",
+    name : "Yet Another Project",
     startDate : new Date(2010, 10, 10),
-    endDate : new Date(2012, 2, 2)
+    endDate : new Date(2012, 2, 2),
+    contactPerson : "Second McNewface",
+    phone : "134265526"
   },
   {
     projectId : "one_more_project",
+    name : "One More Project",
     startDate : new Date(2011, 11, 11),
-    endDate : new Date(2013, 3, 3)
+    endDate : new Date(2013, 3, 3),
+    contactPerson : "Third McNewface",
+    phone : "096661337"
   },
   {
     projectId : "not_the_last_project",
+    name : "Not the Last Project",
     startDate : new Date(2012, 2, 2),
-    endDate : new Date(2014, 4, 4)
+    endDate : new Date(2014, 4, 4),
+    contactPerson : "Fourth McNewface",
+    phone : "040 1234 567"
   },
   {
     projectId : "however_manyeth_project",
+    name : "However Manyeth Project",
     startDate : new Date(2013, 3, 3),
-    endDate : new Date(2015, 5, 5)
+    endDate : new Date(2015, 5, 5),
+    contactPerson : "Fifth McNewface",
+    phone : "112-358-132"
   },
   {
     projectId : "dime_a_dozen_project",
+    name : "Dime a Dozen Project",
     startDate : new Date(2014, 4, 4),
-    endDate : new Date(2016, 6, 6)
+    endDate : new Date(2016, 6, 6),
+    contactPerson : "Sixth McNewface",
+    phone : "    4266 6 1337"
   },
   {
     projectId : "run_of_the_mill_project",
+    name : "Run-of-the-Mill Project",
     startDate : new Date(2015, 5, 5),
-    endDate : new Date(2017, 7, 7)
+    endDate : new Date(2017, 7, 7),
+    contactPerson : "Seventh McNewface",
+    phone : "1-3141   3141"
   }
 ]
 
@@ -1293,8 +1475,11 @@ const updateMaterials = [
 const updateProjects = [
   {
     projectId : "altered_project",
+    name : "Altered Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Altered McAlterface",
+    phone : "048048048",
     address : {
       street : "480 Altered Avenue",
       zipCode : "40404",
@@ -1305,8 +1490,11 @@ const updateProjects = [
   },
   {
     projectId : "changed_project",
+    name : "Changed Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Changed McChangeface",
+    phone : "0000000000",
     address : {
       street : "313 Changed Street",
       zipCode : "00000",
@@ -1317,8 +1505,11 @@ const updateProjects = [
   },
   {
     projectId : "different_project",
+    name : "Different Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Different McDifferentface",
+    phone : "8888-8888",
     address : {
       street : "313 Different Avenue",
       zipCode : "30303",
@@ -1329,8 +1520,11 @@ const updateProjects = [
   },
   {
     projectId : "modified_project",
+    name : "Modified Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Modded McModiface",
+    phone : "531-531-531",
     address : {
       street : "531 Modified Street",
       zipCode : "531531",
@@ -1341,8 +1535,11 @@ const updateProjects = [
   },
   {
     projectId : "not_the_same_project",
+    name : "Not the Same Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Knut the McSameface",
+    phone : "16  14-13  37",
     address : {
       street : "99 Not the Same Street",
       zipCode : "90909",
@@ -1353,8 +1550,11 @@ const updateProjects = [
   },
   {
     projectId : "revised_project",
+    name : "Revised Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Revised McRevisionistface",
+    phone : "555 555 555",
     address : {
       street : "99 Revision Street",
       zipCode : "90909",
@@ -1365,8 +1565,11 @@ const updateProjects = [
   },
   {
     projectId : "updated_project",
+    name : "Updated Project",
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
+    contactPerson : "Updated McUpdateface",
+    phone : "4 44 444 4444",
     address : {
       street : "444 Updated Street",
       zipCode : "44444",
