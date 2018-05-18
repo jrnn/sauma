@@ -20,7 +20,6 @@ const initClients = async () => {
 
   await Promise
     .all(data.initClients
-      .map(c => c = { ...c, address : random(data.validAddresses) })
       .map(c => c = { ...c, lastEditedBy : user.id })
       .map(c => new Client(c).save()))
 }
@@ -144,7 +143,6 @@ const newClient = () => {
   let i = randomIndex(data.newClients.length)
   let client = data.newClients.splice(i, 1)[0]
 
-  client.address = random(data.validAddresses)
   return client
 }
 

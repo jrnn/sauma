@@ -1,24 +1,18 @@
 const initClients = [
   {
-    legalEntity : "First Client Inc.",
     businessId : "client1",
-    contactPerson : "Client McOneface",
-    email : "client1@sauma.io",
-    phone : "42 313 666"
+    domicile : "Duckburg",
+    legalEntity : "First Client Inc."
   },
   {
-    legalEntity : "Second Client Inc.",
     businessId : "client2",
-    contactPerson : "Client McTwoface",
-    email : "client2@sauma.io",
-    phone : "42-3131337"
+    domicile : "Duckburg",
+    legalEntity : "Second Client Inc."
   },
   {
-    legalEntity : "Third Client Inc.",
     businessId : "client3",
-    contactPerson : "Client McThreeface",
-    email : "client3@sauma.io",
-    phone : "0406661337"
+    domicile : "Duckburg",
+    legalEntity : "Third Client Inc."
   }
 ]
 
@@ -182,143 +176,59 @@ const initTasks = [
 const invalidClients = [
   { bestHarkimoEver : "Hjallis" },
   {
-    businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    domicile : "Asikkala",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    businessId : "    ",
+    domicile : "Asikkala",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "client1",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    domicile : "Asikkala",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "0000000-0",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    phone : "0401234567"
+    domicile : "       ",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo",
-    phone : "0401234567"
+    domicile : "Asikkala"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    address : {
-      street : "Mopo avenue 13 ES",
-      zipCode : "13579",
-      city : "Kerava",
-      country : "Finland"
-    }
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "C4LL-M3_N0W"
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "0000000-0",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567",
-    address : {
-      streetExt : "Mopo avenue 13 ES",
-      city : "Kerava",
-      country : "Finland"
-    }
+    domicile : "Asikkala",
+    legalEntity : "          "
   }
 ]
 
 const invalidClientUpdates = [
   {
-    legalEntity : "    ",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "    ",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    domicile : "Asikkala",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
     businessId : "client1",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    domicile : "Asikkala",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "    ",
-    email : "jonne@mopo.es",
-    phone : "0401234567"
+    businessId : "0000000-0",
+    domicile : "       ",
+    legalEntity : "Jonnen Mopopaja Oy"
   },
   {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "    ",
-    phone : "0401234567"
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo",
-    phone : "0401234567"
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "    "
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "040123456789"
-  },
-  {
-    legalEntity : "Jonnen Mopopaja Oy",
-    businessId : "9999999-9",
-    contactPerson : "Jonne McMopoface",
-    email : "jonne@mopo.es",
-    phone : "0401234567",
-    address :{
-      streetExt : "not_a_valid_address",
-      zipCode : "not_a_valid_zipcode"
-    }
+    businessId : "0000000-0",
+    domicile : "Asikkala",
+    legalEntity : "          "
   }
 ]
 
@@ -963,53 +873,39 @@ const invalidTaskUpdates = (materialId) => [
 
 const newClients = [
   {
-    legalEntity : "First New Client Inc.",
     businessId : "new_client1",
-    contactPerson : "First McNewface",
-    email : "new1@client.io",
-    phone : "13-42 65536 "
+    domicile : "Duckburg",
+    legalEntity : "First New Client Inc."
   },
   {
-    legalEntity : "Second New Client Inc.",
     businessId : "new_client2",
-    contactPerson : "Second McNewface",
-    email : "new2@client.io",
-    phone : "134265526"
+    domicile : "Duckburg",
+    legalEntity : "Second New Client Inc."
   },
   {
-    legalEntity : "Third New Client Inc.",
     businessId : "new_client3",
-    contactPerson : "Third McNewface",
-    email : "new3@client.io",
-    phone : "096661337"
+    domicile : "Duckburg",
+    legalEntity : "Third New Client Inc."
   },
   {
-    legalEntity : "Fourth New Client Inc.",
     businessId : "new_client4",
-    contactPerson : "Fourth McNewface",
-    email : "new4@client.io",
-    phone : "040 1234 567"
+    domicile : "Duckburg",
+    legalEntity : "Fourth New Client Inc."
   },
   {
-    legalEntity : "Fifth New Client Inc.",
     businessId : "new_client5",
-    contactPerson : "Fifth McNewface",
-    email : "new5@client.io",
-    phone : "112-358-132"
+    domicile : "Duckburg",
+    legalEntity : "Fifth New Client Inc."
   },
   {
-    legalEntity : "Sixth New Client Inc.",
     businessId : "new_client6",
-    contactPerson : "Sixth McNewface",
-    email : "new6@client.io",
-    phone : "    4266 6 1337"
+    domicile : "Duckburg",
+    legalEntity : "Sixth New Client Inc."
   },
   {
-    legalEntity : "Se7enth New Client Inc.",
     businessId : "new_client7",
-    contactPerson : "Seventh McNewface",
-    email : "new7@client.io",
-    phone : "1-3141   3141"
+    domicile : "Duckburg",
+    legalEntity : "Se7enth New Client Inc."
   }
 ]
 
@@ -1202,101 +1098,45 @@ const newTasks = [
 
 const updateClients = [
   {
-    legalEntity : "Altered Explosives Inc.",
     businessId : "0000000-0",
-    contactPerson : "Altered McAlterface",
-    email : "altered_email@sauma.io",
-    phone : "048048048",
-    address : {
-      street : "480 Altered Avenue",
-      zipCode : "40404",
-      city : "Altertown",
-      country : "Alterstan"
-    },
+    domicile : "Alteredtown",
+    legalEntity : "Altered Explosives Inc.",
     createdOn : new Date(1986,3,7)
   },
   {
-    legalEntity : "Changed Explosives Inc.",
     businessId : "1111111-1",
-    contactPerson : "Changed McChangeface",
-    email : "changed_email@sauma.io",
-    phone : "0000000000",
-    address : {
-      street : "313 Changed Street",
-      zipCode : "00000",
-      city : "Changedtown",
-      country : "Changedstan"
-    },
+    domicile : "Changetown",
+    legalEntity : "Changed Explosives Inc.",
     createdOn : new Date(1999,1,1)
   },
   {
-    legalEntity : "Different Explosives Inc.",
     businessId : "2222222-2",
-    contactPerson : "Different McDifferentface",
-    email : "different_email@sauma.io",
-    phone : "8888-8888",
-    address : {
-      street : "313 Different Avenue",
-      zipCode : "30303",
-      city : "Differenttown",
-      country : "Differentland"
-    },
+    domicile : "Differenttown",
+    legalEntity : "Different Explosives Inc.",
     createdOn : new Date(2003,3,3)
   },
   {
-    legalEntity : "Modified Explosives Inc.",
     businessId : "5315315-3",
-    contactPerson : "Modded McModiface",
-    email : "modified_email@sauma.io",
-    phone : "531-531-531",
-    address : {
-      street : "531 Modified Street",
-      zipCode : "531531",
-      city : "Modificationtown",
-      country : "Modificzstan"
-    },
+    domicile : "Modificationtown",
+    legalEntity : "Modified Explosives Inc.",
     createdOn : new Date(1979,7,9)
   },
   {
-    legalEntity : "Not the Same Explosives Inc.",
     businessId : "3333333-3",
-    contactPerson : "Not the McSameface",
-    email : "not_the_same@sauma.io",
-    phone : "999-999-999",
-    address : {
-      street : "99 Not the Same Street",
-      zipCode : "90909",
-      city : "Not the same town",
-      country : "Not the Same States of America"
-    },
+    domicile : "Notthesametown",
+    legalEntity : "Not the Same Explosives Inc.",
     createdOn : new Date(1993,9,9)
   },
   {
-    legalEntity : "Revised Explosives Inc.",
     businessId : "5555555-5",
-    contactPerson : "Revised McReviseface",
-    email : "revised_email@sauma.io",
-    phone : "555 555 555",
-    address : {
-      street : "55 Revision Street",
-      zipCode : "50505",
-      city : "Revisiontown",
-      country : "Revised Kingdom"
-    },
+    domicile : "Revisiontown",
+    legalEntity : "Revised Explosives Inc.",
     createdOn : new Date(2011,11,11)
   },
   {
-    legalEntity : "Updated Explosives Inc.",
     businessId : "4444444-4",
-    contactPerson : "Updated McUpdateface",
-    email : "updated_email@sauma.io",
-    phone : "4 44 444 4444",
-    address : {
-      street : "444 Updated Street",
-      zipCode : "44444",
-      city : "Updateville",
-      country : "Updated States of America"
-    },
+    domicile : "Updatedtown",
+    legalEntity : "Updated Explosives Inc.",
     createdOn : new Date(2006,6,6)
   }
 ]
@@ -1516,10 +1356,10 @@ const updateProjects = [
     startDate : new Date(1999, 9, 9),
     endDate : new Date(2042, 4, 2),
     address : {
-      street : "99 Not the Same Street",
+      street : "99 Revision Street",
       zipCode : "90909",
-      city : "Not the same town",
-      country : "Not the Same States of America"
+      city : "Revisiontown",
+      country : "Revisionstan"
     },
     createdOn : new Date(2011,11,11)
   },

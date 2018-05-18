@@ -58,7 +58,7 @@ clientRouter.put("/:id", wrapHandler(async (req, res) => {
     throw AuthorizationError()
 
   let client = await Client.findById(req.params.id)
-  Client.overwrite(client, req.body, req.auth.admin)
+  Client.overwrite(client, req.body)
   client.lastEditedBy = req.auth.id
 
   await client.save()
