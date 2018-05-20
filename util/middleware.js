@@ -34,10 +34,8 @@ const tokenParser = (req, res, next) => {
   try {
     let token = jwt.verify(auth.substring(7), process.env.SECRET)
 
-    if ( token.handshake === process.env.HANDSHAKE ) {
-      delete token.handshake
+    if ( token.handshake === process.env.HANDSHAKE )
       req.auth = token
-    }
 
   } catch (ex) { req.auth = undefined }
 

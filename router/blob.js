@@ -2,7 +2,7 @@ const blobRouter = require("express").Router()
 const cloudinary = require("cloudinary")
 const mongoose = require("mongoose")
 const multer = require("multer")
-const { wrapHandler } = require("../util/util")
+const { wrapHandler } = require("./helper")
 
 const fileSize = Number(process.env.MAX_FILESIZE) || ( 4 * 1024 * 1024 )
 const upload = multer(
@@ -11,6 +11,7 @@ const upload = multer(
     limits : { fileSize }
   }
 )
+
 cloudinary.config({
   cloud_name : process.env.CLOUDINARY_CLOUD_NAME,
   api_key : process.env.CLOUDINARY_API_KEY,

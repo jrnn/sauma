@@ -1,25 +1,18 @@
 const { AuthorizationError, FauxValidationError } = require("../util/errors")
+const { checkNewPassword, hashPassword } = require("../util/auth")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
-const { checkNewPassword, hashPassword } = require("../util/auth")
-const { wrapHandler } = require("../util/util")
-
-const projectFields = {
-  client : 1,
-  endDate : 1,
-  projectId : 1,
-  startDate : 1
-}
+const { populateSelector, wrapHandler } = require("./helper")
 
 const findOneAndPopulate = async (id) =>
   await Employee
     .findById(id)
-    .populate("projects", projectFields)
+    .populate("projects", populateSelector)
 
 employeeRouter.get("/", wrapHandler(async (req, res) => {
   let employees = await Employee
     .find()
-    .populate("projects", projectFields)
+    .populate("projects", populateSelector)
 
   res
     .status(200)

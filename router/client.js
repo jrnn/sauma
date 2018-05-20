@@ -1,27 +1,21 @@
 const { AuthorizationError } = require("../util/errors")
 const Client = require("../model/client")
 const clientRouter = require("express").Router()
-const { wrapHandler } = require("../util/util")
-
-const employeeFields = {
-  administrator : 1,
-  firstName : 1,
-  lastName : 1
-}
+const { populateSelector, wrapHandler } = require("./helper")
 
 const findOneAndPopulate = async (id) =>
   await Client
     .findById(id)
-    .populate("attachments.owner", employeeFields)
-    .populate("lastEditedBy", employeeFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
 
 clientRouter.get("/", wrapHandler(async (req, res) => {
   let clients = ( !req.auth.admin )
     ? {}
     : await Client
       .find()
-      .populate("attachments.owner", employeeFields)
-      .populate("lastEditedBy", employeeFields)
+      .populate("attachments.owner", populateSelector)
+      .populate("lastEditedBy", populateSelector)
 
   res
     .status(200)

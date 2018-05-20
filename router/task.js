@@ -1,38 +1,19 @@
 const { AuthorizationError } = require("../util/errors")
 const Employee = require("../model/employee")
+const { populateSelector, wrapHandler } = require("./helper")
 const Task = require("../model/task")
 const taskRouter = require("express").Router()
-const { wrapHandler } = require("../util/util")
 
-const employeeFields = {
-  administrator : 1,
-  firstName : 1,
-  lastName : 1
-}
-const materialFields = {
-  color : 1,
-  _id : 1,
-  name : 1,
-  unit : 1,
-  unitCost : 1
-}
-const projectFields = {
-  client : 1,
-  employees : 1,
-  endDate : 1,
-  _id : 1,
-  manager : 1,
-  projectId : 1,
-  startDate : 1
-}
+const projectSelector = Object.assign({}, populateSelector)
+delete projectSelector.employees
 
 const findOneAndPopulate = async (id) =>
   await Task
     .findById(id)
-    .populate("attachments.owner", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("project", projectFields)
-    .populate("quotas.material", materialFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("project", projectSelector)
+    .populate("quotas.material", populateSelector)
 
 taskRouter.get("/", wrapHandler(async (req, res) => {
   let employee = await Employee.findById(req.auth.id)
@@ -43,10 +24,10 @@ taskRouter.get("/", wrapHandler(async (req, res) => {
 
   let tasks = await Task
     .find(selector)
-    .populate("attachments.owner", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("project", projectFields)
-    .populate("quotas.material", materialFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("project", projectSelector)
+    .populate("quotas.material", populateSelector)
 
   res
     .status(200)

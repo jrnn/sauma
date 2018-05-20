@@ -1,45 +1,19 @@
-const { AuthorizationError, CustomError } = require("../util/errors")
 const Activity = require("../model/activity")
 const activityRouter = require("express").Router()
+const { AuthorizationError, CustomError } = require("../util/errors")
 const Employee = require("../model/employee")
+const { populateSelector, wrapHandler } = require("./helper")
 const Task = require("../model/task")
-const { wrapHandler } = require("../util/util")
-
-const employeeFields = {
-  administrator : 1,
-  firstName : 1,
-  lastName : 1
-}
-const materialFields = {
-  color : 1,
-  _id : 1,
-  name : 1,
-  unit : 1,
-  unitCost : 1
-}
-const projectFields = {
-  client : 1,
-  endDate : 1,
-  _id : 1,
-  manager : 1,
-  projectId : 1,
-  startDate : 1
-}
-const taskFields = {
-  completed : 1,
-  _id : 1,
-  name : 1
-}
 
 const findOneAndPopulate = async (id) =>
   await Activity
     .findById(id)
-    .populate("attachments.owner", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("owner", employeeFields)
-    .populate("project", projectFields)
-    .populate("quotas.material", materialFields)
-    .populate("task", taskFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("owner", populateSelector)
+    .populate("project", populateSelector)
+    .populate("quotas.material", populateSelector)
+    .populate("task", populateSelector)
 
 activityRouter.get("/", wrapHandler(async (req, res) => {
   let employee = await Employee.findById(req.auth.id)
@@ -50,12 +24,12 @@ activityRouter.get("/", wrapHandler(async (req, res) => {
 
   let activities = await Activity
     .find(selector)
-    .populate("attachments.owner", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("owner", employeeFields)
-    .populate("project", projectFields)
-    .populate("quotas.material", materialFields)
-    .populate("task", taskFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("owner", populateSelector)
+    .populate("project", populateSelector)
+    .populate("quotas.material", populateSelector)
+    .populate("task", populateSelector)
 
   res
     .status(200)
@@ -125,7 +99,7 @@ activityRouter.put("/:id", wrapHandler(async (req, res) => {
       400
     )
 
-  Activity.overwrite(activity, req.body, req.auth.admin)
+  Activity.overwrite(activity, req.body)
   activity.lastEditedBy = req.auth.id
 
   await activity.save()

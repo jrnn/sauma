@@ -2,24 +2,17 @@ const { AuthorizationError } = require("../util/errors")
 const Employee = require("../model/employee")
 const Project = require("../model/project")
 const projectRouter = require("express").Router()
+const { populateSelector, wrapHandler } = require("./helper")
 const Task = require("../model/task")
-const { wrapHandler } = require("../util/util")
-
-const clientFields = { legalEntity : 1 }
-const employeeFields = {
-  administrator : 1,
-  firstName : 1,
-  lastName : 1
-}
 
 const findOneAndPopulate = async (id) =>
   await Project
     .findById(id)
-    .populate("attachments.owner", employeeFields)
-    .populate("client", clientFields)
-    .populate("employees", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("manager", employeeFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("client", populateSelector)
+    .populate("employees", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("manager", populateSelector)
 
 projectRouter.get("/", wrapHandler(async (req, res) => {
   let selector = ( req.auth.admin )
@@ -28,11 +21,11 @@ projectRouter.get("/", wrapHandler(async (req, res) => {
 
   let projects = await Project
     .find(selector)
-    .populate("attachments.owner", employeeFields)
-    .populate("client", clientFields)
-    .populate("employees", employeeFields)
-    .populate("lastEditedBy", employeeFields)
-    .populate("manager", employeeFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("client", populateSelector)
+    .populate("employees", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("manager", populateSelector)
 
   res
     .status(200)
@@ -91,9 +84,16 @@ projectRouter.get("/:id/tasks", wrapHandler(async (req, res) => {
     throw AuthorizationError()
 
   project._id  // throws TypeError if !project
+
+  let projectSelector = Object.assign({}, populateSelector)
+  delete projectSelector.employees
+
   let tasks = await Task
     .find({ project : req.params.id })
-    .populate("lastEditedBy", employeeFields)
+    .populate("attachments.owner", populateSelector)
+    .populate("lastEditedBy", populateSelector)
+    .populate("project", projectSelector)
+    .populate("quotas.material", populateSelector)
 
   res
     .status(200)

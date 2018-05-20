@@ -21,26 +21,24 @@ if ( process.env.NODE_ENV === "production" ) {
 }
 
 // middleware and routers
-const cors = require("cors")
-const bodyParser = require("body-parser")
 const middleware = require("./util/middleware")
-app.use(cors())
-app.use(bodyParser.json())
+app.use(require("cors")())
+app.use(require("body-parser").json())
 app.use(middleware.tokenParser)
 app.use(middleware.logger)
 
 // api/login accessible without authentication
-app.use("/api/login", require("./router/login_router"))
+app.use("/api/login", require("./router/login"))
 app.use(middleware.bouncer)
 
 // unauthed reqs to all other paths are bounced
-app.use("/api/activities", require("./router/activity_router"))
-app.use("/api/blobs",      require("./router/blob_router"))
-app.use("/api/clients",    require("./router/client_router"))
-app.use("/api/employees",  require("./router/employee_router"))
-app.use("/api/materials",  require("./router/material_router"))
-app.use("/api/projects",   require("./router/project_router"))
-app.use("/api/tasks",      require("./router/task_router"))
+app.use("/api/activities", require("./router/activity"))
+app.use("/api/blobs",      require("./router/blob"))
+app.use("/api/clients",    require("./router/client"))
+app.use("/api/employees",  require("./router/employee"))
+app.use("/api/materials",  require("./router/material"))
+app.use("/api/projects",   require("./router/project"))
+app.use("/api/tasks",      require("./router/task"))
 
 // and finally, centralized error handling
 const { errorHandler } = require("./util/errors")
