@@ -50,7 +50,7 @@ describe("Client API", async () => {
         .expect(200)
         .expect("content-type", /application\/json/)
 
-      expect(res.body).toEqual({})
+      expect(res.body).toEqual([])
     })
 
     test("fails if invalid token", async () =>

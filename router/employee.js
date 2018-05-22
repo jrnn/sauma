@@ -2,17 +2,10 @@ const { AuthorizationError, FauxValidationError } = require("../util/errors")
 const { checkNewPassword, hashPassword } = require("../util/auth")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
-const { populateSelector, wrapHandler } = require("./helper")
-
-const findOneAndPopulate = async (id) =>
-  await Employee
-    .findById(id)
-    .populate("projects", populateSelector)
+const { wrapHandler } = require("./helper")
 
 employeeRouter.get("/", wrapHandler(async (req, res) => {
-  let employees = await Employee
-    .find()
-    .populate("projects", populateSelector)
+  let employees = await Employee.find()
 
   res
     .status(200)
@@ -20,7 +13,7 @@ employeeRouter.get("/", wrapHandler(async (req, res) => {
 }))
 
 employeeRouter.get("/:id", wrapHandler(async (req, res) => {
-  let employee = await findOneAndPopulate(req.params.id)
+  let employee = await Employee.findById(req.params.id)
 
   employee._id  // throws TypeError if !employee
   res
@@ -37,7 +30,7 @@ employeeRouter.post("/", wrapHandler(async (req, res) => {
   req.body.pwHash = await hashPassword(process.env.STD_PW || "Qwerty_123")
 
   let employee = await new Employee(req.body).save()
-  employee = await findOneAndPopulate(employee._id)
+  employee = await Employee.findById(employee._id)
 
   res
     .status(201)
@@ -52,7 +45,7 @@ employeeRouter.put("/:id", wrapHandler(async (req, res) => {
 
   Employee.overwrite(employee, req.body, req.auth.admin)
   await employee.save()
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await Employee.findById(req.params.id)
 
   res
     .status(200)

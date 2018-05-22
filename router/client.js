@@ -11,7 +11,7 @@ const findOneAndPopulate = async (id) =>
 
 clientRouter.get("/", wrapHandler(async (req, res) => {
   let clients = ( !req.auth.admin )
-    ? {}
+    ? []
     : await Client
       .find()
       .populate("attachments.owner", populateSelector)

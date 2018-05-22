@@ -10,7 +10,6 @@ const findOneAndPopulate = async (id) =>
     .findById(id)
     .populate("attachments.owner", populateSelector)
     .populate("client", populateSelector)
-    .populate("employees", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("manager", populateSelector)
 
@@ -23,7 +22,6 @@ projectRouter.get("/", wrapHandler(async (req, res) => {
     .find(selector)
     .populate("attachments.owner", populateSelector)
     .populate("client", populateSelector)
-    .populate("employees", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("manager", populateSelector)
 

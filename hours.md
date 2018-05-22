@@ -52,5 +52,7 @@
 | 17.5. | 7 | frontend | functionality | attachment views and controls for activities, clients, materials, projects and tasks |
 | 18.5. | 4 | backend | refactoring | switching to cloudinary for file storage instead of mongodb (...what a waste of time yesterday!!); adjustments to client and project models (removing attributes from one and adding to the other) |
 | 20.5. | 1 | backend | refactoring | simplify mongoose populate operations with generalized selector |
-| TOTAL | 156 |
+| 21.5. | 2 | frontend | refactoring | Adding proptypes to components (finally…) |
+| 22.5. | 8 | frontend | refactoring | Proptyping continued; pruning a lot of unnecessary, repetitive code by generalizing all lists and integrating redundant components into others; etc. |
+| TOTAL | 166 |
 
