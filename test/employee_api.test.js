@@ -2,7 +2,7 @@ const { app, server } = require("../index")
 const supertest = require("supertest")
 const api = supertest(app)
 
-const { createToken } = require("../util/auth")
+const { checkPassword, createToken } = require("../util/auth")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
@@ -290,6 +290,142 @@ describe("Employee API", async () => {
           400,
           tokens.admin
         ))
+  })
+
+  describe(`PUT ${url}/:id/password`, async () => {
+
+    let token
+    let validPasswords
+
+    beforeAll(async () => {
+      employee = await Employee
+        .findOne({ username : "basic2" })
+
+      path = `${url}/${employee._id}/password`
+      token = createToken(
+        employee, process.env.SECRET, process.env.HANDSHAKE)
+
+      validPasswords = {
+        password : "Qwerty_123",
+        newPassword : "Trust_no1",
+        confirmPassword : "Trust_no1"
+      }
+    })
+
+    test("succeeds with valid input and auth, and affects only allowed fields", async () => {
+      let employeeBefore = await Employee
+        .findOne({ username : "basic1" })
+
+      await api
+        .put(`${url}/${employeeBefore._id}/password`)
+        .set("authorization", `bearer ${tokens.basic}`)
+        .send(validPasswords)
+        .expect(200)
+
+      let employeeAfter = await Employee
+        .findOne({ username : "basic1" })
+
+      Object.keys(employeeAfter._doc).map(key => {
+        let original = employeeBefore[key].toString()
+        let updated = employeeAfter[key].toString()
+
+        return (key !== "pwHash")
+          ? expect(original).toBe(updated)
+          : expect(original).not.toBe(updated)
+      })
+
+      let pwCheck = await checkPassword("Trust_no1", employeeAfter)
+      expect(pwCheck).toBe(true)
+    })
+
+    test("does not affect any other employees in DB", async () => {
+      let employeeBefore = await Employee
+        .findOne({ username : "admin1" })
+
+      await tests
+        .putOnlyAffectsOne(
+          api,
+          Employee,
+          employeeBefore,
+          validPasswords,
+          `${url}/${employeeBefore._id}/password`,
+          tokens.admin
+        )
+    })
+
+    test("fails if not authed as employee in question", async () => {
+      let others = await Employee
+        .find({ _id : { $ne : employee._id } })
+
+      await Promise
+        .all(others
+          .map(async (user) => {
+            let token = createToken(
+              user, process.env.SECRET, process.env.HANDSHAKE)
+
+            await api
+              .put(path)
+              .set("authorization", `bearer ${token}`)
+              .send(validPasswords)
+              .expect(403)
+          }))
+    })
+
+    test("fails if incorrect current password", async () =>
+      await tests
+        .putFailsWithStatusCode(
+          api,
+          Employee,
+          [ {
+            ...validPasswords,
+            password : "Qwerty_124"
+          } ],
+          path,
+          400,
+          token
+        ))
+
+    test("fails if new password does not meet requirements", async () =>
+      await tests
+        .putFailsWithStatusCode(
+          api,
+          Employee,
+          [ {
+            password : "Qwerty_123",
+            newPassword : "correcthorsebatterystaple",
+            confirmPassword : "correcthorsebatterystaple"
+          } ],
+          path,
+          400,
+          token
+        ))
+
+    test("fails if 'new password' and 'confirm new password' do not match", async () =>
+      await tests
+        .putFailsWithStatusCode(
+          api,
+          Employee,
+          [ {
+            ...validPasswords,
+            confirmPassword : "Trust_no2"
+          } ],
+          path,
+          400,
+          token
+        ))
+
+    test("fails with invalid or nonexisting id", async () =>
+      await Promise
+        .all(invalidIds
+          .map(id => tests
+            .putFailsWithStatusCode(
+              api,
+              Employee,
+              [ validPasswords ],
+              `${id}/password`,
+              403,
+              token
+            ))))
   })
 })
 

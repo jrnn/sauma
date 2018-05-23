@@ -527,7 +527,7 @@ describe("Project API", async () => {
           api,
           Project,
           [
-            undefined,
+            null,
             { id : new Employee()._id },
             { id : "this_is_not_a_valid_id" }
           ],
