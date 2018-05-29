@@ -1,3 +1,8 @@
+const uuid = require("uuid/v4")
+
+const getUuid = () =>
+  uuid().replace(/-/g, "")
+
 const populateSelector = {
   address : 0,
   attachments : 0,
@@ -8,13 +13,13 @@ const populateSelector = {
   quotas : 0
 }
 
-const wrapHandler = (f) => {
-  return (req, res, next) =>
+const wrapHandler = (f) =>
+  (req, res, next) =>
     f(req, res, next)
       .catch(next)
-}
 
 module.exports = {
+  getUuid,
   populateSelector,
   wrapHandler
 }

@@ -8,12 +8,12 @@ const checkPassword = async (password, employee) =>
     ? false
     : await bcrypt.compare(password, employee.pwHash)
 
-const checkNewPassword = async (passwords, employee) => {
+const checkNewPassword = async (passwords, employee, checkCurrent = true) => {
   let errors = {}
   let { password, newPassword, confirmPassword } = passwords
   let pwCheck = await checkPassword(password, employee)
 
-  if ( !pwCheck )
+  if ( checkCurrent && !pwCheck )
     errors.password = "Virheellinen salasana"
 
   if ( !validatePassword(newPassword) )
@@ -29,18 +29,16 @@ const checkNewPassword = async (passwords, employee) => {
 
 const createToken = (employee, key, handshake) =>
   jwt.sign({
+    admin : employee.administrator,
     handshake,
     id : employee._id,
-    admin : employee.administrator
   }, key)
 
-const hashPassword = async (password) => {
-  if ( !validatePassword(password) )
-    return undefined
-  else
-    return await bcrypt
+const hashPassword = async (password) =>
+  ( !validatePassword(password) )
+    ? null
+    : await bcrypt
       .hash(password, Number(process.env.BCRYPT_COST))
-}
 
 module.exports = {
   checkPassword,
