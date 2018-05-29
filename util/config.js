@@ -1,13 +1,14 @@
-if ( process.env.NODE_ENV !== "production" )
+let env = process.env.NODE_ENV
+
+if ( env !== "production" )
   require("dotenv").config()
 
-let port = process.env.PORT
-let dbUri = process.env.DB_URI
-
-if ( process.env.NODE_ENV === "test" ) {
-  port = process.env.PORT_TEST
-  dbUri = process.env.DB_URI_TEST
-}
+let port = ( env === "test" )
+  ? process.env.PORT_TEST
+  : process.env.PORT
+let dbUri = ( env === "test" )
+  ? process.env.DB_URI_TEST
+  : process.env.DB_URI
 
 module.exports = {
   port,

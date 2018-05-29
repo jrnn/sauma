@@ -52,7 +52,12 @@
 | 17.5. | 7 | frontend | functionality | attachment views and controls for activities, clients, materials, projects and tasks |
 | 18.5. | 4 | backend | refactoring | switching to cloudinary for file storage instead of mongodb (...what a waste of time yesterday!!); adjustments to client and project models (removing attributes from one and adding to the other) |
 | 20.5. | 1 | backend | refactoring | simplify mongoose populate operations with generalized selector |
-| 21.5. | 2 | frontend | refactoring | Adding proptypes to components (finally…) |
-| 22.5. | 8 | frontend | refactoring | Proptyping continued; pruning a lot of unnecessary, repetitive code by generalizing all lists and integrating redundant components into others; etc. |
-| TOTAL | 166 |
+| 21.5. | 2 | frontend | refactoring | adding proptypes to components (finally…) |
+| 22.5. | 8 | frontend | refactoring | proptyping continued; pruning a lot of unnecessary, repetitive code by generalizing all lists and integrating redundant components into others; etc. |
+| 23.5. | 1 | backend | tests | tests for changing password (employee API) |
+| 23.5. | 1 | frontend | refactoring | adjust which data points are displayed on list rows depending on context |
+| 29.5. | 3 | backend | functionality | extend login API (requesting for and handling password resets with verification tokens) |
+| 29.5. | 1 | backend | refactoring | fixed bug where all non-index frontend routes result in 401 with a "catch-all" handler |
+| 29.5. | 1 | frontend | functionality | views and forms for the "forgot password?" process |
+| TOTAL | 173 |
 

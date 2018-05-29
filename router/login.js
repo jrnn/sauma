@@ -63,7 +63,7 @@ loginRouter.post("/forgot", wrapHandler(async (req, res) => {
     employee : employee._id
   }).save()
 
-  let url = `${req.protocol}://${req.hostname}/reset/${token.uuid}`
+  let url = `https://${req.hostname}/reset/${token.uuid}`
   res
     .status(200)    // TEMPORARY SHIT SOLUTION
     .json({ url })  // PRIOR TO NODEMAILER

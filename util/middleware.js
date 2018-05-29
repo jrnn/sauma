@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken")
+const path = require("path")
 
 const bouncer = (req, res, next) => {
-  if ( !req.auth ) {
+  if ( isApiRequest(req) && !req.auth ) {
     if ( process.env.NODE_ENV !== "test" )
       console.log("Unauthorized request bounced")
 
@@ -11,6 +12,16 @@ const bouncer = (req, res, next) => {
   }
 
   next()
+}
+
+const catchAll = (req, res) => {
+  if ( isApiRequest(req) )
+    res
+      .status(404)
+      .json({ error : "Resource not found" })
+  else
+    res
+      .sendFile(`${path.resolve(".")}/build/index.html`)
 }
 
 const logger = (req, res, next) => {
@@ -24,6 +35,9 @@ const logger = (req, res, next) => {
 
   next()
 }
+
+const isApiRequest = (req) =>
+  ( req.originalUrl.substring(0, 5) === "/api/" )
 
 const tokenParser = (req, res, next) => {
   let auth = req.get("authorization")
@@ -44,6 +58,7 @@ const tokenParser = (req, res, next) => {
 
 module.exports = {
   bouncer,
+  catchAll,
   logger,
   tokenParser
 }

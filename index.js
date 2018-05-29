@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
-const server = require("http").createServer(app)
 const config = require("./util/config")
+const server = require("http").createServer(app)
 
 // database
 const mongoose = require("mongoose")
@@ -29,9 +29,9 @@ app.use(middleware.logger)
 
 // api/login accessible without authentication
 app.use("/api/login", require("./router/login"))
-app.use(middleware.bouncer)
 
-// unauthed reqs to all other paths are bounced
+// unauthed reqs to all other API paths are bounced
+app.use(middleware.bouncer)
 app.use("/api/activities", require("./router/activity"))
 app.use("/api/blobs",      require("./router/blob"))
 app.use("/api/clients",    require("./router/client"))
@@ -40,9 +40,13 @@ app.use("/api/materials",  require("./router/material"))
 app.use("/api/projects",   require("./router/project"))
 app.use("/api/tasks",      require("./router/task"))
 
-// and finally, centralized error handling
+// centralized error handling
 const { errorHandler } = require("./util/errors")
 app.use(errorHandler)
+
+// and finally, catch-all route that returns 404 for unknown
+// API routes, or otherwise just serves frontend index
+app.get("*", middleware.catchAll)
 
 server.listen(config.port, () =>
   console.log(`Server now listening on port ${config.port}`))

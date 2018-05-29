@@ -2,7 +2,7 @@ const { AuthorizationError, FauxValidationError } = require("../util/errors")
 const { checkNewPassword, hashPassword } = require("../util/auth")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
-const { wrapHandler } = require("./helper")
+const { getUuid, wrapHandler } = require("./helper")
 
 employeeRouter.get("/", wrapHandler(async (req, res) => {
   let employees = await Employee.find()
@@ -25,12 +25,10 @@ employeeRouter.post("/", wrapHandler(async (req, res) => {
   if ( !req.auth.admin )
     throw AuthorizationError()
 
-  // temporary bullshit arrangement just for dev purposes
-  // should be  ... await hashPassword(req.body.password)
-  req.body.pwHash = await hashPassword(process.env.STD_PW || "Qwerty_123")
-
+  req.body.pwHash = await hashPassword(`${getUuid()}ABC123abc`)
   let employee = await new Employee(req.body).save()
   employee = await Employee.findById(employee._id)
+  // TO-DO : SEND INVITATION MAIL TO NEW USER
 
   res
     .status(201)
@@ -54,13 +52,11 @@ employeeRouter.put("/:id", wrapHandler(async (req, res) => {
 
 employeeRouter.put("/:id/password", wrapHandler(async (req, res) => {
   let { id } = req.params
-
   if ( req.auth.id !== id )
     throw AuthorizationError()
 
   let employee = await Employee.findById(id)
   let errors = await checkNewPassword(req.body, employee)
-
   if ( errors )
     throw FauxValidationError(errors)
 
