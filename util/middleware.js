@@ -3,9 +3,6 @@ const path = require("path")
 
 const bouncer = (req, res, next) => {
   if ( isApiRequest(req) && !req.auth ) {
-    if ( process.env.NODE_ENV !== "test" )
-      console.log("Unauthorized request bounced")
-
     return res
       .status(401)
       .json({ error : "Invalid credentials" })

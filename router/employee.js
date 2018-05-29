@@ -3,6 +3,8 @@ const { checkNewPassword, hashPassword } = require("../util/auth")
 const Employee = require("../model/employee")
 const employeeRouter = require("express").Router()
 const { getUuid, wrapHandler } = require("./helper")
+const { newUserInvite } = require("../util/mail")
+const VerificationToken = require("../model/verification_token")
 
 employeeRouter.get("/", wrapHandler(async (req, res) => {
   let employees = await Employee.find()
@@ -28,7 +30,16 @@ employeeRouter.post("/", wrapHandler(async (req, res) => {
   req.body.pwHash = await hashPassword(`${getUuid()}ABC123abc`)
   let employee = await new Employee(req.body).save()
   employee = await Employee.findById(employee._id)
-  // TO-DO : SEND INVITATION MAIL TO NEW USER
+
+  let token = await new VerificationToken({
+    uuid : getUuid(),
+    employee : employee._id
+  }).save()
+
+  newUserInvite(
+    employee,
+    `https://${req.hostname}/reset/${token.uuid}`
+  )
 
   res
     .status(201)

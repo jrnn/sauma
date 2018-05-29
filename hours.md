@@ -56,8 +56,8 @@
 | 22.5. | 8 | frontend | refactoring | proptyping continued; pruning a lot of unnecessary, repetitive code by generalizing all lists and integrating redundant components into others; etc. |
 | 23.5. | 1 | backend | tests | tests for changing password (employee API) |
 | 23.5. | 1 | frontend | refactoring | adjust which data points are displayed on list rows depending on context |
-| 29.5. | 3 | backend | functionality | extend login API (requesting for and handling password resets with verification tokens) |
+| 29.5. | 4 | backend | functionality | extending login API (request and handle password resets against verification tokens); send password reset requests and new employee invites by email with nodemailer |
 | 29.5. | 1 | backend | refactoring | fixed bug where all non-index frontend routes result in 401 with a "catch-all" handler |
 | 29.5. | 1 | frontend | functionality | views and forms for the "forgot password?" process |
-| TOTAL | 173 |
+| TOTAL | 174 |
 

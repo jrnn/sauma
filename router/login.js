@@ -9,9 +9,10 @@ const {
   hashPassword
 } = require("../util/auth")
 const Employee = require("../model/employee")
-const loginRouter = require("express").Router()
-const VerificationToken = require("../model/verification_token")
 const { getUuid, wrapHandler } = require("./helper")
+const loginRouter = require("express").Router()
+const { passwordReset } = require("../util/mail")
+const VerificationToken = require("../model/verification_token")
 
 const loginWrapHandler = (f) =>
   (req, res, next) =>
@@ -63,10 +64,14 @@ loginRouter.post("/forgot", wrapHandler(async (req, res) => {
     employee : employee._id
   }).save()
 
-  let url = `https://${req.hostname}/reset/${token.uuid}`
+  passwordReset(
+    employee.email,
+    `https://${req.hostname}/reset/${token.uuid}`
+  )
+
   res
-    .status(200)    // TEMPORARY SHIT SOLUTION
-    .json({ url })  // PRIOR TO NODEMAILER
+    .status(200)
+    .end()
 }))
 
 loginRouter.post("/reset/:uuid", wrapHandler(async (req, res) => {
