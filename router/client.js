@@ -7,6 +7,7 @@ const findOneAndPopulate = async (id) =>
   await Client
     .findById(id)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
 
 clientRouter.get("/", wrapHandler(async (req, res) => {
@@ -15,6 +16,7 @@ clientRouter.get("/", wrapHandler(async (req, res) => {
     : await Client
       .find()
       .populate("attachments.owner", populateSelector)
+      .populate("comments.owner", populateSelector)
       .populate("lastEditedBy", populateSelector)
 
   res

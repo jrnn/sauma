@@ -22,6 +22,7 @@ const schema = new mongoose.Schema({
     set : parser.round2dp
   },
   attachments : [{ type : schemas.attachment }],
+  comments : [{ type : schemas.comment }],
   createdOn : {
     type : Date,
     default : Date.now

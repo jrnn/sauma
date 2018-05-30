@@ -38,6 +38,7 @@ const schema = new mongoose.Schema({
     required : [ true, "Työmaa puuttuu" ]
   },
   attachments : [{ type : schemas.attachment }],
+  comments : [{ type : schemas.comment }],
   createdOn : {
     type : Date,
     default : Date.now

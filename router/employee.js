@@ -38,6 +38,7 @@ employeeRouter.post("/", wrapHandler(async (req, res) => {
 
   newUserInvite(
     employee,
+    `https://${req.hostname}/`,
     `https://${req.hostname}/reset/${token.uuid}`
   )
 

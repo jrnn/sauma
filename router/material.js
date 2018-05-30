@@ -7,12 +7,14 @@ const findOneAndPopulate = async (id) =>
   await Material
     .findById(id)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
 
 materialRouter.get("/", wrapHandler(async (req, res) => {
   let materials = await Material
     .find()
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
 
   res

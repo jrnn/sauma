@@ -54,6 +54,7 @@ const schema = new mongoose.Schema({
     }
   ],
   attachments : [{ type : schemas.attachment }],
+  comments : [{ type : schemas.comment }],
   createdOn : {
     type : Date,
     default : Date.now

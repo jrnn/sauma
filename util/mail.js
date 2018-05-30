@@ -11,18 +11,18 @@ const transporter = nodemailer.createTransport(
   }
 )
 
-const newUserInvite = (employee, url) =>
+const newUserInvite = (employee, homeUrl, resetUrl) =>
   ( process.env.NODE_ENV === "test" )
     ? null
     : send({
       from : process.env.MAIL_USER,
       to : employee.email,
-      subject : "Sauma || Tervetuloa uusi käyttäjä!",
-      html : `<h3>SAUMA toivottaa sinut tervetulleeksi, ${employee.firstName}</h3>
-        <p>Käyttäjänimesi on <strong>${employee.username}</strong>. Jos ei miellytä, voit vaihtaa sen kirjauduttuasi.</p>
-        <p>Ensin sinun on asetettava salasana. Tee niin seuraamalla <a href='${url}'>tätä linkkiä</a>, sinä senkin könsikäs.</p>
-        <p>Huomaathan, että linkki on yksilöity, ja voimassa vain vuorokauden tämän sähköpostin lähetysajasta. Jos olet niin hidas että se ehtii mennä happamaksi, voit uusia salasanan vaihtopyynnön Sauman etusivulla.</p>
-        <p>Ja varsinainen sovellushan löytyy <a href='https://sauma.herokuapp.com/'>täältä</a></p>
+      subject : "Sauma || Tervetuloa!",
+      html : `<h3>Tervetuloa SAUMA:n käyttäjäksi, ${employee.firstName}!</h3>
+        <p>Käyttäjänimesi on <strong>${employee.username}</strong>. Voit vaihtaa sen kirjauduttuasi.</p>
+        <p>Ensin sinun on asetettava salasana. Tee niin seuraamalla <a href='${resetUrl}'>tätä linkkiä</a>.</p>
+        <p>Huomaathan, että linkki on yksilöity, ja voimassa vain vuorokauden tämän viestin lähetysajasta. Jos se ehtii mennä happamaksi, voit uusia salasanan vaihtopyynnön Sauman etusivulla.</p>
+        <p>Ja varsinainen sovellushan löytyy <a href='${homeUrl}'>täältä</a>.</p>
         <p>Parhain terveisin, Sauman sposti-botti</p>`
     })
 
@@ -33,10 +33,11 @@ const passwordReset = (email, url) =>
       from : process.env.MAIL_USER,
       to : email,
       subject : "Sauma || Unohtuiko salasana?",
-      html : `<p>Seuraa oheista linkkiä asettaaksesi uuden salasanan:</p>
-        <a href='${url}'>Salasanan vaihto</a>
-        <p>Huomaathan, että linkki on yksilöity, ja voimassa vain vuorokauden tämän sähköpostin lähetysajasta.</p>
-        <p>Jos et ole pyytänyt salasanan vaihtoa, niin nyt kannattaa panikoida -- jollain lienee pahat mielessä!</p>`
+      html : `<h3>SAUMA salasana vaihtoon</h3>
+        <p>Seuraa <a href='${url}'>tätä linkkiä</a> asettaaksesi uuden salasanan.</p>
+        <p>Huomaathan, että linkki on yksilöity, ja voimassa vain vuorokauden tämän viestin lähetysajasta.</p>
+        <p>Jos et ole pyytänyt salasanan vaihtoa, niin nyt kannattaa panikoida -- jollain lienee pahat mielessä!</p>
+        <p>Parhain terveisin, Sauman sposti-botti</p>`
     })
 
 const send = (options) =>

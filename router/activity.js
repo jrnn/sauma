@@ -9,6 +9,7 @@ const findOneAndPopulate = async (id) =>
   await Activity
     .findById(id)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("owner", populateSelector)
     .populate("project", populateSelector)
@@ -25,6 +26,7 @@ activityRouter.get("/", wrapHandler(async (req, res) => {
   let activities = await Activity
     .find(selector)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("owner", populateSelector)
     .populate("project", populateSelector)

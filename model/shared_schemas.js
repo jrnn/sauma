@@ -68,6 +68,31 @@ attachment.options.toJSON = {
   }
 }
 
+const comment = new mongoose.Schema({
+  text : {
+    type : String,
+    required : true,
+    maxlength : [ 255, "Korkeintaan 255 merkkiä" ],
+    trim : true
+  },
+  createdOn : {
+    type : Date,
+    default : Date.now
+  },
+  owner : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Employee",
+    required : true
+  }
+})
+
+comment.options.toJSON = {
+  transform : (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+}
+
 const quota = new mongoose.Schema({
   material : {
     type : mongoose.Schema.Types.ObjectId,
@@ -93,5 +118,6 @@ quota.options.toJSON = {
 module.exports = {
   address,
   attachment,
+  comment,
   quota
 }

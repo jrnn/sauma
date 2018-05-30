@@ -11,6 +11,7 @@ const findOneAndPopulate = async (id) =>
   await Task
     .findById(id)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("project", projectSelector)
     .populate("quotas.material", populateSelector)
@@ -25,6 +26,7 @@ taskRouter.get("/", wrapHandler(async (req, res) => {
   let tasks = await Task
     .find(selector)
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("project", projectSelector)
     .populate("quotas.material", populateSelector)
