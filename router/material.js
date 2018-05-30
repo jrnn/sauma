@@ -1,21 +1,14 @@
 const { AuthorizationError } = require("../util/errors")
 const Material = require("../model/material")
 const materialRouter = require("express").Router()
-const { populateSelector, wrapHandler } = require("./helper")
-
-const findOneAndPopulate = async (id) =>
-  await Material
-    .findById(id)
-    .populate("attachments.owner", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
+const {
+  findAllPopulated,
+  findByIdPopulated,
+  wrapHandler
+} = require("./helper")
 
 materialRouter.get("/", wrapHandler(async (req, res) => {
-  let materials = await Material
-    .find()
-    .populate("attachments.owner", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
+  let materials = await findAllPopulated("Material")
 
   res
     .status(200)
@@ -23,7 +16,7 @@ materialRouter.get("/", wrapHandler(async (req, res) => {
 }))
 
 materialRouter.get("/:id", wrapHandler(async (req, res) => {
-  let material = await findOneAndPopulate(req.params.id)
+  let material = await findByIdPopulated("Material", req.params.id)
 
   material._id  // throws TypeError if !material
   res
@@ -37,7 +30,7 @@ materialRouter.post("/", wrapHandler(async (req, res) => {
 
   req.body.lastEditedBy = req.auth.id
   let material = await new Material(req.body).save()
-  material = await findOneAndPopulate(material._id)
+  material = await findByIdPopulated("Material", material._id)
 
   res
     .status(201)
@@ -53,7 +46,7 @@ materialRouter.put("/:id", wrapHandler(async (req, res) => {
   material.lastEditedBy = req.auth.id
 
   await material.save()
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated("Material", req.params.id)
 
   res
     .status(200)

@@ -60,6 +60,7 @@
 | 29.5. | 1 | backend | refactoring | fixed bug where all non-index frontend routes result in 401 with a "catch-all" handler |
 | 29.5. | 1 | frontend | functionality | views and forms for the "forgot password?" process |
 | 30.5. | 2 | backend | functionality | comment model and API (adding comments to other entities) |
+| 30.5. | 1 | backend | refactoring | pruning repetitive populate operations |
 | 30.5. | 2 | frontend | functionality | comment views and controls – lazy and clumsy solution, need to improve at some point |
-| TOTAL | 178 |
+| TOTAL | 179 |
 

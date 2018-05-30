@@ -2,38 +2,28 @@ const { AuthorizationError } = require("../util/errors")
 const Employee = require("../model/employee")
 const Project = require("../model/project")
 const projectRouter = require("express").Router()
-const { populateSelector, wrapHandler } = require("./helper")
+const {
+  findAllPopulated,
+  findByIdPopulated,
+  populateSelector,
+  wrapHandler
+} = require("./helper")
 const Task = require("../model/task")
-
-const findOneAndPopulate = async (id) =>
-  await Project
-    .findById(id)
-    .populate("attachments.owner", populateSelector)
-    .populate("client", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
-    .populate("manager", populateSelector)
 
 projectRouter.get("/", wrapHandler(async (req, res) => {
   let selector = ( req.auth.admin )
     ? {}
     : { employees : req.auth.id }
 
-  let projects = await Project
-    .find(selector)
-    .populate("attachments.owner", populateSelector)
-    .populate("client", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
-    .populate("manager", populateSelector)
-
+  let projects = await findAllPopulated("Project", selector)
   res
     .status(200)
     .json(projects)
 }))
 
 projectRouter.get("/:id", wrapHandler(async (req, res) => {
-  let project = await findOneAndPopulate(req.params.id)
+  let project = await findByIdPopulated("Project", req.params.id)
+
   let idCheck = await Project
     .findOne({ _id : req.params.id, employees : req.auth.id })
 
@@ -52,7 +42,7 @@ projectRouter.post("/", wrapHandler(async (req, res) => {
 
   req.body.lastEditedBy = req.auth.id
   let project = await new Project(req.body).save()
-  project = await findOneAndPopulate(project._id)
+  project = await findByIdPopulated("Project", project._id)
 
   res
     .status(201)
@@ -68,7 +58,7 @@ projectRouter.put("/:id", wrapHandler(async (req, res) => {
   project.lastEditedBy = req.auth.id
 
   await project.save()
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated("Project", req.params.id)
 
   res
     .status(200)
@@ -76,7 +66,7 @@ projectRouter.put("/:id", wrapHandler(async (req, res) => {
 }))
 
 projectRouter.get("/:id/tasks", wrapHandler(async (req, res) => {
-  let project = await findOneAndPopulate(req.params.id)
+  let project = await Project.findById(req.params.id)
   let idCheck = await Project
     .findOne({ _id : req.params.id, employees : req.auth.id })
 
@@ -91,6 +81,7 @@ projectRouter.get("/:id/tasks", wrapHandler(async (req, res) => {
   let tasks = await Task
     .find({ project : req.params.id })
     .populate("attachments.owner", populateSelector)
+    .populate("comments.owner", populateSelector)
     .populate("lastEditedBy", populateSelector)
     .populate("project", projectSelector)
     .populate("quotas.material", populateSelector)
@@ -118,7 +109,7 @@ projectRouter.post("/:id/employees", wrapHandler(async (req, res) => {
   await project.save()
   await employee.save()
 
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated("Project", req.params.id)
   res
     .status(200)
     .json(updated)

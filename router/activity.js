@@ -2,19 +2,12 @@ const Activity = require("../model/activity")
 const activityRouter = require("express").Router()
 const { AuthorizationError, CustomError } = require("../util/errors")
 const Employee = require("../model/employee")
-const { populateSelector, wrapHandler } = require("./helper")
+const {
+  findAllPopulated,
+  findByIdPopulated,
+  wrapHandler
+} = require("./helper")
 const Task = require("../model/task")
-
-const findOneAndPopulate = async (id) =>
-  await Activity
-    .findById(id)
-    .populate("attachments.owner", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
-    .populate("owner", populateSelector)
-    .populate("project", populateSelector)
-    .populate("quotas.material", populateSelector)
-    .populate("task", populateSelector)
 
 activityRouter.get("/", wrapHandler(async (req, res) => {
   let employee = await Employee.findById(req.auth.id)
@@ -23,23 +16,15 @@ activityRouter.get("/", wrapHandler(async (req, res) => {
     ? {}
     : { project : { $in : employee.projects } }
 
-  let activities = await Activity
-    .find(selector)
-    .populate("attachments.owner", populateSelector)
-    .populate("comments.owner", populateSelector)
-    .populate("lastEditedBy", populateSelector)
-    .populate("owner", populateSelector)
-    .populate("project", populateSelector)
-    .populate("quotas.material", populateSelector)
-    .populate("task", populateSelector)
-
+  let activities = await findAllPopulated("Activity", selector)
   res
     .status(200)
     .json(activities)
 }))
 
 activityRouter.get("/:id", wrapHandler(async (req, res) => {
-  let activity = await findOneAndPopulate(req.params.id)
+  let activity = await findByIdPopulated("Activity", req.params.id)
+
   let idCheck = await Employee
     .count({ projects : activity.project })
     .where({ _id : req.auth.id })
@@ -81,7 +66,7 @@ activityRouter.post("/", wrapHandler(async (req, res) => {
 
   req.body.project = task.project
   let activity = await new Activity(req.body).save()
-  activity = await findOneAndPopulate(activity._id)
+  activity = await findByIdPopulated("Activity", activity._id)
 
   res
     .status(201)
@@ -105,7 +90,7 @@ activityRouter.put("/:id", wrapHandler(async (req, res) => {
   activity.lastEditedBy = req.auth.id
 
   await activity.save()
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated("Activity", req.params.id)
 
   res
     .status(200)
@@ -117,7 +102,7 @@ activityRouter.put("/:id/sign", wrapHandler(async (req, res) => {
     throw AuthorizationError()
 
   await Activity.findByIdAndUpdate(req.params.id, { signed : true })
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated("Activity", req.params.id)
 
   res
     .status(200)

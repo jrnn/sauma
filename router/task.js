@@ -7,7 +7,7 @@ const taskRouter = require("express").Router()
 const projectSelector = Object.assign({}, populateSelector)
 delete projectSelector.employees
 
-const findOneAndPopulate = async (id) =>
+const findByIdPopulated = async (id) =>
   await Task
     .findById(id)
     .populate("attachments.owner", populateSelector)
@@ -37,7 +37,7 @@ taskRouter.get("/", wrapHandler(async (req, res) => {
 }))
 
 taskRouter.get("/:id", wrapHandler(async (req, res) => {
-  let task = await findOneAndPopulate(req.params.id)
+  let task = await findByIdPopulated(req.params.id)
   let idCheck = await Employee
     .count({ projects : task.project })
     .where({ _id : req.auth.id })
@@ -57,7 +57,7 @@ taskRouter.post("/", wrapHandler(async (req, res) => {
 
   req.body.lastEditedBy = req.auth.id
   let task = await new Task(req.body).save()
-  task = await findOneAndPopulate(task._id)
+  task = await findByIdPopulated(task._id)
 
   res
     .status(201)
@@ -73,7 +73,7 @@ taskRouter.put("/:id", wrapHandler(async (req, res) => {
   task.lastEditedBy = req.auth.id
 
   await task.save()
-  let updated = await findOneAndPopulate(req.params.id)
+  let updated = await findByIdPopulated(req.params.id)
 
   res
     .status(200)
