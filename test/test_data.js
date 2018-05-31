@@ -320,6 +320,14 @@ const invalidEmployees = [
     password : "Qwerty_123",
     firstName : "Jonne",
     lastName : "McMopoface",
+    email : "admin1@sauma.io",
+    phone : "0401234567"
+  },
+  {
+    username : "jonne",
+    password : "Qwerty_123",
+    firstName : "Jonne",
+    lastName : "McMopoface",
     email : "jonne@mopo.es",
     address : {
       street : "Mopo avenue 13 ES",
@@ -395,6 +403,15 @@ const invalidEmployeeUpdates = [
   {
     administrator : true,
     email : "jonne@mopo",
+    enabled : false,
+    firstName : "Jonne",
+    lastName : "McMopoface",
+    phone : "0401234567",
+    username : "jonne"
+  },
+  {
+    administrator : true,
+    email : "admin1@sauma.io",
     enabled : false,
     firstName : "Jonne",
     lastName : "McMopoface",
