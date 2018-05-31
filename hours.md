@@ -1,5 +1,10 @@
 # TIME TRACKING
 
+Note that the "categories" below are misleading, interpret as follows:
+ - "functionality" --> "new stuff"
+ - "refactoring" --> "fixes/changes"
+ - "tests" --> ... "tests"
+
 | date | hours | layer | category | what exactly? |
 |:-----|:------|:------|:---------|:--------------|
 | 20.3. | 2 | n/a | general | concept analysis and design |
@@ -62,5 +67,6 @@
 | 30.5. | 2 | backend | functionality | comment model and API (adding comments to other entities) |
 | 30.5. | 1 | backend | refactoring | pruning repetitive populate operations |
 | 30.5. | 2 | frontend | functionality | comment views and controls – lazy and clumsy solution, need to improve at some point |
-| TOTAL | 179 |
-
+| 31.5. | 1 | backend | refactoring | changes to employee model : email must be unique due to password reset requests via email |
+| 31.5. | 1 | frontend | refactoring | experimenting with accordion default behavior |
+| TOTAL | 181 |

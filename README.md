@@ -40,8 +40,9 @@ Where we at (as of 2018 May 31)
   - Frontend has no automated testing whatsoever:
     - I have no excuses, it is what it is
     - (Also no idea why frontend code is so bloated compared to backend?)
-  - Roughly 60% of hours burnt on writing new code and tests, and 40% wasted on
-    fixing and refactoring... Hours split very evenly between back and front
+  - Roughly 60% of hours so far burnt on writing new code and tests, vs. 40%
+    wasted on fixing and refactoring... Hours split very evenly between back and
+    front
 
 Way forward
 -----------
@@ -55,7 +56,8 @@ Way forward
   - Showing all work sites at once on a map
   - Ability to delete/undo things (conditionally)
   - All that "aggregate query" stuff, e.g. how much of a certain material has
-    been used in excess of budget across all work sites
+    been used in excess of budget across all work sites, or how many hours have
+    been clocked on a certain work site
   - Extending back-end test coverage
   - Consider switching from a live test DB e.g. to mongomock
   - Consider socket.io
@@ -68,6 +70,7 @@ Helsinki University reviewer, I salute you
 
 - You'll find
   - time tracking [here](https://github.com/jrnn/sauma/blob/master/hours.md)
-  - instructions of use here (TBA)
-  - and a demo version of the app [here](https://sauma-demo.heroku.com/)
-- You should have received an email with username and password reset link
+  - instructions of use [here](https://github.com/jrnn/sauma/blob/master/ohjeet.md)
+  - and a demo version of the app [here](https://sauma-demo.herokuapp.com/)
+- You should have received an email with username and password reset link; if
+  not, contact me!
