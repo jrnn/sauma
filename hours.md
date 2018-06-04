@@ -69,4 +69,5 @@ Note that the "categories" below are misleading, interpret as follows:
 | 30.5. | 2 | frontend | functionality | comment views and controls – lazy and clumsy solution, need to improve at some point |
 | 31.5. | 1 | backend | refactoring | changes to employee model : email must be unique due to password reset requests via email |
 | 31.5. | 1 | frontend | refactoring | experimenting with accordion default behavior |
-| TOTAL | 181 |
+| 4.6. | 4 | frontend | functionality | shaky DIY integration with Google Maps JS API to show the locations of all projects on a map at once |
+| TOTAL | 185 |

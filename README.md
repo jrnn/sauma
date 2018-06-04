@@ -39,7 +39,6 @@ Where we at (as of 2018 May 31)
     - Tests comprise almost 60% of backend code
   - Frontend has no automated testing whatsoever:
     - I have no excuses, it is what it is
-    - (Also no idea why frontend code is so bloated compared to backend?)
   - Roughly 60% of hours so far burnt on writing new code and tests, vs. 40%
     wasted on fixing and refactoring... Hours split very evenly between back and
     front
@@ -53,7 +52,6 @@ Way forward
   which case it just goes to the bin.
 - If Sauma is actually picked up, some known to-dos are:
   - Fixes and improvements to UI/UX
-  - Showing all work sites at once on a map
   - Ability to delete/undo things (conditionally)
   - All that "aggregate query" stuff, e.g. how much of a certain material has
     been used in excess of budget across all work sites, or how many hours have
