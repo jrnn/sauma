@@ -36,7 +36,7 @@ const schema = new mongoose.Schema({
 
 schema.pre("validate", async function (next) {
   let count = await this.model("Material")
-    .count({ name : this.name })
+    .countDocuments({ name : this.name })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(

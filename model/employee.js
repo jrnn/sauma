@@ -75,14 +75,14 @@ schema.pre("validate", async function (next) {
       "pwHash", "Salasana ei täytä vaatimuksia", this.pwHash)
 
   let count = await this.model("Employee")
-    .count({ username : this.username })
+    .countDocuments({ username : this.username })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(
       "username", "Käyttäjänimi on varattu", this.username)
 
   count = await this.model("Employee")
-    .count({ email : this.email })
+    .countDocuments({ email : this.email })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(

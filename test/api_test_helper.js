@@ -7,11 +7,11 @@ const Project = require("../model/project")
 const Task = require("../model/task")
 
 const clearDb = async () => {
-  await Client.remove()
-  await Employee.remove()
-  await Material.remove()
-  await Project.remove()
-  await Task.remove()
+  await Client.deleteMany()
+  await Employee.deleteMany()
+  await Material.deleteMany()
+  await Project.deleteMany()
+  await Task.deleteMany()
 }
 
 const initClients = async () => {

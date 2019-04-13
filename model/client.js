@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
 
 schema.pre("validate", async function (next) {
   let count = await this.model("Client")
-    .count({ businessId : this.businessId })
+    .countDocuments({ businessId : this.businessId })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(

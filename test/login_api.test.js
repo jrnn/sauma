@@ -1,25 +1,17 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const Employee = require("../model/employee")
 const helper = require("../test/api_test_helper")
 const jwt = require("jsonwebtoken")
 const url = "/api/login"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Login API", async () => {
+describe("Login API", () => {
 
   beforeAll(async () => {
     await helper.clearDb()
     await helper.initEmployees()
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid credentials, and returns token as JSON with correct data", async () => {
       let username = (Math.random() < 0.5)
@@ -77,5 +69,3 @@ describe("Login API", async () => {
           )))
   })
 })
-
-afterAll(() => server.close())

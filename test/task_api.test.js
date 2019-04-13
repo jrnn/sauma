@@ -1,7 +1,4 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const { createToken } = require("../util/auth")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
@@ -11,12 +8,7 @@ const Task = require("../model/task")
 const tests = require("./standard_tests")
 const url = "/api/tasks"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Task API", async () => {
+describe("Task API", () => {
 
   let materialIds
   let path
@@ -46,7 +38,7 @@ describe("Task API", async () => {
     tokens = await helper.initTokens()
   })
 
-  describe(`GET ${url}`, async () => {
+  describe(`GET ${url}`, () => {
 
     test("returns all tasks in DB as JSON", async () =>
       await tests
@@ -63,23 +55,18 @@ describe("Task API", async () => {
           "basic2",
           "basic3"
         ].map(async (username) => {
-          let user = await Employee
-            .findOne({ username })
-
-          let tasks = await Task
-            .find({ project : { $in : user.projects } })
-
-          let token = createToken(
-            user, process.env.SECRET, process.env.HANDSHAKE)
-
-          let res = await api
+          const user = await Employee.findOne({ username })
+          const projects = user.projects.map(p => p.toString())
+          const tasks = await Task.find({ project : { $in : user.projects } })
+          const token = createToken(user, process.env.SECRET, process.env.HANDSHAKE)
+          const { body } = await api
             .get(url)
             .set("authorization", `bearer ${token}`)
             .expect(200)
             .expect("content-type", /application\/json/)
 
-          expect(res.body.length).toBe(tasks.length)
-          res.body.map(t => expect(user.projects).toContain(t.project.id))
+          expect(body.length).toBe(tasks.length)
+          body.map(t => expect(projects).toContain(t.project.id.toString()))
         })))
 
     test("fails if invalid token", async () =>
@@ -94,7 +81,7 @@ describe("Task API", async () => {
             ))))
   })
 
-  describe(`GET ${url}/:id`, async () => {
+  describe(`GET ${url}/:id`, () => {
 
     beforeAll(async () => {
       task = await helper.randomTask()
@@ -162,7 +149,7 @@ describe("Task API", async () => {
             ))))
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid input, and returns new task as JSON", async () =>
       await tests
@@ -223,7 +210,7 @@ describe("Task API", async () => {
         ))
   })
 
-  describe(`PUT ${url}/:id`, async () => {
+  describe(`PUT ${url}/:id`, () => {
 
     beforeAll(async () => {
       task = helper.newTask(projectIds, materialIds)
@@ -310,5 +297,3 @@ describe("Task API", async () => {
         ))
   })
 })
-
-afterAll(() => server.close())

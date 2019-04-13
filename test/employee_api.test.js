@@ -1,19 +1,11 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const { checkPassword, createToken } = require("../util/auth")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
 const url = "/api/employees"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Employee API", async () => {
+describe("Employee API", () => {
 
   let employee
   let path
@@ -31,7 +23,7 @@ describe("Employee API", async () => {
     tokens = await helper.initTokens()
   })
 
-  describe(`GET ${url}`, async () => {
+  describe(`GET ${url}`, () => {
 
     test("returns all employees in DB as JSON", async () =>
       await tests
@@ -63,7 +55,7 @@ describe("Employee API", async () => {
     })
   })
 
-  describe(`GET ${url}/:id`, async () => {
+  describe(`GET ${url}/:id`, () => {
 
     beforeAll(async () => {
       employee = await helper.randomEmployee()
@@ -103,7 +95,7 @@ describe("Employee API", async () => {
             ))))
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid input, and returns new employee as JSON", async () =>
       await tests
@@ -164,7 +156,7 @@ describe("Employee API", async () => {
         ))
   })
 
-  describe(`PUT ${url}/:id`, async () => {
+  describe(`PUT ${url}/:id`, () => {
 
     let token
 
@@ -292,7 +284,7 @@ describe("Employee API", async () => {
         ))
   })
 
-  describe(`PUT ${url}/:id/password`, async () => {
+  describe(`PUT ${url}/:id/password`, () => {
 
     let token
     let validPasswords
@@ -428,5 +420,3 @@ describe("Employee API", async () => {
             ))))
   })
 })
-
-afterAll(() => server.close())

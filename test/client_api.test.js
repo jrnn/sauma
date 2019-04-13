@@ -1,19 +1,11 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const Client = require("../model/client")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const tests = require("./standard_tests")
 const url = "/api/clients"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Client API", async () => {
+describe("Client API", () => {
 
   let client
   let path
@@ -32,7 +24,7 @@ describe("Client API", async () => {
     tokens = await helper.initTokens()
   })
 
-  describe(`GET ${url}`, async () => {
+  describe(`GET ${url}`, () => {
 
     test("returns all clients in DB as JSON", async () =>
       await tests
@@ -65,7 +57,7 @@ describe("Client API", async () => {
             ))))
   })
 
-  describe(`GET ${url}/:id`, async () => {
+  describe(`GET ${url}/:id`, () => {
 
     beforeAll(async () => {
       client = await helper.randomClient()
@@ -114,7 +106,7 @@ describe("Client API", async () => {
             ))))
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid input, and returns new client as JSON", async () =>
       await tests
@@ -175,7 +167,7 @@ describe("Client API", async () => {
         ))
   })
 
-  describe(`PUT ${url}/:id`, async () => {
+  describe(`PUT ${url}/:id`, () => {
 
     beforeAll(async () => {
       client = helper.newClient()
@@ -262,5 +254,3 @@ describe("Client API", async () => {
         ))
   })
 })
-
-afterAll(() => server.close())

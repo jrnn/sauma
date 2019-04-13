@@ -1,19 +1,11 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const Employee = require("../model/employee")
 const helper = require("./api_test_helper")
 const Material = require("../model/material")
 const tests = require("./standard_tests")
 const url = "/api/materials"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Material API", async () => {
+describe("Material API", () => {
 
   let material
   let path
@@ -32,7 +24,7 @@ describe("Material API", async () => {
     tokens = await helper.initTokens()
   })
 
-  describe(`GET ${url}`, async () => {
+  describe(`GET ${url}`, () => {
 
     test("returns all materials in DB as JSON", async () =>
       await tests
@@ -55,7 +47,7 @@ describe("Material API", async () => {
             ))))
   })
 
-  describe(`GET ${url}/:id`, async () => {
+  describe(`GET ${url}/:id`, () => {
 
     beforeAll(async () => {
       material = await helper.randomMaterial()
@@ -95,7 +87,7 @@ describe("Material API", async () => {
             ))))
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid input, and returns new material as JSON", async () =>
       await tests
@@ -156,7 +148,7 @@ describe("Material API", async () => {
         ))
   })
 
-  describe(`PUT ${url}/:id`, async () => {
+  describe(`PUT ${url}/:id`, () => {
 
     beforeAll(async () => {
       material = helper.newMaterial()
@@ -243,5 +235,3 @@ describe("Material API", async () => {
         ))
   })
 })
-
-afterAll(() => server.close())

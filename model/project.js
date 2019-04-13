@@ -76,7 +76,7 @@ schema.pre("validate", async function (next) {
       "endDate", "Loppupvm ei voi edeltää alkupvm:ää", this.endDate)
 
   let count = await this.model("Project")
-    .count({ projectId : this.projectId })
+    .countDocuments({ projectId : this.projectId })
     .where({ _id : { $ne : this._id } })
   if ( count > 0 )
     this.invalidate(

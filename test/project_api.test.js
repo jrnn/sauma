@@ -1,7 +1,4 @@
-const { app, server } = require("../index")
-const supertest = require("supertest")
-const api = supertest(app)
-
+const { api } = require("./setup_tests")
 const { createToken } = require("../util/auth")
 const Client = require("../model/client")
 const Employee = require("../model/employee")
@@ -11,12 +8,7 @@ const Task = require("../model/task")
 const tests = require("./standard_tests")
 const url = "/api/projects"
 
-if ( process.env.NODE_ENV !== "test" ) {
-  server.close()
-  throw new Error("Tests must be run in test mode")
-}
-
-describe("Project API", async () => {
+describe("Project API", () => {
 
   let adminId
   let clientIds
@@ -46,7 +38,7 @@ describe("Project API", async () => {
     tokens = await helper.initTokens()
   })
 
-  describe(`GET ${url}`, async () => {
+  describe(`GET ${url}`, () => {
 
     test("returns all projects in DB as JSON", async () =>
       await tests
@@ -94,7 +86,7 @@ describe("Project API", async () => {
             ))))
   })
 
-  describe(`GET ${url}/:id`, async () => {
+  describe(`GET ${url}/:id`, () => {
 
     beforeAll(async () => {
       project = await helper.randomProject()
@@ -162,7 +154,7 @@ describe("Project API", async () => {
             ))))
   })
 
-  describe(`POST ${url}`, async () => {
+  describe(`POST ${url}`, () => {
 
     test("succeeds with valid input, and returns new project as JSON", async () =>
       await tests
@@ -241,7 +233,7 @@ describe("Project API", async () => {
     })
   })
 
-  describe(`PUT ${url}/:id`, async () => {
+  describe(`PUT ${url}/:id`, () => {
 
     let clientId
     let managerId
@@ -354,7 +346,7 @@ describe("Project API", async () => {
     })
   })
 
-  describe(`GET ${url}/:id/tasks`, async () => {
+  describe(`GET ${url}/:id/tasks`, () => {
 
     test("returns only tasks that belong to project in question", async () => {
       let projects = await Project.find()
@@ -426,7 +418,7 @@ describe("Project API", async () => {
             ))))
   })
 
-  describe(`POST ${url}/:id/employees`, async () => {
+  describe(`POST ${url}/:id/employees`, () => {
 
     let employee
 
@@ -561,5 +553,3 @@ describe("Project API", async () => {
         ))
   })
 })
-
-afterAll(() => server.close())
