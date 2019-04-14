@@ -61,8 +61,11 @@ projectRouter.put("/:id", wrapHandler(async (req, res) => {
   const project = await Project.findById(req.params.id)
   Project.overwrite(project, req.body)
   project.lastEditedBy = req.auth.id
-  project.address = await addCoordinatesToAddress(req.body.address)
 
+  const { address } = req.body
+  if ( address ) {
+    project.address = await addCoordinatesToAddress(address)
+  }
   await project.save()
   const _project = await findByIdPopulated("Project", req.params.id)
 
