@@ -104,24 +104,46 @@ projectRouter.post("/:id/employees", wrapHandler(async (req, res) => {
   if ( !req.auth.admin )
     throw AuthorizationError()
 
-  let project = await Project.findById(req.params.id)
-  let employee = await Employee.findById(req.body.id)
+  const employee = await Employee.findById(req.body.id)
+  const project = await Project.findById(req.params.id)
+  const eid = employee._id.toString()
+  const pid = project._id.toString()
 
   project.employees = project.employees
-    .filter(id => id.toString() !== employee._id.toString())
+    .filter(id => id.toString() !== eid)
     .concat(employee._id)
 
   employee.projects = employee.projects
-    .filter(id => id.toString() !== project._id.toString())
+    .filter(id => id.toString() !== pid)
     .concat(project._id)
 
   await project.save()
   await employee.save()
 
-  let updated = await findByIdPopulated("Project", req.params.id)
+  const _project = await findByIdPopulated("Project", req.params.id)
   res
     .status(200)
-    .json(updated)
+    .json(_project)
+}))
+
+projectRouter.delete("/:pid/employees/:eid", wrapHandler(async (req, res) => {
+  if ( !req.auth.admin )
+    throw AuthorizationError()
+
+  const { eid, pid } = req.params
+  const employee = await Employee.findById(eid)
+  const project = await Project.findById(pid)
+
+  project.employees = project.employees.filter(id => id.toString() !== eid)
+  employee.projects = employee.projects.filter(id => id.toString() !== pid)
+
+  await project.save()
+  await employee.save()
+
+  const _project = await findByIdPopulated("Project", pid)
+  res
+    .status(200)
+    .json(_project)
 }))
 
 module.exports = projectRouter
