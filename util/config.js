@@ -5,6 +5,7 @@ if ( env !== "production" ) {
 }
 
 const dbUri = process.env.DB_URI
+const googleApiKey = process.env.REACT_APP_GOOGLE_API_KEY
 const port = process.env.PORT
 const mongoOpts = {
   promiseLibrary: global.Promise,
@@ -14,6 +15,7 @@ const mongoOpts = {
 module.exports = {
   dbUri,
   env,
+  googleApiKey,
   mongoOpts,
   port
 }

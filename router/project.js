@@ -9,6 +9,7 @@ const {
   wrapHandler
 } = require("./helper")
 const Task = require("../model/task")
+const { addCoordinatesToAddress } = require("../util/geocoder")
 
 projectRouter.get("/", wrapHandler(async (req, res) => {
   let selector = ( req.auth.admin )
@@ -40,29 +41,34 @@ projectRouter.post("/", wrapHandler(async (req, res) => {
   if ( !req.auth.admin )
     throw AuthorizationError()
 
-  req.body.lastEditedBy = req.auth.id
-  let project = await new Project(req.body).save()
-  project = await findByIdPopulated("Project", project._id)
+  const body = {
+    ...req.body,
+    address : await addCoordinatesToAddress(req.body.address),
+    lastEditedBy : req.auth.id
+  }
+  const project = await new Project(body).save()
+  const _project = await findByIdPopulated("Project", project._id)
 
   res
     .status(201)
-    .json(project)
+    .json(_project)
 }))
 
 projectRouter.put("/:id", wrapHandler(async (req, res) => {
   if ( !req.auth.admin )
     throw AuthorizationError()
 
-  let project = await Project.findById(req.params.id)
+  const project = await Project.findById(req.params.id)
   Project.overwrite(project, req.body)
   project.lastEditedBy = req.auth.id
+  project.address = await addCoordinatesToAddress(req.body.address)
 
   await project.save()
-  let updated = await findByIdPopulated("Project", req.params.id)
+  const _project = await findByIdPopulated("Project", req.params.id)
 
   res
     .status(200)
-    .json(updated)
+    .json(_project)
 }))
 
 projectRouter.get("/:id/tasks", wrapHandler(async (req, res) => {

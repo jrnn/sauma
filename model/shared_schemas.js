@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const parser = require("../util/parser")
 
-const address = new mongoose.Schema({
+const _address = {
   street : {
     type : String,
     required : [ true, "Katuosoite puuttuu" ],
@@ -27,9 +27,24 @@ const address = new mongoose.Schema({
     required : [ true, "Valtio puuttuu" ],
     trim : true
   }
+}
+
+const address = new mongoose.Schema(_address)
+const addressWithCoordinates = new mongoose.Schema({
+  ..._address,
+  location : {
+    lat : { type : Number },
+    lng : { type : Number }
+  }
 })
 
 address.options.toJSON = {
+  transform : (doc, ret) => {
+    delete ret._id
+    return ret
+  }
+}
+addressWithCoordinates.options.toJSON = {
   transform : (doc, ret) => {
     delete ret._id
     return ret
@@ -117,6 +132,7 @@ quota.options.toJSON = {
 
 module.exports = {
   address,
+  addressWithCoordinates,
   attachment,
   comment,
   quota

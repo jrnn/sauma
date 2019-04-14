@@ -34,7 +34,7 @@ const schema = new mongoose.Schema({
     }
   },
   address : {
-    type : schemas.address,
+    type : schemas.addressWithCoordinates,
     required : [ true, "Osoite puuttuu" ]
   },
   client : {
